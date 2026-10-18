@@ -996,9 +996,116 @@ export interface CropRecommendResponse {
   disclaimer: string;
 }
 
+export type DiagnosisCategory = 'pest_damage' | 'plant_disease' | 'abiotic_disorder' | 'healthy' | 'inconclusive';
+
+export interface CropHealthDiagnosisDetails {
+  isCropLeaf: boolean;
+  category: DiagnosisCategory;
+  categoryLabelEn: string;
+  categoryLabelTa: string;
+  suspectedCondition: string;
+  suspectedConditionTa?: string;
+  affectedCrop: string;
+  affectedCropTa?: string;
+  plantPart?: string;
+  pathogenOrCausalAgent?: string;
+  confidencePercent: number;
+  severityOrUrgency: 'low' | 'moderate' | 'high' | 'critical' | 'unknown';
+  visualSymptoms: string;
+  visualSymptomsTa?: string;
+  possibleCauses: string[];
+  alternativeExplanations: string[];
+  diagnosticLimitations: string[];
+  recommendedNextSteps: string[];
+  biologicalManagement: string[];
+  chemicalTreatment?: string[];
+  chemicalPrecautions?: string;
+  preventionTips: string[];
+  whenToConsultExpert: string[];
+  verifiedGuidanceReferences: string[];
+
+  // Legacy fields for backward compatibility
+  crop?: string;
+  cropTa?: string;
+  diseaseName?: string;
+  diseaseNameTa?: string;
+  pathogen?: string;
+  severity?: string;
+  organicManagement?: string;
+  organicManagementTa?: string;
+  chemicalManagement?: string;
+  chemicalManagementTa?: string;
+  extensionAdvisory?: string;
+  extensionAdvisoryTa?: string;
+  verifiedTreatment?: VerifiedTreatmentGuidance;
+}
+
+export interface AuthoritativeReference {
+  organization: string;
+  sourceTitle: string;
+  url?: string;
+  publicationType?: string;
+}
+
+export interface BiologicalManagementGuidance {
+  culturalPractices: string[];
+  fieldSanitation: string[];
+  cropRotationAndVarieties: string[];
+  biologicalControlAgents: string[];
+  soilAndNutrientManagement?: string[];
+}
+
+export interface ChemicalTreatmentGuidance {
+  isApplicable: boolean;
+  inapplicableReason?: string | null;
+  activeIngredient?: string | null;
+  approvedTarget?: string | null;
+  dosageAndApplication?: string | null;
+  cibrcRegistrationStatus?: string | null;
+  preHarvestIntervalDays?: number | null;
+  reEntryIntervalHours?: number | null;
+  personalProtectiveEquipment: string[];
+  safetyPrecautions: string[];
+}
+
+export interface VerifiedTreatmentGuidance {
+  crop: string;
+  cropTa?: string | null;
+  conditionKey: string;
+  conditionNameEn: string;
+  conditionNameTa?: string | null;
+  category: 'pest_damage' | 'plant_disease' | 'abiotic_disorder' | 'healthy' | 'inconclusive' | string;
+  categoryLabelEn: string;
+  categoryLabelTa: string;
+  biologicalManagement: BiologicalManagementGuidance;
+  chemicalManagement: ChemicalTreatmentGuidance;
+  ipmStrategySummaryEn: string;
+  ipmStrategySummaryTa: string;
+  whenToConsultOfficer: string[];
+  isUncertainOrInconclusive: boolean;
+  safetyNoticeEn: string;
+  safetyNoticeTa: string;
+  references: AuthoritativeReference[];
+}
+
+export type DiseaseDiagnosisDetails = CropHealthDiagnosisDetails;
+
+export interface ImageQualityAssessment {
+  isAcceptable: boolean;
+  qualityScore: number;
+  luminance: number;
+  edgeVariance: number;
+  plantPixelFraction: number;
+  warnings: string[];
+  retakeGuidanceEn: string[];
+  retakeGuidanceTa: string[];
+}
+
 export interface DiseaseAnalysisResponse {
-  status: string;
+  status: 'diagnosed' | 'suspected' | 'inconclusive' | 'quality_failure' | 'unavailable' | 'not_configured' | 'invalid_image' | string;
+  diagnosticStatus?: string;
   testedModelPresent: boolean;
+  modelName?: string;
   filename: string;
   fileSizeBytes?: number;
   contentType?: string;
@@ -1006,7 +1113,62 @@ export interface DiseaseAnalysisResponse {
   messageTa: string;
   truthfulnessNotice: string;
   safeNextSteps: string[];
+  diagnosis?: CropHealthDiagnosisDetails;
+  verifiedTreatment?: VerifiedTreatmentGuidance;
   referenceCatalog?: DiseaseCatalogItem[];
+  imageQuality?: ImageQualityAssessment;
+  reportId?: string;
+  saved?: boolean;
+}
+
+export interface DiagnosisReportEntity {
+  id: string;
+  userId: string;
+  farmerId?: string;
+  farmerName?: string;
+  crop: string;
+  cropTa?: string;
+  plantPart?: string;
+  district?: string;
+  symptomDescription?: string;
+  category: 'pest_damage' | 'plant_disease' | 'abiotic_disorder' | 'healthy' | 'inconclusive' | string;
+  categoryLabelEn: string;
+  categoryLabelTa: string;
+  suspectedCondition: string;
+  suspectedConditionTa?: string;
+  pathogenOrCausalAgent?: string;
+  status: string;
+  confidencePercent: number;
+  severityOrUrgency: string;
+  isUncertainOrInconclusive: boolean;
+  uncertaintyReason?: string;
+  visualSymptoms: string;
+  visualSymptomsTa?: string;
+  possibleCauses: string[];
+  alternativeExplanations: string[];
+  diagnosticLimitations: string[];
+  recommendedNextSteps: string[];
+  biologicalManagement: string[];
+  chemicalTreatment?: string[];
+  chemicalPrecautions?: string;
+  verifiedTreatment?: VerifiedTreatmentGuidance;
+  verifiedGuidanceReferences: string[];
+  imageMetadata?: {
+    filename?: string;
+    fileSizeBytes?: number;
+    contentType?: string;
+    retainedRawImage?: boolean;
+    storagePolicy?: string;
+  };
+  createdAt: string;
+  updatedAt?: string | null;
+}
+
+export interface DiagnosisReportListResponse {
+  reports: DiagnosisReportEntity[];
+  total: number;
+  farmerId?: string;
+  farmerName?: string;
 }
 
 export interface DiseaseCatalogItem {
@@ -1094,9 +1256,18 @@ export async function recommendCropsApi(data: CropRecommendInput): Promise<CropR
   return handleResponse<CropRecommendResponse>(res);
 }
 
-export async function analyzeDiseaseImageApi(formData: FormData): Promise<DiseaseAnalysisResponse> {
-  const res = await fetch(`${API_BASE_URL}/disease/analyze`, {
+export async function analyzeDiseaseImageApi(
+  formData: FormData,
+  language: string = 'en',
+  token?: string | null
+): Promise<DiseaseAnalysisResponse> {
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const res = await fetch(`${API_BASE_URL}/disease/analyze?language=${encodeURIComponent(language)}`, {
     method: 'POST',
+    headers,
     body: formData,
   });
   return handleResponse<DiseaseAnalysisResponse>(res);
@@ -1105,6 +1276,51 @@ export async function analyzeDiseaseImageApi(formData: FormData): Promise<Diseas
 export async function getDiseaseCatalogApi(): Promise<{ catalog: DiseaseCatalogItem[]; source: string }> {
   const res = await fetch(`${API_BASE_URL}/disease/catalog`);
   return handleResponse<{ catalog: DiseaseCatalogItem[]; source: string }>(res);
+}
+
+export async function getDiseaseTreatmentApi(params: {
+  crop?: string;
+  condition?: string;
+  category?: string;
+  confidence?: number;
+  language?: string;
+}): Promise<VerifiedTreatmentGuidance> {
+  const q = new URLSearchParams();
+  if (params.crop) q.append('crop', params.crop);
+  if (params.condition) q.append('condition', params.condition);
+  if (params.category) q.append('category', params.category);
+  if (params.confidence !== undefined) q.append('confidence', params.confidence.toString());
+  if (params.language) q.append('language', params.language);
+  const res = await fetch(`${API_BASE_URL}/disease/treatment?${q.toString()}`);
+  return handleResponse<VerifiedTreatmentGuidance>(res);
+}
+
+export async function listDiagnosisReportsApi(token: string): Promise<DiagnosisReportListResponse> {
+  const res = await fetch(`${API_BASE_URL}/disease/reports`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return handleResponse<DiagnosisReportListResponse>(res);
+}
+
+export async function getDiagnosisReportByIdApi(reportId: string, token: string): Promise<DiagnosisReportEntity> {
+  const res = await fetch(`${API_BASE_URL}/disease/reports/${reportId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return handleResponse<DiagnosisReportEntity>(res);
+}
+
+export async function deleteDiagnosisReportApi(reportId: string, token: string): Promise<{ success: boolean; message: string; deletedId: string }> {
+  const res = await fetch(`${API_BASE_URL}/disease/reports/${reportId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return handleResponse<{ success: boolean; message: string; deletedId: string }>(res);
 }
 
 export async function getMarketPricesApi(district?: string, search?: string): Promise<MarketPricesResponse> {

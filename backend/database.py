@@ -124,3 +124,8 @@ def get_telegram_otps_collection():
     database = get_database()
     return database["telegram_otps"] if database is not None else None
 
+def get_diagnosis_reports_collection():
+    """Returns the 'diagnosis_reports' collection."""
+    database = get_database()
+    return database["diagnosis_reports"] if database is not None else None
+

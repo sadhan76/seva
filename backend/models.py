@@ -677,3 +677,168 @@ class SMSStatusResponse(BaseModel):
     message: str
     note: str
 
+
+# ============================================================================
+# CROP HEALTH & MULTI-CATEGORY DIAGNOSIS SCHEMAS
+# Category 1: Pest and insect damage
+# Category 2: Plant diseases (fungal, bacterial, viral)
+# Category 3: Physiological and abiotic problems (nutrients, drought, waterlogging, heat, salinity)
+# ============================================================================
+
+DiagnosisCategory = Literal["pest_damage", "plant_disease", "abiotic_disorder", "healthy", "inconclusive"]
+SeverityLevel = Literal["low", "moderate", "high", "critical", "unknown"]
+
+class CropHealthDiagnosisDetails(BaseModel):
+    isCropLeaf: bool = True
+    category: DiagnosisCategory = "plant_disease"
+    categoryLabelEn: str = "Plant Disease"
+    categoryLabelTa: str = "பயிர் நோய்"
+    suspectedCondition: str = "Unidentified Condition"
+    suspectedConditionTa: Optional[str] = None
+    affectedCrop: str = "Unknown Crop"
+    affectedCropTa: Optional[str] = None
+    plantPart: Optional[str] = "leaf"
+    pathogenOrCausalAgent: Optional[str] = None
+    confidencePercent: int = Field(default=0, ge=0, le=100)
+    severityOrUrgency: SeverityLevel = "moderate"
+    visualSymptoms: str = ""
+    visualSymptomsTa: Optional[str] = None
+    possibleCauses: List[str] = Field(default_factory=list)
+    alternativeExplanations: List[str] = Field(default_factory=list)
+    diagnosticLimitations: List[str] = Field(default_factory=list)
+    recommendedNextSteps: List[str] = Field(default_factory=list)
+    biologicalManagement: List[str] = Field(default_factory=list)
+    chemicalTreatment: Optional[List[str]] = None
+    chemicalPrecautions: Optional[str] = None
+    preventionTips: List[str] = Field(default_factory=list)
+    whenToConsultExpert: List[str] = Field(default_factory=list)
+    verifiedGuidanceReferences: List[str] = Field(default_factory=list)
+    verifiedTreatment: Optional[Dict[str, Any]] = None
+
+    # Legacy compatibility fields
+    crop: Optional[str] = None
+    cropTa: Optional[str] = None
+    diseaseName: Optional[str] = None
+    diseaseNameTa: Optional[str] = None
+    pathogen: Optional[str] = None
+    severity: Optional[str] = None
+    organicManagement: Optional[str] = None
+    organicManagementTa: Optional[str] = None
+    chemicalManagement: Optional[str] = None
+    chemicalManagementTa: Optional[str] = None
+    extensionAdvisory: Optional[str] = None
+    extensionAdvisoryTa: Optional[str] = None
+
+    @model_validator(mode="after")
+    def populate_compatibility_fields(self):
+        if not self.crop:
+            self.crop = self.affectedCrop
+        if not self.cropTa:
+            self.cropTa = self.affectedCropTa
+        if not self.diseaseName:
+            self.diseaseName = self.suspectedCondition
+        if not self.diseaseNameTa:
+            self.diseaseNameTa = self.suspectedConditionTa
+        if not self.pathogen:
+            self.pathogen = self.pathogenOrCausalAgent
+        if not self.severity:
+            self.severity = self.severityOrUrgency
+        if not self.organicManagement and self.biologicalManagement:
+            self.organicManagement = "; ".join(self.biologicalManagement)
+        if not self.chemicalManagement and self.chemicalTreatment:
+            self.chemicalManagement = "; ".join(self.chemicalTreatment)
+        if not self.extensionAdvisory and self.whenToConsultExpert:
+            self.extensionAdvisory = "; ".join(self.whenToConsultExpert)
+        return self
+
+
+DiseaseDiagnosisDetails = CropHealthDiagnosisDetails
+
+
+class DiseaseAnalysisResponse(BaseModel):
+    status: Literal["diagnosed", "suspected", "inconclusive", "quality_failure", "unavailable", "not_configured", "invalid_image"]
+    diagnosticStatus: Optional[str] = None
+    testedModelPresent: bool
+    modelName: Optional[str] = None
+    filename: str
+    fileSizeBytes: Optional[int] = None
+    contentType: Optional[str] = None
+    messageEn: str
+    messageTa: str
+    truthfulnessNotice: str
+    safeNextSteps: List[str]
+    diagnosis: Optional[CropHealthDiagnosisDetails] = None
+    verifiedTreatment: Optional[Dict[str, Any]] = None
+    referenceCatalog: Optional[List[Dict[str, Any]]] = None
+    imageQuality: Optional[Dict[str, Any]] = None
+    reportId: Optional[str] = None
+    saved: bool = False
+
+
+CropHealthAnalysisResponse = DiseaseAnalysisResponse
+
+
+# ============================================================================
+# DIAGNOSIS HISTORY & REPORT MODELS (PERSISTENCE & SECURITY)
+# ============================================================================
+
+class DiagnosisReportEntity(BaseModel):
+    id: str
+    userId: str
+    farmerId: Optional[str] = None
+    farmerName: Optional[str] = None
+    crop: str
+    cropTa: Optional[str] = None
+    plantPart: Optional[str] = "leaf"
+    district: Optional[str] = None
+    symptomDescription: Optional[str] = None
+    category: str
+    categoryLabelEn: str
+    categoryLabelTa: str
+    suspectedCondition: str
+    suspectedConditionTa: Optional[str] = None
+    pathogenOrCausalAgent: Optional[str] = None
+    status: str
+    confidencePercent: int = 0
+    severityOrUrgency: str = "moderate"
+    isUncertainOrInconclusive: bool = False
+    uncertaintyReason: Optional[str] = None
+    visualSymptoms: str = ""
+    visualSymptomsTa: Optional[str] = None
+    possibleCauses: List[str] = Field(default_factory=list)
+    alternativeExplanations: List[str] = Field(default_factory=list)
+    diagnosticLimitations: List[str] = Field(default_factory=list)
+    recommendedNextSteps: List[str] = Field(default_factory=list)
+    biologicalManagement: List[str] = Field(default_factory=list)
+    chemicalTreatment: Optional[List[str]] = None
+    chemicalPrecautions: Optional[str] = None
+    verifiedTreatment: Optional[Dict[str, Any]] = None
+    verifiedGuidanceReferences: List[str] = Field(default_factory=list)
+    imageMetadata: Dict[str, Any] = Field(default_factory=dict)
+    createdAt: str
+    updatedAt: Optional[str] = None
+
+
+class DiagnosisReportCreatePayload(BaseModel):
+    crop: Optional[str] = None
+    cropTa: Optional[str] = None
+    plantPart: Optional[str] = "leaf"
+    district: Optional[str] = None
+    symptomDescription: Optional[str] = None
+    diagnosis: Optional[CropHealthDiagnosisDetails] = None
+    verifiedTreatment: Optional[Dict[str, Any]] = None
+    status: Optional[str] = "diagnosed"
+    filename: Optional[str] = "leaf.jpg"
+    fileSizeBytes: Optional[int] = 0
+    contentType: Optional[str] = "image/jpeg"
+
+
+class DiagnosisReportListResponse(BaseModel):
+    reports: List[DiagnosisReportEntity]
+    total: int
+    farmerId: Optional[str] = None
+    farmerName: Optional[str] = None
+
+
+
+
