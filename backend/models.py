@@ -794,7 +794,7 @@ class ProcurementCentreInfo(BaseModel):
     dailyCapacityBags: int
     slotCapacityBags: int
     slotWindows: list[str]
-    counters: Optional[List[Dict[str, Any]]] = None
+    counters: Optional[List[Union[Dict[str, Any], str]]] = None
     isActive: bool = True
     isDemoData: bool = True
     dataSourceLabel: str = "TNCSC Direct Purchase Centre (Model Reference)"

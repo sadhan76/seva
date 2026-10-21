@@ -82,6 +82,11 @@ const getDefaultApiUrl = (): string => {
     if (window.location.port === '5173' || window.location.port === '5174') {
       return '/api';
     }
+    // In production browser environments without explicit VITE_API_URL, fallback to relative /api
+    // to prevent blocked mixed-content calls to 127.0.0.1 over HTTPS
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      return '/api';
+    }
   }
   return 'http://127.0.0.1:8000/api';
 };
