@@ -28,10 +28,13 @@ import {
   getProcurementSlots,
   getFarmerBillsApi,
   getDigitalBillApi,
+  cancelProcurementBookingApi,
+  getFarmerQuotaApi,
   type ProcurementBookingEntity,
   type ProcurementCentreInfo,
   type CentreSlotsResponse,
   type DigitalBillEntity,
+  type FarmerQuotaCheckResponse,
 } from '../../services/api';
 import type { ProcurementSlot } from '../../types';
 
@@ -54,6 +57,10 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
 
   // Form Fields
   const [crop, setCrop] = useState('Paddy Grade A (சம்பா நெல் CR 1009)');
+  const [cropVariety, setCropVariety] = useState('CR 1009 Sub 1');
+  const [harvestDate, setHarvestDate] = useState<string>(() => {
+    return new Date().toISOString().split('T')[0];
+  });
   const [bags, setBags] = useState<number>(100);
   const [slotDate, setSlotDate] = useState<string>(() => {
     const d = new Date();
@@ -61,6 +68,10 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
     return d.toISOString().split('T')[0];
   });
   const [slotTime, setSlotTime] = useState<string>('08:30 AM - 11:30 AM');
+
+  // Cancellation State
+  const [bookingToCancel, setBookingToCancel] = useState<ProcurementBookingEntity | null>(null);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   // Slots availability data for selected centre & date
   const [slotsAvailability, setSlotsAvailability] = useState<CentreSlotsResponse | null>(null);
@@ -112,6 +123,9 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
     fetchCentres();
   }, []);
 
+  // Farmer Quota State (Phase 4)
+  const [farmerQuota, setFarmerQuota] = useState<FarmerQuotaCheckResponse | null>(null);
+
   // 2. Fetch live slot availability whenever centre or date changes
   useEffect(() => {
     if (!selectedCentre || !slotDate) return;
@@ -129,6 +143,22 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
     };
     fetchSlots();
   }, [selectedCentre, slotDate]);
+
+  // 2b. Fetch farmer quota limit whenever user, date or slot time changes
+  useEffect(() => {
+    const fid = user?.farmerId;
+    if (!fid || !slotDate) return;
+
+    const fetchQuota = async () => {
+      try {
+        const quota = await getFarmerQuotaApi(fid, slotDate, slotTime);
+        setFarmerQuota(quota);
+      } catch (err) {
+        // Silent fallback
+      }
+    };
+    fetchQuota();
+  }, [user?.farmerId, slotDate, slotTime]);
 
   // 3. Load user's bookings from MongoDB
   const loadBookings = async () => {
@@ -166,7 +196,7 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
     if (submittedSlot && qrCanvasRef.current) {
       // Privacy-first QR encoding: Encode ONLY opaque token and official URL, strictly no PII
       const qrPayload = submittedSlot.qrVerificationUrl ||
-        `https://nammavivasayi.gov.in/verify?token=${submittedSlot.opaqueToken || submittedSlot.tokenNumber}&id=${submittedSlot.bookingId}`;
+        `https://agribharat.gov.in/verify?token=${submittedSlot.opaqueToken || submittedSlot.tokenNumber}&id=${submittedSlot.bookingId}`;
 
       QRCode.toCanvas(
         qrCanvasRef.current,
@@ -209,6 +239,27 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
     setErrorMsg(null);
 
     try {
+      if (!harvestDate) {
+        setErrorMsg('Harvest date is required.');
+        setIsSubmitting(false);
+        return;
+      }
+      const todayStr = new Date().toISOString().split('T')[0];
+      const maxDate = new Date();
+      maxDate.setDate(maxDate.getDate() + 30);
+      const maxDateStr = maxDate.toISOString().split('T')[0];
+
+      if (harvestDate < todayStr) {
+        setErrorMsg('Harvest date cannot be in the past.');
+        setIsSubmitting(false);
+        return;
+      }
+      if (harvestDate > maxDateStr) {
+        setErrorMsg('Harvest date cannot be more than 30 days in advance.');
+        setIsSubmitting(false);
+        return;
+      }
+
       const farmerName = user?.name || user?.fullName || 'Selvakumar R.';
       const farmerId = user?.farmerId || 'TN-AGRI-2026-8841';
 
@@ -217,6 +268,8 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
         farmerId,
         mandiName: selectedCentre.name,
         crop,
+        cropVariety: cropVariety.trim() || undefined,
+        harvestDate,
         quantityBags: bags,
         preferredDate: slotDate,
         timeWindow: slotTime,
@@ -243,9 +296,38 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
 
       await loadBookings();
     } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to submit booking. Capacity might be exceeded.');
+      const msg = err.message || '';
+      if (msg.includes('429') || msg.toLowerCase().includes('rate limit')) {
+        setErrorMsg('⏳ Rate Limit Reached: You have reached the maximum allowed booking requests in a short period. Please wait 60 seconds before trying again.');
+      } else {
+        setErrorMsg(err.message || 'Failed to submit booking. Capacity might be exceeded.');
+      }
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Farmer Cancellation Handler
+  const handleConfirmCancel = async () => {
+    if (!bookingToCancel) return;
+    if (!token) {
+      setErrorMsg('Authentication required to cancel booking.');
+      return;
+    }
+    setIsCancelling(true);
+    try {
+      await cancelProcurementBookingApi(bookingToCancel.bookingId, token);
+      setBookingToCancel(null);
+      await loadBookings();
+      // Refresh slots availability
+      if (selectedCentre && slotDate) {
+        const slotsData = await getProcurementSlots(selectedCentre.centreCode, slotDate);
+        setSlotsAvailability(slotsData);
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Failed to cancel booking.');
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -464,11 +546,73 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
                 </select>
               </div>
 
+              {/* Crop Variety / Sub-variety */}
+              <div>
+                <label className="text-xs font-bold text-slate-700 block mb-1">
+                  {language === 'ta' ? 'பயிர் ரகம் / துணை ரகம்' : 'Crop Variety / Sub-variety'}
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. CR 1009 Sub 1, BPT 5204, ADT 45"
+                  value={cropVariety}
+                  onChange={(e) => setCropVariety(e.target.value)}
+                  className="w-full text-xs p-3 bg-white rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                />
+              </div>
+
+              {/* Harvest Date (Required: Today to +30 days) */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-bold text-slate-700 flex items-center gap-1">
+                    <span>🌾</span>
+                    {language === 'ta' ? 'அறுவடைத் தேதி (கட்டாயம்)' : 'Harvest Date (Required)'}
+                  </label>
+                  <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded">
+                    Max 30 days
+                  </span>
+                </div>
+                <input
+                  type="date"
+                  required
+                  value={harvestDate}
+                  min={new Date().toISOString().split('T')[0]}
+                  max={(() => {
+                    const d = new Date();
+                    d.setDate(d.getDate() + 30);
+                    return d.toISOString().split('T')[0];
+                  })()}
+                  onChange={(e) => setHarvestDate(e.target.value)}
+                  className="w-full text-xs p-3 bg-white rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 font-medium"
+                />
+                <p className="text-[10px] text-slate-400 mt-1">
+                  {language === 'ta'
+                    ? 'இன்றைய தேதியிலிருந்து அடுத்த 30 நாட்களுக்குள் இருக்க வேண்டும்'
+                    : 'Must be within next 30 days for quality preservation'}
+                </p>
+              </div>
+
               {/* Quantity in Bags with Estimated Weight */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">
                   {language === 'ta' ? 'மூட்டைகள் எண்ணிக்கை (40 கிலோ/மூட்டை)' : 'Estimated Quantity (Bags)'}
                 </label>
+
+                {/* Farmer Quota Feedback Banner (Phase 4) */}
+                {farmerQuota && (
+                  <div className={`p-2.5 rounded-xl border text-[11px] mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-1 ${
+                    bags > farmerQuota.remainingBagsSlot || bags > farmerQuota.remainingBagsToday
+                      ? 'bg-rose-50 border-rose-200 text-rose-900'
+                      : 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                  }`}>
+                    <span>
+                      <strong>Quota Allowance:</strong> {farmerQuota.remainingBagsSlot} bags remaining for this slot (Max {farmerQuota.maxBagsPerSlot}) • {farmerQuota.remainingBagsToday} bags remaining today (Max {farmerQuota.maxBagsPerDay})
+                    </span>
+                    {(bags > farmerQuota.remainingBagsSlot || bags > farmerQuota.remainingBagsToday) && (
+                      <span className="font-bold text-rose-700 shrink-0">⚠️ Exceeds Allowed Quota Limit!</span>
+                    )}
+                  </div>
+                )}
+
                 <div className="relative">
                   <input
                     type="number"
@@ -488,10 +632,10 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
                 </p>
               </div>
 
-              {/* Date Selection */}
+              {/* Slot Date Selection */}
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">
-                  {language === 'ta' ? 'விற்பனைத் தேதி' : 'Preferred Date'}
+                  {language === 'ta' ? 'விற்பனைத் தேதி' : 'Preferred Slot Date'}
                 </label>
                 <input
                   type="date"
@@ -521,17 +665,20 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
                   {(selectedCentre?.slotWindows || ['08:30 AM - 11:30 AM', '11:30 AM - 02:30 PM', '02:30 PM - 05:30 PM']).map((win) => {
                     const isSelected = slotTime === win;
                     const slotData = slotsAvailability?.slots?.find((s) => s.timeWindow === win);
-                    const isFull = slotData?.status === 'full' || (slotData && slotData.availableBags <= 0);
-                    const isFillingFast = slotData?.status === 'filling_fast';
+                    const isClosed = Boolean(slotData?.isClosed || slotData?.status === 'closed');
+                    const isFull = !isClosed && (slotData?.status === 'full' || (slotData && slotData.availableBags <= 0));
+                    const isFillingFast = !isClosed && slotData?.status === 'filling_fast';
 
                     return (
                       <div
                         key={win}
                         onClick={() => {
-                          if (!isFull) setSlotTime(win);
+                          if (!isFull && !isClosed) setSlotTime(win);
                         }}
                         className={`p-3 rounded-xl border text-xs cursor-pointer transition-all ${
-                          isFull
+                          isClosed
+                            ? 'opacity-80 bg-rose-50/70 border-rose-300 cursor-not-allowed'
+                            : isFull
                             ? 'opacity-60 bg-slate-100 border-slate-200 cursor-not-allowed'
                             : isSelected
                             ? 'bg-emerald-50 border-emerald-500 ring-2 ring-emerald-500/20 font-bold text-emerald-950'
@@ -540,7 +687,11 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
                       >
                         <div className="flex items-center justify-between">
                           <span className="font-semibold">{win}</span>
-                          {isFull ? (
+                          {isClosed ? (
+                            <span className="text-[10px] font-bold text-white bg-rose-600 px-1.5 py-0.5 rounded uppercase tracking-wider">
+                              CLOSED
+                            </span>
+                          ) : isFull ? (
                             <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded">
                               Full
                             </span>
@@ -555,7 +706,11 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
                           )}
                         </div>
                         <div className="text-[11px] text-slate-500 mt-1">
-                          {slotData ? (
+                          {isClosed ? (
+                            <span className="text-rose-700 font-medium">
+                              ⚠️ {slotData?.closureReason || 'Closed by procurement staff'}
+                            </span>
+                          ) : slotData ? (
                             <span>
                               {slotData.availableBags} / {slotData.maxCapacityBags} Bags left
                             </span>
@@ -645,16 +800,33 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
                 {dbBookings.map((b) => (
                   <tr key={b.bookingId || b.id} className="hover:bg-slate-50/50">
                     <td className="py-3 px-3 font-mono font-bold text-emerald-700">
-                      {b.tokenNumber}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span>{b.tokenNumber}</span>
+                        {b.isNowServing && (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500 text-white animate-pulse">
+                            Now Serving
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="py-3 px-3">
                       <p className="font-semibold text-slate-800">{b.mandiName}</p>
                       <p className="text-[11px] text-slate-500 font-mono">
                         {b.slotDate} ({b.timeWindow})
                       </p>
+                      {b.harvestDate && (
+                        <p className="text-[10px] text-emerald-800 font-medium">
+                          🌾 Harvest: {b.harvestDate}
+                        </p>
+                      )}
                     </td>
                     <td className="py-3 px-3">
-                      <span className="font-medium text-slate-800">{b.crop}</span>
+                      <span className="font-medium text-slate-800 block">{b.crop}</span>
+                      {b.cropVariety && (
+                        <span className="text-[10px] text-emerald-700 font-semibold block">
+                          Var: {b.cropVariety}
+                        </span>
+                      )}
                       <span className="block text-slate-500 text-[11px]">{b.quantityBags} Bags</span>
                     </td>
                     <td className="py-3 px-3 font-mono text-slate-700 font-medium">
@@ -665,9 +837,11 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
                         variant={
                           b.status === 'COMPLETED'
                             ? 'emerald'
-                            : b.status === 'CHECKED_IN' || b.status === 'IN_QUEUE'
+                            : b.status === 'CHECKED_IN' || b.status === 'IN_QUEUE' || b.status === 'PROCESSING'
                             ? 'blue'
-                            : b.status === 'CANCELLED'
+                            : b.status === 'QUALITY_CHECKED'
+                            ? 'emerald'
+                            : b.status === 'CANCELLED' || b.status === 'REJECTED' || b.status === 'NO_SHOW'
                             ? 'rose'
                             : 'amber'
                         }
@@ -675,9 +849,40 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
                       >
                         {b.status}
                       </Badge>
+                      {b.qualityInspection && (
+                        <div className="text-[10px] mt-1 space-y-0.5 text-slate-600 font-medium">
+                          <span className={b.qualityInspection.status === 'REJECTED' ? 'text-rose-600' : 'text-emerald-700'}>
+                            Quality: {b.qualityInspection.status}
+                          </span>
+                          {b.qualityInspection.acceptedWeightKg !== undefined && (
+                            <span className="block text-[9px] text-slate-500">
+                              Acc: {b.qualityInspection.acceptedWeightKg} kg | Rej: {b.qualityInspection.rejectedWeightKg} kg
+                            </span>
+                          )}
+                          {b.qualityInspection.rejectionReason && (
+                            <span className="block text-[9px] text-rose-500 italic">
+                              Reason: {b.qualityInspection.rejectionReason}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </td>
                     <td className="py-3 px-3 text-right">
                       <div className="flex items-center justify-end gap-1.5 flex-wrap">
+                        {/* Cancel Action for eligible BOOKED status */}
+                        {b.status === 'BOOKED' ? (
+                          <button
+                            onClick={() => setBookingToCancel(b)}
+                            className="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 text-[10px] font-bold border border-rose-200 transition-colors"
+                          >
+                            {language === 'ta' ? 'ரத்து செய்' : 'Cancel'}
+                          </button>
+                        ) : !['COMPLETED', 'CANCELLED', 'NO_SHOW', 'REJECTED'].includes(b.status) ? (
+                          <span className="text-[10px] text-slate-400 italic">
+                            Admitted (Cannot cancel)
+                          </span>
+                        ) : null}
+
                         {b.billNumber && (
                           <button
                             onClick={async () => {
@@ -712,6 +917,72 @@ export const ProcurementBookingView: React.FC<ProcurementBookingViewProps> = ({
           </div>
         )}
       </Card>
+
+      {/* Farmer Cancellation Confirmation Modal */}
+      {bookingToCancel && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 animate-scale-up space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center font-bold">
+                ⚠️
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900">
+                  {language === 'ta' ? 'முன்பதிவை ரத்து செய்ய வேண்டுமா?' : 'Cancel Slot Reservation?'}
+                </h3>
+                <p className="text-xs text-slate-500 font-mono">Booking ID: {bookingToCancel.bookingId}</p>
+              </div>
+            </div>
+
+            <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 text-xs space-y-1.5">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Mandi Centre:</span>
+                <span className="font-semibold text-slate-800">{bookingToCancel.mandiName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Slot Date & Time:</span>
+                <span className="font-semibold text-slate-800">{bookingToCancel.slotDate} ({bookingToCancel.timeWindow})</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Crop & Bags:</span>
+                <span className="font-semibold text-slate-800">{bookingToCancel.crop} ({bookingToCancel.quantityBags} bags)</span>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-600">
+              {language === 'ta'
+                ? 'உங்கள் முன்பதிவை ரத்து செய்தால், இந்த நேர இடைவெளி மற்ற விவசாயிகளுக்கு உடனடியாக விடுவிக்கப்படும்.'
+                : 'Cancelling this slot will release the reserved capacity back to other farmers immediately.'}
+            </p>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                type="button"
+                disabled={isCancelling}
+                onClick={() => setBookingToCancel(null)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+              >
+                {language === 'ta' ? 'பின்வாங்கு' : 'Keep Booking'}
+              </button>
+              <button
+                type="button"
+                disabled={isCancelling}
+                onClick={handleConfirmCancel}
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-md shadow-rose-600/20 flex items-center gap-1.5 transition-colors"
+              >
+                {isCancelling ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Cancelling...</span>
+                  </>
+                ) : (
+                  <span>{language === 'ta' ? 'ஆம், ரத்து செய்' : 'Confirm Cancellation'}</span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* TASK 3 & 4: Farmer Digital Bills & Payment Receipts */}
       <Card

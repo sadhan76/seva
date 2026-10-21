@@ -18,7 +18,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from dotenv import load_dotenv
 
-from database import get_users_collection
+from database import get_users_collection, get_farmers_collection
 
 load_dotenv()
 
@@ -178,6 +178,16 @@ async def require_staff(current_user: Dict[str, Any] = Depends(get_current_user)
     return current_user
 
 
+async def require_admin(current_user: Dict[str, Any] = Depends(get_current_user)) -> Dict[str, Any]:
+    """Ensures the authenticated user has administrative or staff privileges to curate official content."""
+    if current_user.get("role") not in ["admin", "staff"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access restricted to authorized administrators and nodal officers only.",
+        )
+    return current_user
+
+
 async def bootstrap_staff_account():
     """
     Administrative process: Seeds an authorized Procurement Staff account
@@ -190,7 +200,7 @@ async def bootstrap_staff_account():
     staff_phone = os.getenv("STAFF_BOOTSTRAP_PHONE", "9842012345")
     staff_pwd = os.getenv("STAFF_BOOTSTRAP_PASSWORD", "MandiStaff@2026")
     staff_name = os.getenv("STAFF_BOOTSTRAP_NAME", "Ramesh Kumar (Procurement Inspector)")
-    staff_mandi = os.getenv("STAFF_BOOTSTRAP_MANDI", "Thanjavur Regulated Market (DPC Centre #3)")
+    staff_mandi = os.getenv("STAFF_BOOTSTRAP_MANDI", "Thanjavur Direct Procurement Centre #3 (Pillaiyarpatti)")
 
     existing_staff = await users_collection.find_one({"phone": staff_phone})
     if not existing_staff:
@@ -209,3 +219,42 @@ async def bootstrap_staff_account():
         }
         await users_collection.insert_one(staff_doc)
         print(f"[Auth] Bootstrapped authorized staff account: {staff_phone} ({staff_name})")
+    else:
+        if "Thanjavur Regulated Market" in existing_staff.get("mandiName", ""):
+            await users_collection.update_one(
+                {"_id": existing_staff["_id"]},
+                {"$set": {"mandiName": "Thanjavur Direct Procurement Centre #3 (Pillaiyarpatti)"}}
+            )
+
+    # Also ensure default demo farmer account exists for quick-fill / demonstration
+    demo_farmer_phone = "9876543299"
+    existing_farmer = await users_collection.find_one({"phone": demo_farmer_phone})
+    if not existing_farmer:
+        f_hash = hash_password("FarmerPassword@123")
+        farmer_doc = {
+            "name": "Murugesan K.",
+            "phone": demo_farmer_phone,
+            "role": "farmer",
+            "farmerId": "TN-AGRI-2026-9281",
+            "village": "Pillaiyarpatti",
+            "district": "Thanjavur",
+            "state": "Tamil Nadu",
+            "country": "India",
+            "totalLandAcres": 4,
+            "primaryCrop": "Paddy Grade A",
+            "soilType": "Alluvial Clay Loam",
+            "irrigationSources": ["Borewell / Tube Well", "Canal"],
+            "preferredLanguage": "ta",
+            "hashed_password": f_hash,
+            "createdAt": datetime.utcnow().strftime("%d %b %Y, %I:%M %p"),
+            "isActive": True
+        }
+        await users_collection.insert_one(farmer_doc)
+        farmers_col = get_farmers_collection()
+        if farmers_col is not None:
+            await farmers_col.update_one(
+                {"farmerId": farmer_doc["farmerId"]},
+                {"$set": farmer_doc},
+                upsert=True
+            )
+        print(f"[Auth] Bootstrapped demo farmer account: {demo_farmer_phone} (Murugesan K.)")

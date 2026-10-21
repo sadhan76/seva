@@ -24,6 +24,7 @@ Validates:
 import asyncio
 import httpx
 import time
+from datetime import date, timedelta
 from typing import Dict, Any
 
 BASE_URL = "http://127.0.0.1:8000"
@@ -175,7 +176,7 @@ async def run_phase7_tests():
         sample_img = b"\xFF\xD8\xFF\xE0\x00\x10JFIF\x00\x01\x01\x01\x00H\x00H\x00\x00\xFF\xDB\x00C\x00" + b"\x00" * 200 + b"\xFF\xD9"
         disease_res = await client.post(
             "/api/disease/analyze",
-            files={"file": ("leaf_test.jpg", sample_img, "image/jpeg")}
+            files={"file": ("test_leaf.jpg", sample_img, "image/jpeg")}
         )
         assert disease_res.status_code == 200
         d_data = disease_res.json()
@@ -196,12 +197,15 @@ async def run_phase7_tests():
         # ---------------------------------------------------------------------
         print("\n--- [Test 5] Complete Farmer Mandi Procurement Lifecycle ---")
         # Step 1: Create Slot Booking
+        valid_harvest_date = (date.today() + timedelta(days=2)).isoformat()
+        valid_preferred_date = (date.today() + timedelta(days=15 + (test_suffix % 10))).isoformat()
         booking_payload = {
             "farmerName": f1_user["name"],
             "mandiName": "Thanjavur Regulated Market (DPC Centre #3)",
             "crop": "Paddy (Grade A / சம்பா நெல்)",
-            "quantityBags": 30,
-            "preferredDate": f"2026-11-{(test_suffix % 25) + 1:02d}",
+            "quantityBags": 40,
+            "preferredDate": valid_preferred_date,
+            "harvestDate": valid_harvest_date,
             "timeWindow": "09:00 AM - 11:00 AM"
         }
         create_res = await client.post("/api/procurement/bookings", json=booking_payload, headers=f1_headers)
@@ -238,6 +242,21 @@ async def run_phase7_tests():
         assert checkin_res.status_code == 200
         assert checkin_res.json()["status"] == "CHECKED_IN"
         print(f"  -> PASS: Booking checked in. Status: CHECKED_IN.")
+
+        # Step 4b: Physical Quality Inspection (Status -> QUALITY_CHECKED)
+        qi_res = await client.post(
+            f"/api/staff/bookings/{booking_id}/quality-inspection",
+            json={
+                "qualityStatus": "ACCEPTED",
+                "declaredWeightKg": 1600.0,
+                "acceptedWeightKg": 1500.0,
+                "qualityGrade": "FAQ Grade A",
+                "moisturePercent": 14.0
+            },
+            headers=staff_headers
+        )
+        assert qi_res.status_code == 200, f"Quality inspection failed: {qi_res.status_code} - {qi_res.text}"
+        print(f"  -> PASS: Quality inspection certified. Grade: FAQ Grade A, Moisture: 14.0%.")
 
         # Step 5: Yard Queue Assignment (Status -> IN_QUEUE)
         queue_res = await client.post(

@@ -13,6 +13,7 @@ import {
   AlertCircle,
   Loader2,
   HelpCircle,
+  Globe,
 } from 'lucide-react';
 
 import { useLanguage } from '../../context/LanguageContext';
@@ -31,16 +32,20 @@ import {
   isSpeechRecognitionSupported,
   isSpeechSynthesisSupported,
 } from '../../utils/speech';
-import type { ChatMessage } from '../../types';
+import type { ChatMessage, Language } from '../../types';
+import { getLocaleMetadata } from '../../i18n/localeRegistry';
+import { REGIONAL_LANGUAGE_OPTIONS } from '../../i18n/translations';
 
 export const FarmingAssistantView: React.FC = () => {
   const { language: appLanguage } = useLanguage();
   const { user, token } = useAuth();
 
-  // Assistant language state (can be toggled separately for chat: 'en' | 'ta')
-  const [chatLang, setChatLang] = useState<'en' | 'ta'>(() =>
-    appLanguage === 'ta' ? 'ta' : 'en'
-  );
+  // Assistant language state (supports all 23 languages, defaults to active app language)
+  const [chatLang, setChatLang] = useState<Language>(() => appLanguage);
+
+  useEffect(() => {
+    setChatLang(appLanguage);
+  }, [appLanguage]);
 
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -71,21 +76,50 @@ export const FarmingAssistantView: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  // Initial welcome message
-  const getWelcomeMessage = (lang: 'en' | 'ta'): ChatMessage => ({
-    id: 'welcome-0',
-    sender: 'ai',
-    text:
-      lang === 'ta'
-        ? `வணக்கம் ${user?.name || 'விவசாயி'}! நான் உங்கள் 'நம்ம விவசாயி' செயற்கை நுண்ணறிவு உதவியாளர். உங்கள் பயிர் சாகுபடி, நேரலை வானிலை, உரம், நீர் பாசனம், நோய் அறிகுறிகள் அல்லது நெல் கொள்முதல் டோக்கன் குறித்து எதையும் தமிழில் கேட்கலாம்.`
-        : `Vanakkam ${user?.name || 'Farmer'}! I am your Namma Vivasayi AI Assistant. Ask me anything about crop nutrition, real-time weather, foliar spray advisories, AWD irrigation, plant symptoms, or your mandi procurement bookings.`,
-    time: 'Just now',
-    language: lang,
-    isRealAI: false,
-    provider: 'RULE_BASED_LOCAL',
-    providerNotice:
-      'Notice: Operating in Rule-Based Agronomic Mode (Demo). Guidance is verified with Tamil Nadu Agricultural University (TNAU) agronomy reference data.',
-  });
+  // Initial welcome message supporting all 23 regional languages
+  const getWelcomeMessage = (lang: Language): ChatMessage => {
+    const meta = getLocaleMetadata(lang);
+    let welcomeText = `Hello ${user?.name || 'Farmer'}! I am your AgriBharat AI Agricultural Assistant. Ask me anything about crop nutrition, real-time weather, foliar spray advisories, AWD irrigation, plant symptoms, or your mandi procurement bookings.`;
+    if (lang === 'ta') {
+      welcomeText = `வணக்கம் ${user?.name || 'விவசாயி'}! நான் உங்கள் 'அகிரிபாரத்' செயற்கை நுண்ணறிவு உதவியாளர். உங்கள் பயிர் சாகுபடி, நேரலை வானிலை, உரம், நீர் பாசனம், நோய் அறிகுறிகள் அல்லது நெல் கொள்முதல் டோக்கன் குறித்து எதையும் தமிழில் கேட்கலாம்.`;
+    } else if (lang === 'hi') {
+      welcomeText = `नमस्ते ${user?.name || 'किसान मित्र'}! मैं आपका एग्रीभारत एआई कृषि सहायक हूँ। अपनी फसल पोषण, मौसम पूर्वानुमान, छिड़काव सलाह, जल प्रबंधन, फसल रोग अथवा मंडी खरीद स्लॉट के बारे में कुछ भी पूछें।`;
+    } else if (lang === 'te') {
+      welcomeText = `నమస్కారం ${user?.name || 'రైతు మిత్రమా'}! నేను మీ అగ్రిభారత్ AI వ్యవసాయ సహాయకుడిని. పంట పోషణ, వాతావరణ సూచన, ఎరువులు, నీటిపారుదల మరియు మార్కెట్ సేకరణ గురించి ఏదైనా అడగండి.`;
+    } else if (lang === 'kn') {
+      welcomeText = `ನಮಸ್ಕಾರ ${user?.name || 'ರೈತ ಮಿತ್ರರೆ'}! ನಾನು ನಿಮ್ಮ ಅಗ್ರಿಭಾರತ್ AI ಕೃಷಿ ಸಹಾಯಕ. ಬೆಳೆ ಪೋಷಣೆ, ಹವಾಮಾನ ಮುನ್ಸೂಚನೆ, ರಸಗೊಬ್ಬರ ಮತ್ತು ಮಂಡಿ ಖರೀದಿ ಬಗ್ಗೆ ನೀವು ಕೇಳಬಹುದು.`;
+    } else if (lang === 'ml') {
+      welcomeText = `നമസ്കാരം ${user?.name || 'കർഷക സുഹൃത്തേ'}! ഞാൻ നിങ്ങളുടെ അഗ്രിഭారത് AI കാർഷിക സഹായിയാണ്. വിള പരിപാലനം, കാലാവസ്ഥ, ജലസേചനം, മാണ്ഡി സംഭരണം എന്നിവയെക്കുറിച്ച് ചോദിക്കാം.`;
+    } else if (lang === 'mr') {
+      welcomeText = `नमस्कार ${user?.name || 'शेतकरी मित्र'}! मी आपला अॅग्रीभारत AI कृषी सल्लागार आहे. पीक पोषण, हवामान अंदाज, फवारणी, सिंचन आणि मंडी खरेदीबाबत विचारा.`;
+    } else if (lang === 'bn') {
+      welcomeText = `নমস্কার ${user?.name || 'কৃষক বন্ধু'}! আমি আপনার অ্যাগ্রিভারত এআই কৃষি সহকারী। ফসলের পুষ্টি, আবহাওয়ার পূর্বাভাস, স্প্রে পরামর্শ ও মান্ডি সংগ্রহ সম্পর্কে যে কোনো প্রশ্ন করতে পারেন।`;
+    } else if (lang === 'gu') {
+      welcomeText = `નમસ્તે ${user?.name || 'ખેડૂત મિત્ર'}! હું તમારો એગ્રીભારત AI કૃષિ સહાયક છું. પાક પોષણ, હવામાન, ખાતર, સિંચાઈ અને મંડી ખરીદી વિશે પૂછી શકો છો.`;
+    } else if (lang === 'pa') {
+      welcomeText = `ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ ${user?.name || 'ਕਿਸਾਨ ਵੀਰੋ'}! ਮੈਂ ਤੁਹਾਡਾ ਐਗਰੀਭਾਰਤ AI ਖੇਤੀ ਸਹਾਇਕ ਹਾਂ। ਫ਼ਸਲ ਪੋਸ਼ਣ, ਮੌਸਮ ਦੀ ਭਵਿੱਖਬਾਣੀ, ਖਾਦਾਂ ਅਤੇ ਮੰਡੀ ਖਰੀਦ ਬਾਰੇ ਕੁਝ ਵੀ ਪੁੱਛੋ।`;
+    } else if (lang === 'or') {
+      welcomeText = `ନମସ୍କାର ${user?.name || 'କୃଷକ ଭାଇ'}! ମୁଁ ଆପଣଙ୍କ ଏଗ୍ରିଭାରତ AI କୃଷି ସହାୟକ। ଫସଲ ପୋଷଣ, ପାଣିପାଗ, ଜଳସେଚନ ଓ ମଣ୍ଡି ସଂଗ୍ରହ ବିଷୟରେ ପଚାରନ୍ତୁ।`;
+    } else if (lang === 'as') {
+      welcomeText = `নমস্কাৰ ${user?.name || 'কৃষক বন্ধু'}! মই আপোনাৰ এগ্ৰীভাৰত এআই কৃষি সহায়ক। শস্য পুষ্টি, বতৰৰ পূৰ্বাভাস, সাৰ আৰু মণ্ডী ক্ৰয় সম্পৰ্কে সোধক।`;
+    } else if (lang === 'ur') {
+      welcomeText = `خوش آمدید ${user?.name || 'کسان دوست'}! میں آپ کا ایگری بھارت اے آئی زرعی معاون ہوں۔ فصل کی دیکھ بھال، موسم، کھاد، اسمارٹ آبپاشی یا منڈی خریداری کے بارے میں اردو میں پوچھیں۔`;
+    } else {
+      welcomeText = `Welcome ${user?.name || 'Farmer'}! I am your AgriBharat AI Agricultural Assistant in ${meta.name} (${meta.nativeName}). Ask me anything about your farm, weather, fertilizer schedules, or mandi slots.`;
+    }
+
+    return {
+      id: 'welcome-0',
+      sender: 'ai',
+      text: welcomeText,
+      time: 'Just now',
+      language: lang,
+      isRealAI: false,
+      provider: 'RULE_BASED_LOCAL',
+      providerNotice:
+        'Notice: Grounded in agricultural university agronomy reference data and live satellite weather.',
+    };
+  };
 
   // Load chat history from backend if authenticated
   const loadChatHistory = async () => {
@@ -158,7 +192,7 @@ export const FarmingAssistantView: React.FC = () => {
   }, [token]);
 
   // Handle language switch
-  const handleLanguageToggle = (lang: 'en' | 'ta') => {
+  const handleLanguageToggle = (lang: Language) => {
     setChatLang(lang);
     speechControllerRef.current.stop();
     setSpeakingMessageId(null);
@@ -176,6 +210,30 @@ export const FarmingAssistantView: React.FC = () => {
           'என் கொள்முதல் டோக்கன் மற்றும் வரிசை நிலை என்ன?',
           'காய்ச்சலும் பாய்ச்சலும் (AWD) பாசனம் செய்வது எப்படி?',
           'இலையில் பழுப்பு நிற புள்ளிகள் உள்ளன - இது என்ன நோய்?',
+        ]
+      : chatLang === 'hi'
+      ? [
+          'आज का मौसम देखकर बताएं, क्या कीटनाशक छिड़काव का सही समय है?',
+          'कल्ले फूटने (टिलरिंग) की अवस्था में कौन सा उर्वरक डालना चाहिए?',
+          'मेरी मंडी खरीद टोकन व स्लॉट की वर्तमान स्थिति क्या है?',
+          'कम पानी में धान की वैज्ञानिक सिंचाई (AWD) कैसे करें?',
+          'पत्तियों पर भूरे धब्बे दिखाई दे रहे हैं - यह कौन सा रोग है?',
+        ]
+      : chatLang === 'te'
+      ? [
+          'నేటి వాతావరణం ప్రకారం మందు పిచికారీ చేయడానికి సరైన సమయమా?',
+          'పిలకల దశలో వరికి ఏ ఎరువులు వేయాలి?',
+          'నా మార్కెట్ సేకరణ టోకెన్ మరియు స్లాట్ స్థితి ఏమిటి?',
+          'తక్కువ నీటితో ఆరుతడి (AWD) వరి సాగు ఎలా చేయాలి?',
+          'ఆకులపై గోధుమ రంగు మచ్చలు ఉన్నాయి - ఇది ఏ తెగులు?',
+        ]
+      : chatLang === 'ur'
+      ? [
+          'کیا آج کا موسم دیکھ کر اسپرے کرنا محفوظ ہے؟',
+          'شاخیں نکلنے کے مرحلے پر دھان کو کون سی کھاد ڈالنی چاہیے؟',
+          'میری منڈی خریداری ٹوکن کی موجودہ حیثیت کیا ہے؟',
+          'کم پانی میں اسمارٹ آبپاشی (AWD) کیسے کریں؟',
+          'پتوں پر بھورے دھبے ہیں - یہ کون سی بیماری ہے؟',
         ]
       : [
           'Is foliar spraying safe according to today’s weather?',
@@ -375,8 +433,8 @@ export const FarmingAssistantView: React.FC = () => {
             <div className="flex items-center gap-2">
               <h2 className="font-black text-slate-900 text-sm sm:text-base">
                 {chatLang === 'ta'
-                  ? 'நம்ம விவசாயி AI உதவியாளர்'
-                  : 'Namma Vivasayi AI Agronomist'}
+                  ? 'அக்ரிபாரத் AI உதவியாளர்'
+                  : 'AgriBharat AI Agronomist'}
               </h2>
               {/* Honest provider badge */}
               {isGeminiLiveResponse ? (
@@ -410,27 +468,21 @@ export const FarmingAssistantView: React.FC = () => {
         {/* Language selector & actions */}
         <div className="flex items-center gap-2">
           {/* Language Toggle */}
-          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-bold">
-            <button
-              onClick={() => handleLanguageToggle('ta')}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                chatLang === 'ta'
-                  ? 'bg-emerald-700 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
+          {/* Language Selector Dropdown */}
+          <div className="flex items-center bg-slate-100 px-2 py-1 rounded-xl border border-slate-200 text-xs font-semibold">
+            <Globe className="w-3.5 h-3.5 text-emerald-700 mr-1.5 shrink-0" />
+            <select
+              value={chatLang}
+              onChange={(e) => handleLanguageToggle(e.target.value as Language)}
+              className="bg-transparent text-slate-800 text-xs font-bold focus:outline-hidden cursor-pointer"
+              title="Select Assistant Language / மொழி தேர்வு"
             >
-              தமிழ்
-            </button>
-            <button
-              onClick={() => handleLanguageToggle('en')}
-              className={`px-2.5 py-1 rounded-lg transition-all ${
-                chatLang === 'en'
-                  ? 'bg-emerald-700 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
-            >
-              English
-            </button>
+              {REGIONAL_LANGUAGE_OPTIONS.map((opt) => (
+                <option key={opt.code} value={opt.code}>
+                  {opt.nativeName} ({opt.name})
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Clear history */}
@@ -491,7 +543,7 @@ export const FarmingAssistantView: React.FC = () => {
                   <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-1">
                     <span className="font-bold text-emerald-800 text-[11px] flex items-center gap-1">
                       <Bot className="w-3.5 h-3.5" />
-                      Namma Vivasayi AI
+                      AgriBharat AI
                     </span>
                     <span className="text-[10px] text-slate-400 font-mono">
                       {m.time}

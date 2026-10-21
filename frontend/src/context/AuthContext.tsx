@@ -53,6 +53,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(verifiedUser);
           setToken(storedToken);
           localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(verifiedUser));
+          if (verifiedUser?.preferredLanguage) {
+            localStorage.setItem('namma_vivasayi_lang', verifiedUser.preferredLanguage);
+            window.dispatchEvent(new Event('storage'));
+          }
         }
       } catch {
         // Token expired or invalid
@@ -82,6 +86,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(receivedUser);
     localStorage.setItem(TOKEN_STORAGE_KEY, receivedToken);
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(receivedUser));
+    if (receivedUser?.preferredLanguage) {
+      localStorage.setItem('namma_vivasayi_lang', receivedUser.preferredLanguage);
+      window.dispatchEvent(new Event('storage'));
+    }
 
     return receivedUser;
   };
@@ -95,6 +103,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(receivedUser);
     localStorage.setItem(TOKEN_STORAGE_KEY, receivedToken);
     localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(receivedUser));
+    if (receivedUser?.preferredLanguage) {
+      localStorage.setItem('namma_vivasayi_lang', receivedUser.preferredLanguage);
+      window.dispatchEvent(new Event('storage'));
+    }
 
     return receivedUser;
   };

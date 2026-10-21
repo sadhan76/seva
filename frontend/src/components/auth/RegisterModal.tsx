@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   UserPlus,
   AlertCircle,
@@ -7,22 +7,15 @@ import {
   Lock,
   Phone,
   User,
-  MapPin,
   Globe2,
   Sprout,
   Droplets,
-  Send,
-  Check,
-  ExternalLink,
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import { REGIONAL_LANGUAGE_OPTIONS, IRRIGATION_OPTIONS } from '../../i18n/translations';
 import type { Language } from '../../types';
-import {
-  createTelegramLinkTokenApi,
-  getTelegramLinkStatusApi,
-} from '../../services/api';
+import { GeoLocationSelect, type GeoLocationValue } from '../common/GeoLocationSelect';
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -40,9 +33,15 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
 
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
-  const [village, setVillage] = useState('');
-  const [district, setDistrict] = useState('Thanjavur');
-  const [state, setState] = useState('Tamil Nadu');
+  const [geoLoc, setGeoLoc] = useState<GeoLocationValue>({
+    country: 'India',
+    state: '',
+    stateCode: '',
+    district: '',
+    districtCode: '',
+    village: '',
+    taluk: '',
+  });
   const [prefLang, setPrefLang] = useState<Language>(language);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -57,26 +56,9 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
   ]);
   const [otherIrrigationDetail, setOtherIrrigationDetail] = useState('');
 
-  // Telegram Linking State
-  const [telegramToken, setTelegramToken] = useState<string | null>(null);
-  const [telegramDeepLink, setTelegramDeepLink] = useState<string | null>(null);
-  const [telegramLinked, setTelegramLinked] = useState(false);
-  const [telegramUsername, setTelegramUsername] = useState<string | null>(null);
-  const [isLinkingTelegram, setIsLinkingTelegram] = useState(false);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  const pollIntervalRef = useRef<any>(null);
-
-  useEffect(() => {
-    return () => {
-      if (pollIntervalRef.current) {
-        clearInterval(pollIntervalRef.current);
-      }
-    };
-  }, []);
 
   if (!isOpen) return null;
 
@@ -89,50 +71,6 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         return [...prev, source];
       }
     });
-  };
-
-  const handleStartTelegramLinking = async () => {
-    setErrorMessage(null);
-    const phoneClean = phone.trim().replace(/\D/g, '');
-    if (!/^[6-9]\d{9}$/.test(phoneClean)) {
-      setErrorMessage('Please enter a valid 10-digit mobile number before linking Telegram.');
-      return;
-    }
-
-    setIsLinkingTelegram(true);
-    try {
-      const linkResp = await createTelegramLinkTokenApi(phoneClean, 'registration');
-      setTelegramToken(linkResp.linkToken);
-      setTelegramDeepLink(linkResp.deepLink);
-      window.open(linkResp.deepLink, '_blank', 'noopener,noreferrer');
-
-      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
-      let attempts = 0;
-      pollIntervalRef.current = setInterval(async () => {
-        attempts++;
-        if (attempts > 30) {
-          clearInterval(pollIntervalRef.current);
-          setIsLinkingTelegram(false);
-          return;
-        }
-
-        try {
-          const status = await getTelegramLinkStatusApi(linkResp.linkToken);
-          if (status.linked && status.verified) {
-            clearInterval(pollIntervalRef.current);
-            setTelegramLinked(true);
-            setTelegramUsername(status.telegramUsername || status.telegramFirstName || 'Verified');
-            setIsLinkingTelegram(false);
-            setSuccessMessage('Telegram account linked successfully!');
-          }
-        } catch {
-          // ignore
-        }
-      }, 2500);
-    } catch (err: any) {
-      setIsLinkingTelegram(false);
-      setErrorMessage(err.message || 'Failed to start Telegram linking.');
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -152,8 +90,8 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
       return;
     }
 
-    if (!village.trim() || !district.trim() || !state.trim()) {
-      setErrorMessage('Please fill in your village, district, and state.');
+    if (!geoLoc.state.trim() || !geoLoc.district.trim() || !(geoLoc.village?.trim() || geoLoc.taluk?.trim())) {
+      setErrorMessage('Please select your State/UT, District, and enter your Village/Taluk.');
       return;
     }
 
@@ -195,9 +133,13 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
       await register({
         name: fullName.trim(),
         phone: phoneClean,
-        village: village.trim(),
-        district: district.trim(),
-        state: state.trim(),
+        country: geoLoc.country || 'India',
+        village: geoLoc.village?.trim() || geoLoc.taluk?.trim() || '',
+        taluk: geoLoc.taluk?.trim(),
+        district: geoLoc.district.trim(),
+        districtCode: geoLoc.districtCode,
+        state: geoLoc.state.trim(),
+        stateCode: geoLoc.stateCode,
         preferredLanguage: prefLang,
         password,
         confirmPassword,
@@ -206,7 +148,6 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         soilType: soilType.trim() || 'Alluvial Clay Loam',
         irrigationSources,
         otherIrrigationDetail: irrigationSources.includes('Other') ? otherIrrigationDetail.trim() : undefined,
-        telegramVerifiedToken: telegramLinked && telegramToken ? telegramToken : undefined,
       });
 
       // Synchronize language toggle if preferred language differs
@@ -219,7 +160,12 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
         onClose();
       }, 1200);
     } catch (err: any) {
-      setErrorMessage(err.message || 'Registration failed. Please verify details.');
+      const msg = err.message || '';
+      if (msg.includes('fetch') || msg.includes('Unable to connect') || msg.includes('NetworkError')) {
+        setErrorMessage('Unable to connect to AgriBharat server. Please ensure the backend is running at http://127.0.0.1:8000.');
+      } else {
+        setErrorMessage(err.message || 'Registration failed. Please verify details.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -305,53 +251,14 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
             </div>
           </div>
 
-          {/* Location Grid: Village, District, State */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">
-                {t.auth.villageLabel} <span className="text-rose-500">*</span>
-              </label>
-              <div className="relative">
-                <MapPin className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
-                <input
-                  type="text"
-                  required
-                  value={village}
-                  onChange={(e) => setVillage(e.target.value)}
-                  placeholder="Kabisthalam"
-                  className="w-full pl-8 pr-2.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">
-                {t.auth.districtLabel} <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={district}
-                onChange={(e) => setDistrict(e.target.value)}
-                placeholder="Thanjavur"
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-              />
-            </div>
-
-            <div>
-              <label className="block font-bold text-slate-700 mb-1">
-                {t.auth.stateLabel} <span className="text-rose-500">*</span>
-              </label>
-              <input
-                type="text"
-                required
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                placeholder="Tamil Nadu"
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-              />
-            </div>
-          </div>
+          {/* Complete India-wide Location Selection */}
+          <GeoLocationSelect
+            value={geoLoc}
+            onChange={setGeoLoc}
+            required
+            showAttribution
+            compact
+          />
 
           {/* Preferred Language (16 Options) */}
           <div>
@@ -482,52 +389,15 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
             )}
           </div>
 
-          {/* Telegram Linking Optional Section */}
-          <div className="p-3 bg-sky-50 rounded-2xl border border-sky-200 space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="font-bold text-sky-900 flex items-center gap-1.5 text-xs">
-                <Send className="w-3.5 h-3.5 text-sky-600" />
-                Telegram Fast OTP Sign-in (Optional)
-              </span>
-              {telegramLinked ? (
-                <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <Check className="w-3 h-3 text-emerald-600" />
-                  @{telegramUsername}
-                </span>
-              ) : null}
-            </div>
-            {!telegramLinked ? (
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  disabled={isLinkingTelegram}
-                  onClick={handleStartTelegramLinking}
-                  className="py-1 px-3 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 disabled:opacity-50"
-                >
-                  {isLinkingTelegram ? (
-                    <>
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                      Waiting for Bot /start...
-                    </>
-                  ) : (
-                    <>
-                      <ExternalLink className="w-3 h-3" />
-                      Link Telegram via Bot
-                    </>
-                  )}
-                </button>
-                {telegramDeepLink && (
-                  <a
-                    href={telegramDeepLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[11px] text-sky-700 underline font-semibold"
-                  >
-                    Reopen Bot Link
-                  </a>
-                )}
-              </div>
-            ) : null}
+          {/* Account Security & Phone Ownership Disclosure */}
+          <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-1">
+            <span className="font-bold text-slate-800 flex items-center gap-1.5 text-xs">
+              <Lock className="w-3.5 h-3.5 text-emerald-600" />
+              Account Security Notice
+            </span>
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Your farmer profile is secured by your chosen password. Phone ownership is not verified as no SMS provider is currently active.
+            </p>
           </div>
 
           {/* Password & Confirm Password */}

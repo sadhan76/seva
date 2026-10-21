@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Sprout,
   LogIn,
@@ -12,41 +12,18 @@ import {
   Eye,
   EyeOff,
   User,
-  MapPin,
   Sparkles,
   CheckCircle2,
   ShieldAlert,
-  Send,
-  ExternalLink,
-  Check,
   Globe2,
   Droplets,
-  ShieldCheck,
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import { LanguageToggle } from '../common/LanguageToggle';
 import { REGIONAL_LANGUAGE_OPTIONS, IRRIGATION_OPTIONS } from '../../i18n/translations';
 import type { Language } from '../../types';
-import {
-  getTelegramStatusApi,
-  createTelegramLinkTokenApi,
-  getTelegramLinkStatusApi,
-  sendTelegramOtpApi,
-  type TelegramStatusResponse,
-} from '../../services/api';
-
-const TN_DISTRICTS = [
-  'Thanjavur', 'Tiruvarur', 'Nagapattinam', 'Tiruchirappalli',
-  'Madurai', 'Coimbatore', 'Erode', 'Salem', 'Cuddalore',
-  'Tirunelveli', 'Dharmapuri', 'Chennai', 'Dindigul', 'Theni',
-  'Pudukkottai', 'Ariyalur', 'Perambalur', 'Namakkal', 'Karur',
-  'Tiruppur', 'Villupuram', 'Kallakurichi', 'Vellore', 'Ranipet',
-  'Tirupathur', 'Tiruvannamalai', 'Kanchipuram', 'Chengalpattu',
-  'Tiruvallur', 'Krishnagiri', 'Tenkasi', 'Ramanathapuram',
-  'Sivaganga', 'Virudhunagar', 'Thoothukudi', 'Kanniyakumari',
-  'Nilgiris', 'Mayiladuthurai'
-];
+import { GeoLocationSelect, type GeoLocationValue } from '../common/GeoLocationSelect';
 
 interface LoginPageProps {
   initialMode?: 'signin' | 'register';
@@ -60,25 +37,22 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
 
   // Sign-in state
   const [role, setRole] = useState<'farmer' | 'staff'>('farmer');
-  const [phone, setPhone] = useState('9876543299');
-  const [authMethod, setAuthMethod] = useState<'password' | 'telegram_otp'>('password');
-  const [password, setPassword] = useState('FarmerPassword@123');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
-  // Telegram OTP state
-  const [telegramOtp, setTelegramOtp] = useState('');
-  const [isSendingOtp, setIsSendingOtp] = useState(false);
-  const [otpSent, setOtpSent] = useState(false);
-  const [otpCooldown, setOtpCooldown] = useState(0);
-  const [maskedChat, setMaskedChat] = useState<string | null>(null);
-  const [telegramStatus, setTelegramStatus] = useState<TelegramStatusResponse | null>(null);
 
   // Registration state
   const [regName, setRegName] = useState('');
   const [regPhone, setRegPhone] = useState('');
-  const [regVillage, setRegVillage] = useState('');
-  const [regDistrict, setRegDistrict] = useState('Thanjavur');
-  const [regState] = useState('Tamil Nadu');
+  const [regLoc, setRegLoc] = useState<GeoLocationValue>({
+    country: 'India',
+    state: '',
+    stateCode: '',
+    district: '',
+    districtCode: '',
+    village: '',
+    taluk: '',
+  });
   const [regPrefLang, setRegPrefLang] = useState<Language>(language);
   const [regPassword, setRegPassword] = useState('');
   const [regConfirmPassword, setRegConfirmPassword] = useState('');
@@ -94,62 +68,21 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
   ]);
   const [regOtherIrrigationDetail, setRegOtherIrrigationDetail] = useState('');
 
-  // Telegram Registration Linking
-  const [regTelegramToken, setRegTelegramToken] = useState<string | null>(null);
-  const [regTelegramDeepLink, setRegTelegramDeepLink] = useState<string | null>(null);
-  const [regTelegramLinked, setRegTelegramLinked] = useState(false);
-  const [regTelegramUsername, setRegTelegramUsername] = useState<string | null>(null);
-  const [isLinkingTelegram, setIsLinkingTelegram] = useState(false);
-
   // Loading & error state
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const pollIntervalRef = useRef<any>(null);
+  // Handle Role Selection without injecting credentials
+  const handleSelectRole = (targetRole: 'farmer' | 'staff') => {
+    setRole(targetRole);
+    setErrorMessage(null);
+  };
 
-  // Load Telegram Server Status
-  useEffect(() => {
-    let isMounted = true;
-    getTelegramStatusApi()
-      .then((status) => {
-        if (isMounted) setTelegramStatus(status);
-      })
-      .catch(() => {
-        if (isMounted) {
-          setTelegramStatus({
-            configured: false,
-            message: 'Telegram service unavailable. Password login is active.',
-          });
-        }
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  // Cooldown countdown timer
-  useEffect(() => {
-    if (otpCooldown > 0) {
-      const timer = setTimeout(() => setOtpCooldown((prev) => prev - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [otpCooldown]);
-
-  // Clean up Telegram Link Polling on unmount
-  useEffect(() => {
-    return () => {
-      if (pollIntervalRef.current) {
-        clearInterval(pollIntervalRef.current);
-      }
-    };
-  }, []);
-
-  // Handle Quick Demo Fill
+  // Handle Quick Demo Fill (Local Development Helper Only)
   const handleQuickDemo = (demoRole: 'farmer' | 'staff') => {
     setRole(demoRole);
     setErrorMessage(null);
-    setAuthMethod('password');
     if (demoRole === 'farmer') {
       setPhone('9876543299');
       setPassword('FarmerPassword@123');
@@ -171,35 +104,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
     });
   };
 
-  // Send Telegram OTP handler
-  const handleSendTelegramOtp = async () => {
-    setErrorMessage(null);
-    const cleanPhone = phone.trim().replace(/\D/g, '');
-    if (!cleanPhone || cleanPhone.length !== 10) {
-      setErrorMessage(
-        language === 'ta'
-          ? 'சரியான 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.'
-          : 'Please enter a valid 10-digit mobile number.'
-      );
-      return;
-    }
-
-    setIsSendingOtp(true);
-    try {
-      const res = await sendTelegramOtpApi(cleanPhone, 'login');
-      setOtpSent(true);
-      setMaskedChat(res.maskedChat);
-      setOtpCooldown(res.cooldownSeconds || 60);
-      setSuccessMessage(
-        res.message || (language === 'ta' ? 'OTP உங்கள் டெலிகிராம் கணக்கிற்கு அனுப்பப்பட்டது.' : 'OTP sent to your verified Telegram account.')
-      );
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Failed to dispatch Telegram OTP.');
-    } finally {
-      setIsSendingOtp(false);
-    }
-  };
-
   // Sign In Handler
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,100 +119,37 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
       return;
     }
 
-    if (authMethod === 'password') {
-      if (!password.trim()) {
-        setErrorMessage(
-          language === 'ta'
-            ? 'கடவுச்சொல்லை உள்ளிடவும்.'
-            : 'Please enter your password.'
-        );
-        return;
-      }
-    } else {
-      if (!telegramOtp.trim() || telegramOtp.trim().length !== 6) {
-        setErrorMessage(
-          language === 'ta'
-            ? 'டெலிகிராமில் பெறப்பட்ட 6 இலக்க OTP ஐ உள்ளிடவும்.'
-            : 'Please enter the 6-digit Telegram OTP.'
-        );
-        return;
-      }
+    if (!password.trim()) {
+      setErrorMessage(
+        language === 'ta'
+          ? 'கடவுச்சொல்லை உள்ளிடவும்.'
+          : 'Please enter your password.'
+      );
+      return;
     }
 
     setIsSubmitting(true);
     try {
       await login({
         phone: cleanPhone,
-        password: authMethod === 'password' ? password.trim() : undefined,
+        password: password.trim(),
         role,
-        authMethod,
-        telegramOtp: authMethod === 'telegram_otp' ? telegramOtp.trim() : undefined,
       });
     } catch (err: any) {
-      setErrorMessage(
-        err.message || (language === 'ta' ? 'உள்நுழைவு தோல்வியடைந்தது. விவரங்களை சரிபார்க்கவும்.' : 'Authentication failed. Please verify credentials.')
-      );
+      const msg = err.message || '';
+      if (msg.includes('fetch') || msg.includes('Unable to connect') || msg.includes('NetworkError')) {
+        setErrorMessage(
+          language === 'ta'
+            ? 'அக்ரிபாரத் சேவையகத்துடன் இணைக்க முடியவில்லை. பின்தள சேவையகம் (http://127.0.0.1:8000) இயங்குவதை உறுதிசெய்யவும்.'
+            : 'Unable to connect to AgriBharat backend server. Please ensure the backend is running at http://127.0.0.1:8000.'
+        );
+      } else {
+        setErrorMessage(
+          err.message || (language === 'ta' ? 'உள்நுழைவு தோல்வியடைந்தது. விவரங்களை சரிபார்க்கவும்.' : 'Authentication failed. Please verify credentials.')
+        );
+      }
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  // Start Telegram Account Linking during Registration
-  const handleStartTelegramLinking = async () => {
-    setErrorMessage(null);
-    const cleanPhone = regPhone.trim().replace(/\D/g, '');
-    if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
-      setErrorMessage(
-        language === 'ta'
-          ? 'டெலிகிராம் இணைப்பிற்கு முன் 10 இலக்க மொபைல் எண்ணை உள்ளிடவும்.'
-          : 'Please enter a valid 10-digit mobile number before linking Telegram.'
-      );
-      return;
-    }
-
-    setIsLinkingTelegram(true);
-    try {
-      const linkResp = await createTelegramLinkTokenApi(cleanPhone, 'registration');
-      setRegTelegramToken(linkResp.linkToken);
-      setRegTelegramDeepLink(linkResp.deepLink);
-
-      // Open Telegram link in new window / tab
-      window.open(linkResp.deepLink, '_blank', 'noopener,noreferrer');
-
-      // Start polling for verification status
-      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
-      const tokenToPoll = linkResp.linkToken;
-      
-      let attempts = 0;
-      pollIntervalRef.current = setInterval(async () => {
-        attempts++;
-        if (attempts > 30) {
-          // 30 attempts * 2.5s = 75 seconds timeout
-          clearInterval(pollIntervalRef.current);
-          setIsLinkingTelegram(false);
-          return;
-        }
-
-        try {
-          const status = await getTelegramLinkStatusApi(tokenToPoll);
-          if (status.linked && status.verified) {
-            clearInterval(pollIntervalRef.current);
-            setRegTelegramLinked(true);
-            setRegTelegramUsername(status.telegramUsername || status.telegramFirstName || 'Verified');
-            setIsLinkingTelegram(false);
-            setSuccessMessage(
-              language === 'ta'
-                ? 'டெலிகிராம் கணக்கு வெற்றிகரமாக இணைக்கப்பட்டது!'
-                : 'Telegram account verified and linked successfully!'
-            );
-          }
-        } catch {
-          // Ignore polling errors
-        }
-      }, 2500);
-    } catch (err: any) {
-      setIsLinkingTelegram(false);
-      setErrorMessage(err.message || 'Failed to generate Telegram linking token.');
     }
   };
 
@@ -333,11 +174,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
       return;
     }
 
-    if (!regVillage.trim() || !regDistrict.trim()) {
+    if (!regLoc.state.trim() || !regLoc.district.trim() || !(regLoc.village?.trim() || regLoc.taluk?.trim())) {
       setErrorMessage(
         language === 'ta'
-          ? 'உங்கள் கிராமம் மற்றும் மாவட்டத்தை உள்ளிடவும்.'
-          : 'Please enter your village and select your district.'
+          ? 'உங்கள் மாநிலம், மாவட்டம் மற்றும் கிராமத்தை உள்ளிடவும்/தேர்ந்தெடுக்கவும்.'
+          : 'Please select your State/UT, District, and enter your Village/Taluk.'
       );
       return;
     }
@@ -404,9 +245,13 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
       await register({
         name: regName.trim(),
         phone: cleanPhone,
-        village: regVillage.trim(),
-        district: regDistrict.trim(),
-        state: regState,
+        country: regLoc.country || 'India',
+        village: regLoc.village?.trim() || regLoc.taluk?.trim() || '',
+        taluk: regLoc.taluk?.trim(),
+        district: regLoc.district.trim(),
+        districtCode: regLoc.districtCode,
+        state: regLoc.state.trim(),
+        stateCode: regLoc.stateCode,
         preferredLanguage: regPrefLang,
         password: regPassword,
         confirmPassword: regConfirmPassword,
@@ -415,7 +260,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
         soilType: regSoilType.trim() || 'Alluvial Clay Loam',
         irrigationSources: regIrrigationSources,
         otherIrrigationDetail: regIrrigationSources.includes('Other') ? regOtherIrrigationDetail.trim() : undefined,
-        telegramVerifiedToken: regTelegramLinked && regTelegramToken ? regTelegramToken : undefined,
       });
 
       // Synchronize language state if user selected a different regional language
@@ -429,9 +273,18 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
           : 'Farmer account registered successfully! Opening your dashboard...'
       );
     } catch (err: any) {
-      setErrorMessage(
-        err.message || (language === 'ta' ? 'பதிவு தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.' : 'Registration failed. Please check your inputs.')
-      );
+      const msg = err.message || '';
+      if (msg.includes('fetch') || msg.includes('Unable to connect') || msg.includes('NetworkError')) {
+        setErrorMessage(
+          language === 'ta'
+            ? 'அக்ரிபாரத் சேவையகத்துடன் இணைக்க முடியவில்லை. பின்தள சேவையகம் (http://127.0.0.1:8000) இயங்குவதை உறுதிசெய்யவும்.'
+            : 'Unable to connect to AgriBharat backend server. Please ensure the backend is running at http://127.0.0.1:8000.'
+        );
+      } else {
+        setErrorMessage(
+          err.message || (language === 'ta' ? 'பதிவு தோல்வியடைந்தது. மீண்டும் முயற்சிக்கவும்.' : 'Registration failed. Please check your inputs.')
+        );
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -485,8 +338,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
             <p className="text-xs text-slate-500 max-w-md mx-auto">
               {mode === 'signin'
                 ? (language === 'ta'
-                    ? 'உங்கள் பதிவுசெய்யப்பட்ட மொபைல் எண் மற்றும் கடவுச்சொல் அல்லது டெலிகிராம் OTP ஐப் பயன்படுத்தி தொடரவும்.'
-                    : 'Access your personalized farm advisory, live weather, and mandi procurement slots with Password or Telegram OTP.')
+                    ? 'உங்கள் பதிவுசெய்யப்பட்ட மொபைல் எண் மற்றும் கடவுச்சொல்லைப் பயன்படுத்தி தொடரவும்.'
+                    : 'Access your personalized farm advisory, live weather, and mandi procurement slots with your mobile number and password.')
                 : (language === 'ta'
                     ? 'தமிழ்நாடு உழவர் அட்டை மற்றும் கொள்முதல் முன்பதிவுகளுக்கான புதிய பதிவு.'
                     : 'Create your digital farmer profile with multi-source irrigation and 16 regional languages.')}
@@ -559,7 +412,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
                 <div className="grid grid-cols-2 gap-2 p-1 bg-slate-50 rounded-2xl border border-slate-200">
                   <button
                     type="button"
-                    onClick={() => handleQuickDemo('farmer')}
+                    onClick={() => handleSelectRole('farmer')}
                     className={`py-2 px-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
                       role === 'farmer'
                         ? 'bg-white text-emerald-800 border border-emerald-300 shadow-xs'
@@ -571,7 +424,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleQuickDemo('staff')}
+                    onClick={() => handleSelectRole('staff')}
                     className={`py-2 px-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
                       role === 'staff'
                         ? 'bg-white text-purple-800 border border-purple-300 shadow-xs'
@@ -584,83 +437,44 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
                 </div>
               </div>
 
-              {/* Demo Credentials Helper */}
-              <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-wrap items-center justify-between gap-2">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                  DEMO FILL:
-                </span>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => handleQuickDemo('farmer')}
-                    className={`text-[11px] px-2.5 py-1 rounded-lg border font-bold transition-all ${
-                      role === 'farmer'
-                        ? 'bg-emerald-100 text-emerald-900 border-emerald-300'
-                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
-                    Farmer (Murugesan)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleQuickDemo('staff')}
-                    className={`text-[11px] px-2.5 py-1 rounded-lg border font-bold transition-all ${
-                      role === 'staff'
-                        ? 'bg-purple-100 text-purple-900 border-purple-300'
-                        : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
-                    Staff Inspector (Ramesh)
-                  </button>
+              {/* Demo Credentials Helper (Local Development Only) */}
+              {import.meta.env.DEV && (
+                <div className="p-3 rounded-2xl bg-slate-50 border border-slate-200/80 flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    LOCAL DEV FILL:
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleQuickDemo('farmer')}
+                      className={`text-[11px] px-2.5 py-1 rounded-lg border font-bold transition-all ${
+                        role === 'farmer'
+                          ? 'bg-emerald-100 text-emerald-900 border-emerald-300'
+                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                      }`}
+                    >
+                      Farmer (Murugesan)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleQuickDemo('staff')}
+                      className={`text-[11px] px-2.5 py-1 rounded-lg border font-bold transition-all ${
+                        role === 'staff'
+                          ? 'bg-purple-100 text-purple-900 border-purple-300'
+                          : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                      }`}
+                    >
+                      Staff Inspector (Ramesh)
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {/* Auth Method Sub-Toggle: Password vs Telegram OTP */}
-              <div>
-                <label className="block font-bold text-slate-700 mb-1.5">
-                  {language === 'ta' ? 'உள்நுழைவு முறை:' : 'Authentication Method:'}
-                </label>
-                <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl border border-slate-200 text-xs font-semibold">
-                  <button
-                    type="button"
-                    id="auth-method-password"
-                    onClick={() => {
-                      setAuthMethod('password');
-                      setErrorMessage(null);
-                    }}
-                    className={`py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
-                      authMethod === 'password'
-                        ? 'bg-white text-slate-900 shadow-xs font-bold'
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <Lock className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Password</span>
-                  </button>
-                  <button
-                    type="button"
-                    id="auth-method-telegram"
-                    onClick={() => {
-                      setAuthMethod('telegram_otp');
-                      setErrorMessage(null);
-                    }}
-                    className={`py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
-                      authMethod === 'telegram_otp'
-                        ? 'bg-white text-sky-800 shadow-xs font-bold'
-                        : 'text-slate-600 hover:text-slate-900'
-                    }`}
-                  >
-                    <Send className="w-3.5 h-3.5 text-sky-600" />
-                    <span>Telegram OTP</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Mobile Input */}
+              {/* Mobile Number Input */}
               <div>
                 <label htmlFor="login-phone" className="block font-bold text-slate-700 mb-1">
-                  {language === 'ta' ? 'பதிவுசெய்த மொபைல் எண்:' : 'Registered 10-Digit Mobile Number:'}
+                  {language === 'ta' ? 'மொபைல் எண்:' : 'Mobile Number:'}
                 </label>
                 <div className="relative">
                   <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -670,112 +484,39 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
                     required
                     maxLength={10}
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
-                    placeholder="9876543210"
+                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                    placeholder="e.g. 9876543210"
                     className="w-full pl-10 pr-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-900"
                   />
                 </div>
               </div>
 
-              {/* PASSWORD LOGIN FORM */}
-              {authMethod === 'password' ? (
-                <div>
-                  <label htmlFor="login-password" className="block font-bold text-slate-700 mb-1">
-                    {language === 'ta' ? 'கடவுச்சொல்:' : 'Password:'}
-                  </label>
-                  <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                    <input
-                      id="login-password"
-                      type={showPassword ? 'text' : 'password'}
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="••••••••"
-                      className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-900"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3.5 top-2.5 text-slate-400 hover:text-slate-600 p-0.5"
-                      aria-label="Toggle password visibility"
-                    >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                    </button>
-                  </div>
+              {/* Password Input */}
+              <div>
+                <label htmlFor="login-password" className="block font-bold text-slate-700 mb-1">
+                  {language === 'ta' ? 'கடவுச்சொல்:' : 'Password:'}
+                </label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+                  <input
+                    id="login-password"
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-slate-900"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-2.5 text-slate-400 hover:text-slate-600 p-0.5"
+                    aria-label="Toggle password visibility"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
-              ) : (
-                /* TELEGRAM OTP LOGIN FORM */
-                <div className="space-y-3 p-3.5 bg-sky-50/60 rounded-2xl border border-sky-200">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 font-bold text-sky-900">
-                      <Send className="w-4 h-4 text-sky-600" />
-                      <span>Telegram Instant OTP</span>
-                    </div>
-                    {telegramStatus && !telegramStatus.configured && (
-                      <span className="text-[10px] font-semibold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full border border-amber-200">
-                        Bot Offline
-                      </span>
-                    )}
-                  </div>
-
-                  {telegramStatus && !telegramStatus.configured ? (
-                    <p className="text-[11px] text-amber-900 bg-amber-50 p-2.5 rounded-xl border border-amber-200">
-                      Telegram bot is not configured on this server. Please switch to <strong>Password</strong> login above.
-                    </p>
-                  ) : (
-                    <>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          id="send-telegram-otp-btn"
-                          disabled={isSendingOtp || otpCooldown > 0}
-                          onClick={handleSendTelegramOtp}
-                          className="flex-1 py-2 px-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold shadow-xs transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
-                        >
-                          {isSendingOtp ? (
-                            <>
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                              <span>Sending OTP...</span>
-                            </>
-                          ) : otpCooldown > 0 ? (
-                            <span>Resend in {otpCooldown}s</span>
-                          ) : (
-                            <>
-                              <Send className="w-3.5 h-3.5" />
-                              <span>{otpSent ? 'Resend OTP' : 'Request Telegram OTP'}</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
-
-                      {maskedChat && (
-                        <p className="text-[11px] text-sky-800 bg-sky-100/70 px-2.5 py-1.5 rounded-lg font-medium">
-                          ✓ OTP dispatched to verified chat: <strong className="font-mono">{maskedChat}</strong>
-                        </p>
-                      )}
-
-                      <div>
-                        <label htmlFor="telegram-otp-input" className="block font-bold text-slate-700 mb-1">
-                          6-Digit OTP Code:
-                        </label>
-                        <input
-                          id="telegram-otp-input"
-                          type="text"
-                          maxLength={6}
-                          value={telegramOtp}
-                          onChange={(e) => setTelegramOtp(e.target.value.replace(/\D/g, ''))}
-                          placeholder="123456"
-                          className="w-full tracking-widest text-center text-lg font-mono font-black py-2 bg-white border border-sky-300 rounded-xl focus:ring-2 focus:ring-sky-500/20 text-slate-900"
-                        />
-                        <p className="text-[10px] text-slate-500 mt-1">
-                          Expires in 5 minutes • Max 3 attempts • Single-use cryptographic invalidation
-                        </p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
+              </div>
 
               {/* Submit Button */}
               <button
@@ -793,9 +534,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
                   <>
                     <LogIn className="w-4 h-4" />
                     <span>
-                      {authMethod === 'password'
-                        ? (language === 'ta' ? 'உள்நுழைக' : 'Sign In to Dashboard')
-                        : (language === 'ta' ? 'OTP சரிபார்த்து உள்நுழைக' : 'Verify OTP & Enter Dashboard')}
+                      {language === 'ta' ? 'உள்நுழைக' : 'Sign In to Dashboard'}
                     </span>
                   </>
                 )}
@@ -827,8 +566,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
                 <ShieldAlert className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                 <p className="text-[11px] leading-relaxed">
                   {language === 'ta'
-                    ? 'பொது பதிவு தமிழ்நாடு விவசாயிகளுக்கானது மட்டுமே. கொள்முதல் நிலைய ஊழியர் கணக்குகள் நிர்வாகத்தால் மட்டுமே ஒதுக்கப்படும்.'
-                    : 'Public registration is exclusively for farmers. Staff accounts are assigned directly by the Mandi Procurement Administration.'}
+                    ? 'பொது பதிவு விவசாயிகளுக்கானது மட்டுமே. கொள்முதல் நிலைய ஊழியர் கணக்குகள் நிர்வாகத்தால் மட்டுமே ஒதுக்கப்படும்.'
+                    : 'Public registration is exclusively for farmers across all Indian States & Union Territories. Staff accounts are assigned directly by the Mandi Procurement Administration.'}
                 </p>
               </div>
 
@@ -870,40 +609,14 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
                   </div>
                 </div>
 
-                {/* Village / Taluk */}
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    {language === 'ta' ? 'கிராமம் / தாலுகா *' : 'Village / Taluk *'}
-                  </label>
-                  <div className="relative">
-                    <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                    <input
-                      type="text"
-                      required
-                      value={regVillage}
-                      onChange={(e) => setRegVillage(e.target.value)}
-                      placeholder="e.g. Kabisthalam"
-                      className="w-full pl-10 pr-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                    />
-                  </div>
-                </div>
-
-                {/* District */}
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    {language === 'ta' ? 'மாவட்டம் *' : 'District *'}
-                  </label>
-                  <select
-                    value={regDistrict}
-                    onChange={(e) => setRegDistrict(e.target.value)}
-                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                  >
-                    {TN_DISTRICTS.map((d) => (
-                      <option key={d} value={d}>
-                        {d}
-                      </option>
-                    ))}
-                  </select>
+                {/* Complete India-wide Location Selection */}
+                <div className="sm:col-span-2">
+                  <GeoLocationSelect
+                    value={regLoc}
+                    onChange={setRegLoc}
+                    required
+                    showAttribution
+                  />
                 </div>
 
                 {/* Preferred Regional Language (16 Languages) */}
@@ -911,11 +624,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
                   <label className="block font-bold text-slate-700 mb-1 flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <Globe2 className="w-3.5 h-3.5 text-emerald-600" />
-                      {language === 'ta' ? 'விருப்பமான பிராந்திய மொழி (16 மொழிகள்) *' : 'Preferred Regional Language (16 Languages) *'}
+                      {language === 'ta' ? 'விருப்பமான பிராந்திய மொழி (22 அட்டவணை மொழிகள் + ஆங்கிலம்) *' : 'Preferred Regional Language (22 Eighth Schedule + English) *'}
                     </span>
-                    {selectedLangOption && !selectedLangOption.isFullyTranslated && (
-                      <span className="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
-                        AI & Voice Active • UI in English/Tamil
+                    {selectedLangOption && (
+                      <span className="text-[10px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                        {selectedLangOption.tier === 'full' ? 'Full UI (100%)' : selectedLangOption.tier === 'core' ? `Core UI (${selectedLangOption.coveragePercent}%)` : `Essential (${selectedLangOption.coveragePercent}%)`}
+                        {selectedLangOption.direction === 'rtl' ? ' • RTL' : ''}
                       </span>
                     )}
                   </label>
@@ -927,12 +641,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
                   >
                     {REGIONAL_LANGUAGE_OPTIONS.map((opt) => (
                       <option key={opt.code} value={opt.code}>
-                        {opt.name} ({opt.nativeName}) {opt.isFullyTranslated ? '• Full UI' : '• AI & Voice'}
+                        {opt.nativeName} — {opt.name} {opt.direction === 'rtl' ? '(RTL)' : ''} ({opt.tier === 'full' ? 'Full UI' : opt.tier === 'core' ? `Core UI ${opt.coveragePercent}%` : `Essential ${opt.coveragePercent}%`})
                       </option>
                     ))}
                   </select>
                   <p className="text-[10px] text-slate-500 mt-1">
-                    Gemini AI Assistant, speech synthesis, and voice recognition will interact in your selected language.
+                    AgriBharat AI assistant, weather alerts, and application screens will personalize to your selected language.
                   </p>
                 </div>
 
@@ -1092,69 +806,21 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
                   )}
                 </div>
 
-                {/* Optional Telegram Account Linking Section */}
-                <div className="p-3.5 rounded-2xl bg-gradient-to-r from-sky-50 to-indigo-50 border border-sky-200 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-lg bg-sky-500 text-white flex items-center justify-center">
-                        <Send className="w-3.5 h-3.5" />
-                      </div>
-                      <span className="font-bold text-sky-900 text-xs">
-                        Telegram Fast Authentication (Optional)
-                      </span>
+                {/* Account Security & Phone Ownership Disclosure */}
+                <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+                      <Lock className="w-3.5 h-3.5" />
                     </div>
-                    {regTelegramLinked ? (
-                      <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-300 flex items-center gap-1">
-                        <Check className="w-3 h-3 text-emerald-600" />
-                        Verified: @{regTelegramUsername}
-                      </span>
-                    ) : (
-                      <span className="text-[10px] text-slate-500 font-medium">Recommended</span>
-                    )}
+                    <span className="font-bold text-slate-800 text-xs">
+                      {language === 'ta' ? 'கடவுச்சொல் பாதுகாப்பு மற்றும் சரிபார்ப்பு அறிவிப்பு' : 'Account Security & Phone Ownership Notice'}
+                    </span>
                   </div>
-
-                  <p className="text-[11px] text-slate-600 leading-relaxed">
-                    Link your Telegram account now for passwordless OTP sign-in, mandi queue notifications, and automated harvest alerts.
+                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                    {language === 'ta'
+                      ? 'உங்கள் விவசாயி கணக்கு நீங்கள் தேர்ந்தெடுத்த கடவுச்சொல்லால் பாதுகாக்கப்படுகிறது. SMS சரிபார்ப்பு சேவை செயலில் இல்லை என்பதால் மொபைல் எண் சரிபார்க்கப்படாத நிலையில் உள்ளது.'
+                      : 'Your farmer profile is secured by your chosen password. Phone ownership is not verified as no SMS provider is currently active.'}
                   </p>
-
-                  {!regTelegramLinked ? (
-                    <div className="flex items-center gap-2 pt-1">
-                      <button
-                        type="button"
-                        id="link-telegram-register-btn"
-                        disabled={isLinkingTelegram}
-                        onClick={handleStartTelegramLinking}
-                        className="py-1.5 px-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 disabled:opacity-50 shadow-xs"
-                      >
-                        {isLinkingTelegram ? (
-                          <>
-                            <Loader2 className="w-3 h-3 animate-spin" />
-                            <span>Awaiting Bot Verification...</span>
-                          </>
-                        ) : (
-                          <>
-                            <ExternalLink className="w-3 h-3" />
-                            <span>Link Telegram via Bot</span>
-                          </>
-                        )}
-                      </button>
-                      {regTelegramDeepLink && (
-                        <a
-                          href={regTelegramDeepLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[11px] text-sky-700 underline font-semibold"
-                        >
-                          Reopen Bot Link
-                        </a>
-                      )}
-                    </div>
-                  ) : (
-                    <div className="p-2 bg-emerald-50 rounded-xl border border-emerald-200 text-emerald-900 text-[11px] flex items-center gap-2">
-                      <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                      <span>Telegram token securely attached to your farmer registration.</span>
-                    </div>
-                  )}
                 </div>
               </div>
 
@@ -1200,7 +866,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
 
       {/* Footer */}
       <footer className="py-4 text-center text-xs text-slate-400 border-t border-slate-200/60 bg-white/60">
-        <p>Namma Vivasayi AI • Secure Authentication & Role Isolation • Government of Tamil Nadu Agro Platform</p>
+        <p>AgriBharat • Secure Authentication & Role Isolation • Smart Farming Intelligence & Agricultural Marketplace</p>
       </footer>
     </div>
   );

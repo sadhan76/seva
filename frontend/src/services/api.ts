@@ -1,11 +1,95 @@
-import type { InAppNotification, SMSStatusInfo } from '../types';
+import type { 
+  InAppNotification, 
+  SMSStatusInfo, 
+  NotificationPreferences, 
+  PushStatusInfo, 
+  IrrigationAlertCheckSummary,
+  FarmerSupportContent,
+  FarmerSupportResponse,
+  MarketplaceListing,
+  MarketplaceResponse,
+  MarketplaceListingCreate,
+  MarketplaceListingReportRequest,
+  MarketplaceOrderRequestCreate,
+  MarketplaceOrderRequest,
+  SpecialOperationJourney,
+  SpecialOperationStepUpdateRequest,
+  SpecialOperationCropRecommendation,
+  SpecialOperationCropGuide,
+  SpecialOperationTimeline,
+  JourneyObservation,
+  BusinessIdeaMatchRequest,
+  BusinessIdeaMatchResponse,
+  BusinessPlanWizardData,
+  BusinessPlanCalculationResult,
+  BusinessPlanCalculationRequest,
+  BusinessPlanModel,
+  BusinessPlanCreateRequest,
+  BusinessPlanUpdateRequest,
+  ValueAdditionProductBlueprint,
+  ValueAdditionCalculationRequest,
+  ValueAdditionCalculationResponse,
+  GeoDistrictItem,
+  GeoStateItem,
+  GeoMetaResponse,
+  Language,
+} from '../types';
 
-export type { InAppNotification, SMSStatusInfo };
+export type { 
+  GeoDistrictItem,
+  GeoStateItem,
+  GeoMetaResponse,
+};
+
+export type { 
+  InAppNotification, 
+  SMSStatusInfo, 
+  NotificationPreferences, 
+  PushStatusInfo, 
+  IrrigationAlertCheckSummary,
+  FarmerSupportContent,
+  FarmerSupportResponse,
+  MarketplaceListing,
+  MarketplaceResponse,
+  MarketplaceListingCreate,
+  MarketplaceListingReportRequest,
+  MarketplaceOrderRequestCreate,
+  MarketplaceOrderRequest,
+  SpecialOperationJourney,
+  SpecialOperationStepUpdateRequest,
+  SpecialOperationCropRecommendation,
+  SpecialOperationCropGuide,
+  SpecialOperationTimeline,
+  JourneyObservation,
+  BusinessIdeaMatchRequest,
+  BusinessIdeaMatchResponse,
+  BusinessPlanWizardData,
+  BusinessPlanCalculationResult,
+  BusinessPlanCalculationRequest,
+  BusinessPlanModel,
+  BusinessPlanCreateRequest,
+  BusinessPlanUpdateRequest,
+  ValueAdditionProductBlueprint,
+  ValueAdditionCalculationRequest,
+  ValueAdditionCalculationResponse,
+};
+
+import localGeoDirectory from '../data/indiaGeographicDirectory.json';
+
+const getDefaultApiUrl = (): string => {
+  if (typeof window !== 'undefined') {
+    // When running inside Vite dev server or browser preview, prefer relative /api proxy
+    if (window.location.port === '5173' || window.location.port === '5174') {
+      return '/api';
+    }
+  }
+  return 'http://127.0.0.1:8000/api';
+};
 
 const rawApiUrl =
   import.meta.env.VITE_API_URL ||
   import.meta.env.VITE_API_BASE_URL ||
-  'http://localhost:8000/api';
+  getDefaultApiUrl();
 const cleanApiUrl = rawApiUrl.replace(/\/+$/, '');
 const API_BASE_URL = cleanApiUrl.endsWith('/api') ? cleanApiUrl : `${cleanApiUrl}/api`;
 
@@ -27,23 +111,38 @@ export interface UserSummary {
   phone: string;
   role: 'farmer' | 'staff';
   preferredLanguage: string;
+  country?: string;
   village?: string;
+  taluk?: string;
   district?: string;
+  districtCode?: string;
   state?: string;
+  stateCode?: string;
   mandiName?: string;
   mandiAssigned?: string;
+  centreCode?: string;
   farmerId?: string;
   primaryCrop?: string;
   totalLandAcres?: number;
+  landUnit?: string;
   soilType?: string;
   irrigationSource?: string;
   irrigationSources?: string[];
   otherIrrigationDetail?: string;
   aadhaarMasked?: string;
   isAadhaarVerified?: boolean;
+  isPhoneVerified?: boolean;
+  profilePhoto?: string;
   createdAt: string;
   telegramLinked?: boolean;
   telegramUsername?: string;
+  farmCoordinates?: {
+    latitude: number;
+    longitude: number;
+    locationName?: string;
+    consentGiven?: boolean;
+    updatedAt?: string;
+  };
 }
 
 export interface AuthTokenResponse {
@@ -56,9 +155,13 @@ export interface AuthTokenResponse {
 export interface FarmerRegisterPayload {
   name: string;
   phone: string;
+  country?: string;
   village: string;
-  district?: string;
-  state?: string;
+  taluk?: string;
+  district: string;
+  districtCode?: string;
+  state: string;
+  stateCode?: string;
   preferredLanguage: string;
   password: string;
   confirmPassword: string;
@@ -68,71 +171,35 @@ export interface FarmerRegisterPayload {
   irrigationSources?: string[];
   irrigationSource?: string;
   otherIrrigationDetail?: string;
-  telegramVerifiedToken?: string;
 }
 
 export interface LoginPayload {
   phone: string;
-  password?: string;
+  password: string;
   role: 'farmer' | 'staff';
-  authMethod?: 'password' | 'telegram_otp';
-  telegramOtp?: string;
 }
 
 export interface FarmerProfileInput {
   name: string;
   phone: string;
+  country?: string;
+  village?: string;
   location: string;
+  taluk?: string;
   district?: string;
+  districtCode?: string;
   state?: string;
+  stateCode?: string;
   totalLandAcres: number;
+  landUnit?: string;
   primaryCrop: string;
   soilType?: string;
   irrigationSource?: string;
   irrigationSources?: string[];
   otherIrrigationDetail?: string;
   preferredLanguage?: string;
+  profilePhoto?: string;
   aadhaarMasked?: string;
-}
-
-export interface TelegramStatusResponse {
-  configured: boolean;
-  botUsername?: string;
-  message: string;
-}
-
-export interface TelegramLinkTokenResponse {
-  linkToken: string;
-  deepLink: string;
-  botUsername: string;
-  expiresInSeconds: number;
-  configured: boolean;
-  notice: string;
-}
-
-export interface TelegramLinkStatusResponse {
-  linked: boolean;
-  verified: boolean;
-  telegramUsername?: string;
-  telegramFirstName?: string;
-  phone?: string;
-  message: string;
-}
-
-export interface TelegramSendOtpResponse {
-  success: boolean;
-  message: string;
-  maskedChat: string;
-  cooldownSeconds: number;
-  expiresInSeconds: number;
-}
-
-export interface TelegramVerifyOtpResponse {
-  success: boolean;
-  message: string;
-  phone: string;
-  verifiedToken?: string;
-  authToken?: AuthTokenResponse;
 }
 
 export interface FarmerProfileEntity extends FarmerProfileInput {
@@ -146,8 +213,11 @@ export interface ProcurementBookingInput {
   farmerId?: string;
   mandiName: string;
   crop: string;
+  cropVariety?: string;
+  harvestDate: string;
   quantityBags: number;
   preferredDate: string;
+  slotDate?: string;
   timeWindow?: string;
 }
 
@@ -173,7 +243,9 @@ export interface SlotStatusInfo {
   maxCapacityBags: number;
   bookedBags: number;
   availableBags: number;
-  status: 'available' | 'filling_fast' | 'full';
+  status: 'available' | 'filling_fast' | 'full' | 'closed';
+  isClosed?: boolean;
+  closureReason?: string | null;
 }
 
 export interface CentreSlotsResponse {
@@ -241,10 +313,13 @@ export interface QueueTrackingResponse {
   tokenNumber: string;
   status: string;
   mandiName: string;
+  centreCode?: string;
   slotDate: string;
   timeWindow: string;
   farmerName: string;
   crop: string;
+  cropVariety?: string;
+  harvestDate?: string;
   quantityBags?: number;
   vehiclesAhead: number | null;
   queuePosition: number | null;
@@ -258,6 +333,24 @@ export interface QueueTrackingResponse {
   auditHistory: AuditLogEntry[];
   lastPolledAt: string;
   isDemoData: boolean;
+  qualityInspection?: {
+    qualityStatus?: 'ACCEPTED' | 'PARTIALLY_ACCEPTED' | 'REJECTED';
+    status?: 'ACCEPTED' | 'PARTIALLY_ACCEPTED' | 'REJECTED';
+    qualityGrade: string;
+    moisturePercent: number;
+    declaredWeightKg?: number;
+    acceptedWeightKg: number;
+    rejectedWeightKg: number;
+    rejectionReason?: string;
+    notes?: string;
+    inspectedAt?: string;
+    inspectedByStaff?: string;
+  };
+  isNowServing?: boolean;
+  nowServingToken?: string;
+  counterId?: string | null;
+  counterName?: string | null;
+  counters?: CounterInfo[];
 }
 
 export interface StaffTransactionPayload {
@@ -352,6 +445,8 @@ export interface ProcurementBookingEntity {
   farmerId: string;
   mandiName: string;
   crop: string;
+  cropVariety?: string;
+  harvestDate?: string;
   quantityBags: number;
   estimatedWeightQuintals: number;
   slotDate: string;
@@ -361,6 +456,27 @@ export interface ProcurementBookingEntity {
   actualNetWeightQuintals?: number;
   acceptedWeightKg?: number;
   qualityNotes?: string;
+  qualityInspection?: {
+    qualityStatus: 'ACCEPTED' | 'PARTIALLY_ACCEPTED' | 'REJECTED';
+    status?: 'ACCEPTED' | 'PARTIALLY_ACCEPTED' | 'REJECTED';
+    qualityGrade: string;
+    moisturePercent: number;
+    declaredWeightKg: number;
+    acceptedWeightKg: number;
+    rejectedWeightKg: number;
+    rejectionReason?: string;
+    notes?: string;
+    inspectedAt: string;
+    inspectedByStaff: string;
+  };
+  noShowDetails?: {
+    markedAt: string;
+    markedByStaff: string;
+    markedByStaffName?: string;
+    reason: string;
+  };
+  isNowServing?: boolean;
+  rateSourceLabel?: string;
   billNumber?: string;
   bill?: DigitalBillEntity | null;
   transaction?: WeighingTransactionDetails | null;
@@ -368,9 +484,111 @@ export interface ProcurementBookingEntity {
   createdAt: string;
 }
 
+export interface QualityInspectionPayload {
+  qualityStatus: 'ACCEPTED' | 'PARTIALLY_ACCEPTED' | 'REJECTED';
+  qualityGrade?: string;
+  moisturePercent: number;
+  declaredWeightKg?: number;
+  acceptedWeightKg?: number;
+  rejectedWeightKg?: number;
+  rejectionReason?: string;
+  notes?: string;
+}
+
+export interface ProcurementRateItem {
+  id?: string;
+  crop: string;
+  cropVariety: string;
+  centreCode: string;
+  ratePerKg: number;
+  ratePerQuintal: number;
+  effectiveDate: string;
+  isActive: boolean;
+  sourceLabel: string;
+  rateSourceLabel?: string;
+  notes?: string;
+  createdAt?: string;
+}
+
+export interface CounterInfo {
+  counterId: string;
+  name: string;
+  isActive: boolean;
+  isNowServing: boolean;
+  currentBookingId?: string | null;
+  currentToken?: string | null;
+  farmerName?: string | null;
+  crop?: string | null;
+  lastCalledAt?: string | null;
+}
+
+export interface NowServingResponse {
+  centreCode: string;
+  centreName: string;
+  date: string;
+  counterId: string;
+  counterName?: string;
+  counters?: CounterInfo[];
+  currentServing?: {
+    bookingId: string;
+    tokenNumber: string;
+    farmerName: string;
+    crop: string;
+    cropVariety?: string;
+    quantityBags: number;
+    status: string;
+    timeWindow?: string;
+    nowServingCalledAt?: string;
+  } | null;
+  currentToken?: {
+    bookingId: string;
+    tokenNumber: string;
+    farmerName: string;
+    crop: string;
+    cropVariety?: string;
+    quantityBags: number;
+    status: string;
+    timeWindow?: string;
+    nowServingCalledAt?: string;
+  } | null;
+  nextEligible?: {
+    bookingId: string;
+    tokenNumber: string;
+    farmerName: string;
+    crop: string;
+    cropVariety?: string;
+    quantityBags: number;
+    status: string;
+    timeWindow?: string;
+  } | null;
+  nextEligibleToken?: {
+    bookingId: string;
+    tokenNumber: string;
+    farmerName: string;
+    crop: string;
+    cropVariety?: string;
+    quantityBags: number;
+    status: string;
+    timeWindow?: string;
+  } | null;
+  calledToken?: {
+    bookingId: string;
+    tokenNumber: string;
+    farmerName: string;
+    crop: string;
+    cropVariety?: string;
+    quantityBags: number;
+    status: string;
+    timeWindow?: string;
+  };
+  activeWaitingCount: number;
+  lastCalledAt?: string | null;
+}
+
 export interface StaffQueueOverviewResponse {
   staffName: string;
   mandiName: string;
+  centreCode?: string;
   selectedDate?: string;
   selectedTimeWindow?: string;
   totalBookings: number;
@@ -400,6 +618,24 @@ export interface StaffBookingStatusUpdatePayload {
 }
 
 
+export async function safeFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  try {
+    return await fetch(input, init);
+  } catch (err: any) {
+    if (
+      err.name === 'TypeError' ||
+      err.message?.includes('fetch') ||
+      err.message?.includes('NetworkError') ||
+      err.message?.includes('Failed to fetch')
+    ) {
+      throw new Error(
+        'Unable to connect to AgriBharat server. Please ensure the backend is running on http://127.0.0.1:8000.'
+      );
+    }
+    throw err;
+  }
+}
+
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
     let errorDetail = `Request failed with status ${res.status}`;
@@ -426,8 +662,129 @@ async function handleResponse<T>(res: Response): Promise<T> {
  * Check backend API health and real MongoDB connectivity status
  */
 export async function checkBackendHealth(): Promise<BackendHealthResponse> {
-  const res = await fetch(`${API_BASE_URL}/health`);
+  const res = await safeFetch(`${API_BASE_URL}/health`);
   return handleResponse<BackendHealthResponse>(res);
+}
+
+// ============================================================================
+// GEOGRAPHIC DIRECTORY APIS (ALL 36 REGIONS, 788 DISTRICTS)
+// ============================================================================
+
+export async function getGeoMetaApi(): Promise<GeoMetaResponse> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/geo/meta`);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch {
+    // Network fallback
+  }
+  const geo = localGeoDirectory as any;
+  return {
+    version: geo.version,
+    lastUpdated: geo.lastUpdated,
+    source: geo.source,
+    license: geo.license,
+    totalRegions: geo.totalRegions,
+    statesCount: geo.statesCount,
+    unionTerritoriesCount: geo.unionTerritoriesCount,
+    totalDistricts: geo.totalDistricts,
+    notes: geo.notes,
+  };
+}
+
+export async function getStatesApi(): Promise<GeoStateItem[]> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/geo/states`);
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.states) && data.states.length > 0) {
+        return data.states;
+      }
+    }
+  } catch {
+    // Network fallback
+  }
+  return (localGeoDirectory.states as any[]).map((s) => ({
+    id: s.id,
+    code: s.code,
+    name: s.name,
+    type: s.type,
+    localNames: s.localNames || {},
+    districtsCount: s.districtsCount || (s.districts ? s.districts.length : 0),
+  }));
+}
+
+export async function getDistrictsApi(stateQuery: string): Promise<GeoDistrictItem[]> {
+  if (!stateQuery || !stateQuery.trim()) return [];
+  try {
+    const res = await fetch(`${API_BASE_URL}/geo/districts?state=${encodeURIComponent(stateQuery.trim())}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data.districts)) {
+        return data.districts;
+      }
+    }
+  } catch {
+    // Network fallback
+  }
+  const clean = stateQuery.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+  const matched = (localGeoDirectory.states as any[]).find((s) => {
+    const sId = (s.id || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const sCode = (s.code || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const sName = (s.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    return clean === sId || clean === sCode || clean === sName;
+  });
+  return (matched?.districts as GeoDistrictItem[]) || [];
+}
+
+export async function searchGeoLocationsApi(
+  query: string,
+  stateQuery?: string
+): Promise<{ states: GeoStateItem[]; districts: GeoDistrictItem[] }> {
+  try {
+    let url = `${API_BASE_URL}/geo/search?q=${encodeURIComponent(query)}`;
+    if (stateQuery) {
+      url += `&state=${encodeURIComponent(stateQuery)}`;
+    }
+    const res = await fetch(url);
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch {
+    // Network fallback
+  }
+  const qClean = query.trim().toLowerCase();
+  const matchedStates = (localGeoDirectory.states as any[])
+    .filter((s) => s.name.toLowerCase().includes(qClean) || (s.code && s.code.toLowerCase().includes(qClean)))
+    .map((s) => ({
+      id: s.id,
+      code: s.code,
+      name: s.name,
+      type: s.type,
+      localNames: s.localNames || {},
+      districtsCount: s.districtsCount || (s.districts ? s.districts.length : 0),
+    }));
+
+  let poolDistricts: GeoDistrictItem[] = [];
+  if (stateQuery) {
+    const cleanState = stateQuery.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+    const st = (localGeoDirectory.states as any[]).find((s) => {
+      const sId = (s.id || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const sCode = (s.code || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const sName = (s.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      return cleanState === sId || cleanState === sCode || cleanState === sName;
+    });
+    if (st && st.districts) poolDistricts = st.districts;
+  } else {
+    for (const st of localGeoDirectory.states as any[]) {
+      if (st.districts) poolDistricts.push(...st.districts);
+    }
+  }
+  const matchedDistricts = poolDistricts.filter(
+    (d) => d.name.toLowerCase().includes(qClean) || (d.code && d.code.toLowerCase().includes(qClean))
+  );
+  return { states: matchedStates, districts: matchedDistricts.slice(0, 50) };
 }
 
 // ============================================================================
@@ -439,6 +796,7 @@ function normalizeUser(u: UserSummary): UserSummary {
     ...u,
     fullName: u.name || u.fullName || '',
     mandiAssigned: u.mandiName || u.mandiAssigned || '',
+    landUnit: u.landUnit || 'Acres',
   };
 }
 
@@ -446,7 +804,7 @@ function normalizeUser(u: UserSummary): UserSummary {
  * Register a new farmer account
  */
 export async function registerFarmerApi(data: FarmerRegisterPayload): Promise<AuthTokenResponse> {
-  const res = await fetch(`${API_BASE_URL}/auth/register`, {
+  const res = await safeFetch(`${API_BASE_URL}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -462,7 +820,7 @@ export async function registerFarmerApi(data: FarmerRegisterPayload): Promise<Au
  * Login with mobile, password, and role
  */
 export async function loginApi(data: LoginPayload): Promise<AuthTokenResponse> {
-  const res = await fetch(`${API_BASE_URL}/auth/login`, {
+  const res = await safeFetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -478,7 +836,7 @@ export async function loginApi(data: LoginPayload): Promise<AuthTokenResponse> {
  * Fetch current authenticated user's profile using JWT
  */
 export async function getMeApi(token: string): Promise<UserSummary> {
-  const res = await fetch(`${API_BASE_URL}/auth/me`, {
+  const res = await safeFetch(`${API_BASE_URL}/auth/me`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -522,7 +880,52 @@ export async function updateFarmerProfileApi(
     headers,
     body: JSON.stringify(data),
   });
-  return handleResponse<UserSummary>(res);
+  const u = await handleResponse<UserSummary>(res);
+  return normalizeUser(u);
+}
+
+export async function getMyFarmerProfileApi(token: string): Promise<UserSummary> {
+  const res = await fetch(`${API_BASE_URL}/farmers/me`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  const u = await handleResponse<UserSummary>(res);
+  return normalizeUser(u);
+}
+
+export async function uploadProfilePhotoApi(
+  file: File,
+  token?: string | null
+): Promise<{ status: string; message: string; profilePhoto: string }> {
+  const formData = new FormData();
+  formData.append('file', file);
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const res = await fetch(`${API_BASE_URL}/users/me/avatar`, {
+    method: 'POST',
+    headers,
+    body: formData,
+  });
+  return handleResponse<{ status: string; message: string; profilePhoto: string }>(res);
+}
+
+export async function updateUserLanguageApi(
+  language: string,
+  token?: string | null
+): Promise<{ status: string; preferredLanguage: string; user: UserSummary }> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const res = await fetch(`${API_BASE_URL}/users/me/language`, {
+    method: 'PUT',
+    headers,
+    body: JSON.stringify({ preferredLanguage: language }),
+  });
+  return handleResponse<{ status: string; preferredLanguage: string; user: UserSummary }>(res);
 }
 
 export async function getProcurementBookings(token?: string | null): Promise<ProcurementBookingEntity[]> {
@@ -752,6 +1155,75 @@ export async function getSmsGatewayStatusApi(token: string): Promise<SMSStatusIn
   return handleResponse<SMSStatusInfo>(res);
 }
 
+export async function getNotificationPreferencesApi(token: string): Promise<NotificationPreferences> {
+  const res = await fetch(`${API_BASE_URL}/notifications/preferences`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return handleResponse<NotificationPreferences>(res);
+}
+
+export async function updateNotificationPreferencesApi(
+  token: string,
+  updates: Partial<NotificationPreferences>
+): Promise<NotificationPreferences> {
+  const res = await fetch(`${API_BASE_URL}/notifications/preferences`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(updates),
+  });
+  return handleResponse<NotificationPreferences>(res);
+}
+
+export async function getPushStatusApi(token: string): Promise<PushStatusInfo> {
+  const res = await fetch(`${API_BASE_URL}/notifications/push-status`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return handleResponse<PushStatusInfo>(res);
+}
+
+export async function savePushSubscriptionApi(
+  token: string,
+  subscriptionPayload: { endpoint: string; keys: Record<string, string>; expirationTime?: number | null }
+): Promise<{ success: boolean; message: string; data?: any }> {
+  const res = await fetch(`${API_BASE_URL}/notifications/push-subscription`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(subscriptionPayload),
+  });
+  return handleResponse<{ success: boolean; message: string; data?: any }>(res);
+}
+
+export async function deletePushSubscriptionApi(token: string): Promise<{ success: boolean; message: string }> {
+  const res = await fetch(`${API_BASE_URL}/notifications/push-subscription`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return handleResponse<{ success: boolean; message: string }>(res);
+}
+
+export async function triggerIrrigationCheckApi(token: string): Promise<IrrigationAlertCheckSummary> {
+  const res = await fetch(`${API_BASE_URL}/notifications/irrigation-check`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return handleResponse<IrrigationAlertCheckSummary>(res);
+}
+
+export async function triggerMandiCheckApi(token: string): Promise<{ success: boolean; syncResult?: any; notificationSummary?: any }> {
+  const res = await fetch(`${API_BASE_URL}/notifications/mandi-check`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return handleResponse<{ success: boolean; syncResult?: any; notificationSummary?: any }>(res);
+}
+
+
 // ============================================================================
 // STAFF PROCUREMENT CENTRE OPERATIONS
 // ============================================================================
@@ -870,6 +1342,362 @@ export async function staffCancelBookingApi(bookingId: string, staffToken: strin
   return handleResponse<ProcurementBookingEntity>(res);
 }
 
+/**
+ * PHASE 3: Staff records physical quality inspection
+ */
+export async function staffQualityInspectionApi(
+  bookingId: string,
+  payload: QualityInspectionPayload,
+  staffToken: string
+): Promise<ProcurementBookingEntity> {
+  const res = await fetch(`${API_BASE_URL}/staff/bookings/${encodeURIComponent(bookingId)}/quality-inspection`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${staffToken}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<ProcurementBookingEntity>(res);
+}
+
+/**
+ * PHASE 3: Staff marks an unadmitted booking as NO_SHOW
+ */
+export async function staffNoShowApi(
+  bookingId: string,
+  reason: string | undefined,
+  staffToken: string
+): Promise<ProcurementBookingEntity> {
+  const res = await fetch(`${API_BASE_URL}/staff/bookings/${encodeURIComponent(bookingId)}/no-show`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${staffToken}`,
+    },
+    body: JSON.stringify({ reason }),
+  });
+  return handleResponse<ProcurementBookingEntity>(res);
+}
+
+/**
+ * PHASE 3: Fetch active configured procurement rates
+ */
+export async function getProcurementRatesApi(
+  crop?: string,
+  centreCode?: string
+): Promise<ProcurementRateItem[]> {
+  const params = new URLSearchParams();
+  if (crop) params.set('crop', crop);
+  if (centreCode && centreCode !== 'ALL') params.set('centreCode', centreCode);
+  const qs = params.toString() ? `?${params.toString()}` : '';
+  const res = await fetch(`${API_BASE_URL}/procurement/rates${qs}`);
+  return handleResponse<ProcurementRateItem[]>(res);
+}
+
+/**
+ * PHASE 3: Staff creates or updates rate configuration
+ */
+export async function createProcurementRateApi(
+  payload: Partial<ProcurementRateItem>,
+  staffToken: string
+): Promise<ProcurementRateItem> {
+  const res = await fetch(`${API_BASE_URL}/staff/rates`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${staffToken}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<ProcurementRateItem>(res);
+}
+
+/**
+ * PHASE 3: Get live Now Serving token and next eligible waiting vehicle
+ */
+export interface CropReportSummary {
+  crop: string;
+  totalBags?: number;
+  totalBookings?: number;
+  acceptedWeightKg: number;
+  acceptedWeightQuintals: number;
+  rejectedWeightKg: number;
+  totalTransactions?: number;
+  completedCount?: number;
+  grossAmount?: number;
+  grossValue?: number;
+  netPayable?: number;
+  netAmount?: number;
+}
+
+export interface CounterThroughputSummary {
+  counterId: string;
+  counterName: string;
+  tokensServed?: number;
+  completedCount?: number;
+  completedBookings?: number;
+  totalAcceptedWeightKg?: number;
+  totalWeightKg: number;
+  grossAmount?: number;
+}
+
+export interface DailyProcurementReportResponse {
+  centreCode: string;
+  centreName: string;
+  date?: string;
+  reportDate?: string;
+  filterCrop?: string | null;
+  filterPaymentStatus?: string | null;
+  totalBookings: number;
+  cancelledBookings?: number;
+  cancelledCount?: number;
+  noShowBookings?: number;
+  noShowCount?: number;
+  cancelledAndNoShowBookings?: number;
+  completedTransactions?: number;
+  completedCount?: number;
+  totalEstimatedBags?: number;
+  totalAcceptedWeightKg: number;
+  totalAcceptedWeightQuintals: number;
+  totalRejectedWeightKg: number;
+  totalGrossAmount?: number;
+  totalGrossTransactionValue?: number;
+  totalDeductions?: number;
+  totalDeductionsAmount?: number;
+  totalNetPayable?: number;
+  totalNetAmount?: number;
+  amountPending: number;
+  amountProcessing: number;
+  amountPaid: number;
+  paymentBreakdown?: {
+    pendingAmount: number;
+    pendingCount: number;
+    processingAmount: number;
+    processingCount: number;
+    paidAmount: number;
+    paidCount: number;
+  };
+  cropBreakdown: CropReportSummary[];
+  counterThroughput: CounterThroughputSummary[];
+  generatedAt: string;
+  generatedByStaff?: string;
+}
+
+export interface SlotClosureEntity {
+  id?: string;
+  centreCode: string;
+  slotDate: string;
+  timeWindow: string;
+  isClosed?: boolean;
+  isActive?: boolean;
+  closureReason: string;
+  reason?: string;
+  closedByStaffName?: string;
+  closedByStaff?: string;
+  closedBy?: string;
+  closedAt?: string;
+  reopenedByStaffName?: string;
+  reopenedByStaff?: string;
+  reopenedAt?: string;
+}
+
+export interface FarmerQuotaCheckResponse {
+  farmerId: string;
+  date: string;
+  timeWindow?: string | null;
+  maxBagsPerSlot: number;
+  maxBagsPerDay: number;
+  bookedBagsToday: number;
+  bookedBagsSlot: number;
+  remainingBagsToday: number;
+  remainingBagsSlot: number;
+  canBook: boolean;
+  reason?: string | null;
+}
+
+export interface ProcurementCentreItem {
+  id?: string;
+  centreCode: string;
+  name: string;
+  nameTa?: string;
+  district: string;
+  taluk?: string;
+  locationAddress?: string;
+  address?: string;
+  contactNumber?: string;
+  operatingHours?: string;
+  dailyCapacityBags: number;
+  slotCapacityBags?: number;
+  supportedCrops: string[];
+  slotWindows?: string[];
+  counters?: CounterInfo[];
+  isActive: boolean;
+  statusChangeReason?: string;
+  deactivationReason?: string | null;
+}
+
+/**
+ * PHASE 3 & 4: Get live Now Serving token and next eligible waiting vehicle per counter
+ */
+export async function getNowServingApi(
+  centreCode: string,
+  date?: string,
+  counterId?: string
+): Promise<NowServingResponse> {
+  const params = new URLSearchParams({ centreCode });
+  if (date) params.set('date', date);
+  if (counterId) params.set('counterId', counterId);
+  const res = await fetch(`${API_BASE_URL}/procurement/now-serving?${params.toString()}`);
+  return handleResponse<NowServingResponse>(res);
+}
+
+/**
+ * PHASE 3 & 4: Staff calls next eligible token from FIFO queue with atomic concurrency
+ */
+export async function staffCallNextTokenApi(
+  payload: { centreCode: string; date?: string; counterId?: string },
+  staffToken: string
+): Promise<NowServingResponse> {
+  const res = await fetch(`${API_BASE_URL}/staff/queue/call-next`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${staffToken}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<NowServingResponse>(res);
+}
+
+/**
+ * PHASE 4: Staff Daily Procurement Report
+ */
+export async function getDailyProcurementReportApi(
+  params: { centreCode: string; date?: string; crop?: string; paymentStatus?: string },
+  staffToken: string
+): Promise<DailyProcurementReportResponse> {
+  const search = new URLSearchParams({ centreCode: params.centreCode });
+  if (params.date) search.set('date', params.date);
+  if (params.crop) search.set('crop', params.crop);
+  if (params.paymentStatus) search.set('paymentStatus', params.paymentStatus);
+  const res = await fetch(`${API_BASE_URL}/staff/reports/daily?${search.toString()}`, {
+    headers: { Authorization: `Bearer ${staffToken}` }
+  });
+  return handleResponse<DailyProcurementReportResponse>(res);
+}
+
+/**
+ * PHASE 4: Slot Closure Management
+ */
+export async function closeSlotApi(
+  payload: { centreCode: string; slotDate: string; timeWindow: string; reason: string },
+  staffToken: string
+): Promise<SlotClosureEntity> {
+  const res = await fetch(`${API_BASE_URL}/staff/slots/close`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${staffToken}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<SlotClosureEntity>(res);
+}
+
+export async function reopenSlotApi(
+  payload: { centreCode: string; slotDate: string; timeWindow: string },
+  staffToken: string
+): Promise<SlotClosureEntity> {
+  const res = await fetch(`${API_BASE_URL}/staff/slots/reopen`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${staffToken}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<SlotClosureEntity>(res);
+}
+
+export async function getSlotClosuresApi(
+  centreCode: string,
+  date?: string,
+  staffToken?: string
+): Promise<{ centreCode: string; closures: SlotClosureEntity[] }> {
+  const search = new URLSearchParams({ centreCode });
+  if (date) search.set('date', date);
+  const headers: Record<string, string> = {};
+  if (staffToken) headers['Authorization'] = `Bearer ${staffToken}`;
+  const res = await fetch(`${API_BASE_URL}/staff/slots/closures?${search.toString()}`, { headers });
+  return handleResponse<{ centreCode: string; closures: SlotClosureEntity[] }>(res);
+}
+
+/**
+ * PHASE 4: Farmer Quota / Quantity Limit Check
+ */
+export async function getFarmerQuotaApi(
+  farmerId: string,
+  date: string,
+  timeWindow?: string
+): Promise<FarmerQuotaCheckResponse> {
+  const search = new URLSearchParams({ farmerId, date });
+  if (timeWindow) search.set('timeWindow', timeWindow);
+  const res = await fetch(`${API_BASE_URL}/procurement/farmer-quota?${search.toString()}`);
+  return handleResponse<FarmerQuotaCheckResponse>(res);
+}
+
+/**
+ * PHASE 4: Procurement Centre Master Data Management
+ */
+export async function createProcurementCentreApi(
+  data: Partial<ProcurementCentreItem>,
+  staffToken: string
+): Promise<ProcurementCentreItem> {
+  const res = await fetch(`${API_BASE_URL}/staff/centres`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${staffToken}`,
+    },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<ProcurementCentreItem>(res);
+}
+
+export async function updateProcurementCentreApi(
+  centreCode: string,
+  data: Partial<ProcurementCentreItem>,
+  staffToken: string
+): Promise<ProcurementCentreItem> {
+  const res = await fetch(`${API_BASE_URL}/staff/centres/${encodeURIComponent(centreCode)}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${staffToken}`,
+    },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<ProcurementCentreItem>(res);
+}
+
+export async function setProcurementCentreStatusApi(
+  centreCode: string,
+  isActive: boolean,
+  reason: string,
+  staffToken: string
+): Promise<ProcurementCentreItem> {
+  const res = await fetch(`${API_BASE_URL}/staff/centres/${encodeURIComponent(centreCode)}/status`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${staffToken}`,
+    },
+    body: JSON.stringify({ isActive, reason }),
+  });
+  return handleResponse<ProcurementCentreItem>(res);
+}
+
 
 // ============================================================================
 // PHASE 4: SMART FARMING INTELLIGENCE APIS
@@ -934,11 +1762,68 @@ export interface WeatherApiResponse {
   error?: string;
 }
 
+export interface IrrigationWeatherResponse {
+  coordinates: { lat: number; lon: number };
+  timezone: string;
+  source: string;
+  forecastHorizon: string;
+  units: {
+    temperature: string;
+    humidity: string;
+    precipitation: string;
+    rain: string;
+    et0: string;
+    soilMoisture: string;
+  };
+  current: {
+    temperatureC: number | null;
+    humidity: number | null;
+    precipitationMm: number | null;
+    rainMm: number | null;
+    weatherCode: number;
+    condition: string;
+    conditionTa: string;
+    weatherIcon: string;
+    observationTime: string;
+  } | null;
+  precipitationProbability: number | null;
+  precipitationSumMm: number | null;
+  et0EstimateMmDay: number | null;
+  soilMoisture: {
+    available: boolean;
+    rootZonePercent: number | null;
+    displayLabel: string;
+    depth0To7cmPercent: number | null;
+    depth7To28cmPercent: number | null;
+    depth28To100cmPercent: number | null;
+    disclaimer: string;
+    disclaimerTa: string;
+  };
+  lastUpdated: string;
+  lastUpdatedIso: string;
+  isLive: boolean;
+  isCached: boolean;
+  isStale: boolean;
+  cacheAgeSeconds?: number;
+  warning?: string;
+  error?: string;
+}
+
+export interface FarmLocationInput {
+  latitude: number;
+  longitude: number;
+  locationName?: string;
+  consent: boolean;
+}
+
 export interface IrrigationCalculateInput {
   crop: string;
   growthStage: string;
   soilType: string;
   irrigationMethod: string;
+  fieldAreaAcres?: number;
+  latitude?: number;
+  longitude?: number;
   soilMoisturePercent?: number;
   recentRainMm?: number;
   forecastRainChance?: number;
@@ -949,15 +1834,41 @@ export interface IrrigationCalculateResponse {
   growthStage: string;
   soilType: string;
   irrigationMethod: string;
+  recommendation?: 'irrigate_now' | 'delay_reassess' | 'monitor_conditions';
   status: 'delay' | 'adequate' | 'urgent' | 'moderate';
+  recommendationTitleEn?: string;
+  recommendationTitleTa?: string;
   recommendationEn: string;
   recommendationTa: string;
+  irrigationWindowEn?: string;
+  irrigationWindowTa?: string;
+  referenceEtoMmDay?: number;
   cropWaterDemandMm: number;
   cropFactorKc: number;
+  fieldAreaAcres?: number;
+  effectiveRainfallMm?: number;
+  netIrrigationRequirementMm?: number;
+  grossIrrigationRequirementMm?: number | null;
   estimatedLitersPerAcre: number;
+  totalEstimatedLiters?: number | null;
+  isWaterVolumeEstimated?: boolean;
+  unitExplanationEn?: string;
+  unitExplanationTa?: string;
+  soilMoistureUsedPercent?: number | null;
+  forecastRainChancePercent?: number | null;
+  recentRainMm?: number | null;
   reasonsEn: string[];
   reasonsTa: string[];
+  confidenceLevel?: 'High' | 'Medium' | 'Low';
+  limitationsEn?: string[];
+  limitationsTa?: string[];
+  paddySpecificNotesEn?: string | null;
+  paddySpecificNotesTa?: string | null;
+  isLiveWeatherUsed?: boolean;
+  weatherSummary?: IrrigationWeatherResponse | null;
+  weatherTimestamp?: string | null;
   isAdvisoryOnly: boolean;
+  noHardwareControlNotice?: string;
   disclaimerEn: string;
   disclaimerTa: string;
 }
@@ -1188,8 +2099,16 @@ export interface MarketCommodityItem {
   id: string;
   crop: string;
   cropTa: string;
+  commodity?: string;
+  commodityTa?: string;
+  variety?: string;
+  grade?: string;
   district: string;
   mandi: string;
+  market?: string;
+  state?: string;
+  arrivalDate?: string;
+  arrivalDateHuman?: string;
   minPrice: number;
   maxPrice: number;
   modalPrice: number;
@@ -1199,31 +2118,70 @@ export interface MarketCommodityItem {
   date: string;
 }
 
+export interface MarketPricesPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
 export interface MarketPricesResponse {
   timestamp: string;
   dataSource: string;
+  sourceUrl?: string;
+  resourceId?: string;
+  sourceStatus?: string;
+  sourceConfigured?: boolean;
   isLive: boolean;
-  demoNoticeEn: string;
-  demoNoticeTa: string;
+  isStale?: boolean;
+  sourceArrivalDate?: string;
+  lastSuccessfulFetchTime?: string;
+  lastCheckedTime?: string;
   commodities: MarketCommodityItem[];
+  pagination?: MarketPricesPagination;
+  availableDistricts?: string[];
+  availableCommodities?: string[];
+  staleNoticeEn?: string;
+  staleNoticeTa?: string;
+  error?: string | null;
+  demoNoticeEn?: string;
+  demoNoticeTa?: string;
+  hasNewData?: boolean;
+  syncStatus?: string;
+  syncMessageEn?: string;
+  syncMessageTa?: string;
+  refreshIntervalMinutes?: number;
+  nextScheduledRefreshTime?: string;
 }
 
 export interface GovernmentSchemeItem {
   id: string;
+  name?: string;
+  nameTa?: string;
   titleEn: string;
   titleTa: string;
   dept: string;
+  department?: string;
   category: string;
+  governmentLevel?: 'Central' | 'State' | string;
+  description?: string;
   benefit: string;
-  eligibility: string;
+  benefits?: string[];
+  eligibility: string | string[];
   requiredDocuments: string[];
+  livestockTypes?: string[];
   applicationUrl: string;
+  sourceUrl?: string;
+  verificationDate?: string;
+  applicationStatus?: 'Active' | 'Application Window Unknown' | 'Closed' | 'Unverified' | string;
+  notes?: string;
   isVerifiedLink: boolean;
   portalName: string;
 }
 
 export interface GovernmentSchemesResponse {
   schemes: GovernmentSchemeItem[];
+  totalCount?: number;
   disclaimerEn: string;
   disclaimerTa: string;
 }
@@ -1236,6 +2194,38 @@ export async function getWeatherApi(district: string = 'thanjavur'): Promise<Wea
 export async function getWeatherDistrictsApi(): Promise<WeatherDistrict[]> {
   const res = await fetch(`${API_BASE_URL}/weather/districts`);
   return handleResponse<WeatherDistrict[]>(res);
+}
+
+export async function getIrrigationWeatherApi(
+  lat: number,
+  lon: number,
+  forceRefresh?: boolean
+): Promise<IrrigationWeatherResponse> {
+  const query = new URLSearchParams({
+    lat: lat.toString(),
+    lon: lon.toString(),
+  });
+  if (forceRefresh) {
+    query.set('forceRefresh', 'true');
+  }
+  const res = await fetch(`${API_BASE_URL}/weather/irrigation?${query.toString()}`);
+  return handleResponse<IrrigationWeatherResponse>(res);
+}
+
+export async function updateFarmLocationApi(
+  data: FarmLocationInput,
+  token?: string | null
+): Promise<UserSummary> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const res = await fetch(`${API_BASE_URL}/farmer/farm-location`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  });
+  return handleResponse<UserSummary>(res);
 }
 
 export async function calculateIrrigationApi(data: IrrigationCalculateInput): Promise<IrrigationCalculateResponse> {
@@ -1323,18 +2313,96 @@ export async function deleteDiagnosisReportApi(reportId: string, token: string):
   return handleResponse<{ success: boolean; message: string; deletedId: string }>(res);
 }
 
-export async function getMarketPricesApi(district?: string, search?: string): Promise<MarketPricesResponse> {
-  const params = new URLSearchParams();
-  if (district) params.append('district', district);
-  if (search) params.append('search', search);
-  const res = await fetch(`${API_BASE_URL}/market/prices?${params.toString()}`);
+export interface GetMarketPricesParams {
+  district?: string;
+  commodity?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  forceRefresh?: boolean;
+}
+
+export async function getMarketPricesApi(
+  districtOrParams?: string | GetMarketPricesParams,
+  search?: string
+): Promise<MarketPricesResponse> {
+  const query = new URLSearchParams();
+
+  if (typeof districtOrParams === 'object' && districtOrParams !== null) {
+    if (districtOrParams.district && districtOrParams.district !== 'All') {
+      query.append('district', districtOrParams.district);
+    }
+    if (districtOrParams.commodity && districtOrParams.commodity !== 'All') {
+      query.append('commodity', districtOrParams.commodity);
+    }
+    if (districtOrParams.search && districtOrParams.search.trim()) {
+      query.append('search', districtOrParams.search.trim());
+    }
+    if (districtOrParams.page) {
+      query.append('page', String(districtOrParams.page));
+    }
+    if (districtOrParams.limit) {
+      query.append('limit', String(districtOrParams.limit));
+    }
+    if (districtOrParams.sortBy) {
+      query.append('sort_by', districtOrParams.sortBy);
+    }
+    if (districtOrParams.sortOrder) {
+      query.append('sort_order', districtOrParams.sortOrder);
+    }
+    if (districtOrParams.forceRefresh) {
+      query.append('force_refresh', 'true');
+    }
+  } else {
+    if (districtOrParams && districtOrParams !== 'All') {
+      query.append('district', districtOrParams);
+    }
+    if (search && search.trim()) {
+      query.append('search', search.trim());
+    }
+  }
+
+  const queryString = query.toString();
+  const url = queryString ? `${API_BASE_URL}/market/prices?${queryString}` : `${API_BASE_URL}/market/prices`;
+  const res = await fetch(url);
   return handleResponse<MarketPricesResponse>(res);
 }
 
-export async function getGovernmentSchemesApi(category?: string): Promise<GovernmentSchemesResponse> {
-  const params = new URLSearchParams();
-  if (category) params.append('category', category);
-  const res = await fetch(`${API_BASE_URL}/schemes?${params.toString()}`);
+export interface GetGovernmentSchemesParams {
+  category?: string;
+  search?: string;
+  governmentLevel?: string;
+  livestockType?: string;
+}
+
+export async function getGovernmentSchemesApi(
+  paramsOrCategory?: string | GetGovernmentSchemesParams
+): Promise<GovernmentSchemesResponse> {
+  const queryParams = new URLSearchParams();
+
+  if (typeof paramsOrCategory === 'string') {
+    if (paramsOrCategory && paramsOrCategory !== 'All') {
+      queryParams.set('category', paramsOrCategory);
+    }
+  } else if (paramsOrCategory) {
+    if (paramsOrCategory.category && paramsOrCategory.category !== 'All') {
+      queryParams.set('category', paramsOrCategory.category);
+    }
+    if (paramsOrCategory.search && paramsOrCategory.search.trim()) {
+      queryParams.set('search', paramsOrCategory.search.trim());
+    }
+    if (paramsOrCategory.governmentLevel && paramsOrCategory.governmentLevel !== 'All') {
+      queryParams.set('governmentLevel', paramsOrCategory.governmentLevel);
+    }
+    if (paramsOrCategory.livestockType && paramsOrCategory.livestockType !== 'All') {
+      queryParams.set('livestockType', paramsOrCategory.livestockType);
+    }
+  }
+
+  const queryString = queryParams.toString();
+  const res = await fetch(`${API_BASE_URL}/schemes${queryString ? `?${queryString}` : ''}`);
   return handleResponse<GovernmentSchemesResponse>(res);
 }
 
@@ -1344,7 +2412,7 @@ export async function getGovernmentSchemesApi(category?: string): Promise<Govern
 
 export interface ChatMessagePayload {
   message: string;
-  language: 'en' | 'ta';
+  language: Language;
   conversationId?: string;
   includeFarmContext?: boolean;
   confirmedAction?: Record<string, any>;
@@ -1365,7 +2433,7 @@ export interface ChatAction {
 export interface ChatMessageApiResponse {
   id: string;
   reply: string;
-  language: 'en' | 'ta';
+  language: Language;
   provider: string;
   isRealAI: boolean;
   providerNotice: string;
@@ -1454,16 +2522,17 @@ export async function cancelProcurementBookingApi(
 }
 
 // ============================================================================
-// PHASE 19: CONFIGURATION METADATA & TELEGRAM AUTH APIS
+// PLATFORM CONFIGURATION METADATA API
 // ============================================================================
 
 export interface ConfigMetaResponse {
   irrigationOptions: string[];
   languages: string[];
   languageCodes: Record<string, string>;
-  telegram: {
+  phoneVerification?: {
     configured: boolean;
-    botUsername: string;
+    provider?: string | null;
+    notice: string;
   };
 }
 
@@ -1472,47 +2541,432 @@ export async function getConfigMetaApi(): Promise<ConfigMetaResponse> {
   return handleResponse<ConfigMetaResponse>(res);
 }
 
-export async function getTelegramStatusApi(): Promise<TelegramStatusResponse> {
-  const res = await fetch(`${API_BASE_URL}/auth/telegram/status`);
-  return handleResponse<TelegramStatusResponse>(res);
+// ============================================================================
+// FARMER SUPPORT HUB (SECTIONS 1-6) APIS
+// ============================================================================
+
+export async function getFarmerSupportContent(params?: {
+  category?: string;
+  district?: string;
+  state?: string;
+  search?: string;
+  contentType?: string;
+  activeOnly?: boolean;
+}): Promise<FarmerSupportResponse> {
+  const q = new URLSearchParams();
+  if (params?.category && params.category !== 'all') q.set('category', params.category);
+  if (params?.district && params.district !== 'All') q.set('district', params.district);
+  if (params?.state && params.state !== 'All') q.set('state', params.state);
+  if (params?.search) q.set('search', params.search);
+  if (params?.contentType) q.set('content_type', params.contentType);
+  if (params?.activeOnly !== undefined) q.set('active_only', String(params.activeOnly));
+
+  const url = `${API_BASE_URL}/support/content${q.toString() ? `?${q.toString()}` : ''}`;
+  const res = await fetch(url);
+  return handleResponse<FarmerSupportResponse>(res);
 }
 
-export async function createTelegramLinkTokenApi(phone?: string, purpose?: string): Promise<TelegramLinkTokenResponse> {
-  const res = await fetch(`${API_BASE_URL}/auth/telegram/link-token`, {
+export async function getSupportContentById(contentId: string): Promise<FarmerSupportContent> {
+  const res = await fetch(`${API_BASE_URL}/support/content/${encodeURIComponent(contentId)}`);
+  return handleResponse<FarmerSupportContent>(res);
+}
+
+export async function getTrainingCalendar(params?: {
+  district?: string;
+  mode?: string;
+  upcomingOnly?: boolean;
+}): Promise<{ items: FarmerSupportContent[]; total: number }> {
+  const q = new URLSearchParams();
+  if (params?.district && params.district !== 'All') q.set('district', params.district);
+  if (params?.mode && params.mode !== 'All') q.set('mode', params.mode);
+  if (params?.upcomingOnly !== undefined) q.set('upcoming_only', String(params.upcomingOnly));
+
+  const url = `${API_BASE_URL}/support/training/calendar${q.toString() ? `?${q.toString()}` : ''}`;
+  const res = await fetch(url);
+  return handleResponse<{ items: FarmerSupportContent[]; total: number }>(res);
+}
+
+export async function getCropMasterGuide(cropId: string): Promise<FarmerSupportContent> {
+  const res = await fetch(`${API_BASE_URL}/support/crops/guide/${encodeURIComponent(cropId)}`);
+  return handleResponse<FarmerSupportContent>(res);
+}
+
+// ============================================================================
+// FARMER DIRECT MARKETPLACE (SECTION 7) APIS
+// ============================================================================
+
+export async function getMarketplaceListings(params?: {
+  district?: string;
+  category?: string;
+  search?: string;
+  organicOnly?: boolean;
+  page?: number;
+  limit?: number;
+}): Promise<MarketplaceResponse> {
+  const q = new URLSearchParams();
+  if (params?.district && params.district !== 'All') q.set('district', params.district);
+  if (params?.category && params.category !== 'All') q.set('category', params.category);
+  if (params?.search) q.set('search', params.search);
+  if (params?.organicOnly) q.set('organic_only', 'true');
+  if (params?.page) q.set('page', String(params.page));
+  if (params?.limit) q.set('limit', String(params.limit));
+
+  const url = `${API_BASE_URL}/marketplace/listings${q.toString() ? `?${q.toString()}` : ''}`;
+  const res = await fetch(url);
+  return handleResponse<MarketplaceResponse>(res);
+}
+
+export async function getMarketplaceListingById(listingId: string): Promise<MarketplaceListing> {
+  const res = await fetch(`${API_BASE_URL}/marketplace/listings/${encodeURIComponent(listingId)}`);
+  return handleResponse<MarketplaceListing>(res);
+}
+
+export async function recordMarketplaceInquiry(listingId: string): Promise<{ success: boolean; listingId: string }> {
+  const res = await fetch(`${API_BASE_URL}/marketplace/listings/${encodeURIComponent(listingId)}/inquiry`, {
+    method: 'POST',
+  });
+  return handleResponse<{ success: boolean; listingId: string }>(res);
+}
+
+export async function getFarmerMyListings(token: string): Promise<{ items: MarketplaceListing[]; total: number }> {
+  const res = await fetch(`${API_BASE_URL}/marketplace/my-listings`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return handleResponse<{ items: MarketplaceListing[]; total: number }>(res);
+}
+
+export async function createFarmerMarketplaceListing(
+  data: MarketplaceListingCreate,
+  token: string
+): Promise<{ success: boolean; message: string; listing: MarketplaceListing }> {
+  const res = await fetch(`${API_BASE_URL}/marketplace/listings`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<{ success: boolean; message: string; listing: MarketplaceListing }>(res);
+}
+
+export async function updateFarmerMarketplaceListing(
+  listingId: string,
+  data: Partial<MarketplaceListingCreate> & { listingStatus?: string },
+  token: string
+): Promise<{ success: boolean; message: string; listing: MarketplaceListing }> {
+  const res = await fetch(`${API_BASE_URL}/marketplace/listings/${encodeURIComponent(listingId)}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<{ success: boolean; message: string; listing: MarketplaceListing }>(res);
+}
+
+export async function deleteFarmerMarketplaceListing(
+  listingId: string,
+  token: string
+): Promise<{ success: boolean; message: string }> {
+  const res = await fetch(`${API_BASE_URL}/marketplace/listings/${encodeURIComponent(listingId)}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return handleResponse<{ success: boolean; message: string }>(res);
+}
+
+export async function createMarketplaceOrderRequest(
+  listingId: string,
+  data: MarketplaceOrderRequestCreate
+): Promise<MarketplaceOrderRequest> {
+  const res = await fetch(`${API_BASE_URL}/marketplace/listings/${encodeURIComponent(listingId)}/orders`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone, purpose }),
+    body: JSON.stringify(data),
   });
-  return handleResponse<TelegramLinkTokenResponse>(res);
+  return handleResponse<MarketplaceOrderRequest>(res);
 }
 
-export async function getTelegramLinkStatusApi(token: string): Promise<TelegramLinkStatusResponse> {
-  const res = await fetch(`${API_BASE_URL}/auth/telegram/link-status?token=${encodeURIComponent(token)}`);
-  return handleResponse<TelegramLinkStatusResponse>(res);
+export async function getFarmerMyOrders(
+  token: string,
+  listingId?: string
+): Promise<{ items: MarketplaceOrderRequest[]; total: number }> {
+  const q = listingId ? `?listing_id=${encodeURIComponent(listingId)}` : '';
+  const res = await fetch(`${API_BASE_URL}/marketplace/my-orders${q}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return handleResponse<{ items: MarketplaceOrderRequest[]; total: number }>(res);
 }
 
-export async function sendTelegramOtpApi(phone: string, purpose?: string): Promise<TelegramSendOtpResponse> {
-  const res = await fetch(`${API_BASE_URL}/auth/telegram/send-otp`, {
+export async function updateFarmerOrderStatus(
+  orderId: string,
+  status: string,
+  token: string
+): Promise<{ success: boolean; order: MarketplaceOrderRequest }> {
+  const res = await fetch(`${API_BASE_URL}/marketplace/orders/${encodeURIComponent(orderId)}/status?status=${encodeURIComponent(status)}`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return handleResponse<{ success: boolean; order: MarketplaceOrderRequest }>(res);
+}
+
+// ============================================================================
+// SPECIAL OPERATION — FROM FIRST STEP TO FIRST SALE API CLIENT
+// ============================================================================
+
+export async function getSpecialOperationJourney(token: string): Promise<SpecialOperationJourney> {
+  const res = await fetch(`${API_BASE_URL}/special-operation/journey`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return handleResponse<SpecialOperationJourney>(res);
+}
+
+export async function updateSpecialOperationStep(
+  payload: SpecialOperationStepUpdateRequest,
+  token: string
+): Promise<SpecialOperationJourney> {
+  const res = await fetch(`${API_BASE_URL}/special-operation/journey/step`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<SpecialOperationJourney>(res);
+}
+
+export async function getSpecialOperationCrops(
+  filters?: Record<string, string>
+): Promise<{ crops: SpecialOperationCropRecommendation[]; total: number; disclaimer: string }> {
+  const params = new URLSearchParams(filters || {});
+  const res = await fetch(`${API_BASE_URL}/special-operation/crops?${params.toString()}`);
+  return handleResponse<{ crops: SpecialOperationCropRecommendation[]; total: number; disclaimer: string }>(res);
+}
+
+export async function getSpecialOperationCropGuide(cropId: string): Promise<SpecialOperationCropGuide> {
+  const res = await fetch(`${API_BASE_URL}/special-operation/crops/${encodeURIComponent(cropId)}/guide`);
+  return handleResponse<SpecialOperationCropGuide>(res);
+}
+
+export async function getSpecialOperationTimeline(
+  cropId: string,
+  plantingDate?: string
+): Promise<SpecialOperationTimeline> {
+  const q = plantingDate ? `?planting_date=${encodeURIComponent(plantingDate)}` : '';
+  const res = await fetch(`${API_BASE_URL}/special-operation/crops/${encodeURIComponent(cropId)}/timeline${q}`);
+  return handleResponse<SpecialOperationTimeline>(res);
+}
+
+export async function addSpecialOperationObservation(
+  payload: {
+    note: string;
+    stageNumber?: number;
+    photoUrl?: string;
+    isDeviation?: boolean;
+    deviationReason?: string;
+  },
+  token: string
+): Promise<{ success: boolean; observation: JourneyObservation }> {
+  const res = await fetch(`${API_BASE_URL}/special-operation/journey/observation`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone, purpose }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
   });
-  return handleResponse<TelegramSendOtpResponse>(res);
+  return handleResponse<{ success: boolean; observation: JourneyObservation }>(res);
 }
 
-export async function verifyTelegramOtpApi(phone: string, otp: string, purpose?: string): Promise<TelegramVerifyOtpResponse> {
-  const res = await fetch(`${API_BASE_URL}/auth/telegram/verify-otp`, {
+export async function triggerSpecialOperationReminder(
+  payload: { title: string; message: string },
+  token: string
+): Promise<{ success: boolean; notification: any }> {
+  const res = await fetch(`${API_BASE_URL}/special-operation/journey/reminders`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone, otp, purpose }),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
   });
-  const data = await handleResponse<TelegramVerifyOtpResponse>(res);
-  if (data.authToken && data.authToken.user) {
-    data.authToken.user = normalizeUser(data.authToken.user);
-  }
-  return data;
+  return handleResponse<{ success: boolean; notification: any }>(res);
 }
 
+export async function resetSpecialOperationJourney(
+  token: string
+): Promise<{ success: boolean; message: string; journey: SpecialOperationJourney }> {
+  const res = await fetch(`${API_BASE_URL}/special-operation/journey/reset`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return handleResponse<{ success: boolean; message: string; journey: SpecialOperationJourney }>(res);
+}
 
+// ============================================================================
+// MARKETPLACE REPORTING API
+// ============================================================================
+
+export async function reportMarketplaceListing(
+  listingId: string,
+  payload: MarketplaceListingReportRequest
+): Promise<{ listingId: string; reportCount: number; flagged: boolean; message: string }> {
+  const res = await fetch(`${API_BASE_URL}/marketplace/listings/${encodeURIComponent(listingId)}/report`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<{ listingId: string; reportCount: number; flagged: boolean; message: string }>(res);
+}
+
+// ============================================================================
+// AGRI ENTREPRENEURSHIP APIS
+// ============================================================================
+
+export async function matchBusinessIdeas(
+  payload: BusinessIdeaMatchRequest
+): Promise<BusinessIdeaMatchResponse> {
+  const res = await fetch(`${API_BASE_URL}/business/ideas/match`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<BusinessIdeaMatchResponse>(res);
+}
+
+export async function calculateBusinessPlan(
+  payload: BusinessPlanCalculationRequest
+): Promise<BusinessPlanCalculationResult> {
+  const res = await fetch(`${API_BASE_URL}/business/plans/calculate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<BusinessPlanCalculationResult>(res);
+}
+
+export async function createFarmerBusinessPlan(
+  payload: BusinessPlanCreateRequest,
+  token: string
+): Promise<BusinessPlanModel> {
+  const res = await fetch(`${API_BASE_URL}/business/plans`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<BusinessPlanModel>(res);
+}
+
+export async function getFarmerBusinessPlans(
+  token: string
+): Promise<{ items: BusinessPlanModel[]; total: number }> {
+  const res = await fetch(`${API_BASE_URL}/business/plans`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return handleResponse<{ items: BusinessPlanModel[]; total: number }>(res);
+}
+
+export async function getFarmerBusinessPlanById(
+  planId: string,
+  token: string
+): Promise<BusinessPlanModel> {
+  const res = await fetch(`${API_BASE_URL}/business/plans/${encodeURIComponent(planId)}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return handleResponse<BusinessPlanModel>(res);
+}
+
+export async function updateFarmerBusinessPlan(
+  planId: string,
+  payload: BusinessPlanUpdateRequest,
+  token: string
+): Promise<BusinessPlanModel> {
+  const res = await fetch(`${API_BASE_URL}/business/plans/${encodeURIComponent(planId)}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<BusinessPlanModel>(res);
+}
+
+export async function deleteFarmerBusinessPlan(
+  planId: string,
+  token: string
+): Promise<{ success: boolean; message: string }> {
+  const res = await fetch(`${API_BASE_URL}/business/plans/${encodeURIComponent(planId)}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+  return handleResponse<{ success: boolean; message: string }>(res);
+}
+
+// ============================================================================
+// VALUE-ADDED PRODUCTS APIS
+// ============================================================================
+
+export async function getValueAdditionProducts(params?: {
+  raw_material?: string;
+  method_category?: string;
+}): Promise<{ items: ValueAdditionProductBlueprint[]; total: number }> {
+  const q = new URLSearchParams();
+  if (params?.raw_material) q.set('raw_material', params.raw_material);
+  if (params?.method_category) q.set('method_category', params.method_category);
+  const url = `${API_BASE_URL}/value-addition/products${q.toString() ? `?${q.toString()}` : ''}`;
+  const res = await fetch(url);
+  return handleResponse<{ items: ValueAdditionProductBlueprint[]; total: number }>(res);
+}
+
+export async function getValueAdditionProductDetail(
+  productId: string
+): Promise<ValueAdditionProductBlueprint> {
+  const res = await fetch(`${API_BASE_URL}/value-addition/products/${encodeURIComponent(productId)}`);
+  return handleResponse<ValueAdditionProductBlueprint>(res);
+}
+
+export async function calculateValueAddition(
+  payload: ValueAdditionCalculationRequest
+): Promise<ValueAdditionCalculationResponse> {
+  const res = await fetch(`${API_BASE_URL}/value-addition/calculate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  return handleResponse<ValueAdditionCalculationResponse>(res);
+}
 
 

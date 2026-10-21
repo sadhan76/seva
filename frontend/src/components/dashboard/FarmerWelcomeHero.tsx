@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sprout, MapPin, Calendar, CheckCircle2, Bot, CalendarPlus, Sparkles, Droplets, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { Sprout, MapPin, Calendar, CheckCircle2, Bot, CalendarPlus, Sparkles, Droplets, ArrowUpRight, ShieldCheck, UserCog } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import type { NavTab, FarmerProfile } from '../../types';
@@ -54,18 +54,27 @@ export const FarmerWelcomeHero: React.FC<FarmerWelcomeHeroProps> = ({ onNavigate
               )}
             </div>
 
-            <div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
-                {t.welcome.greeting}{' '}
-                <span className="text-emerald-300 font-black">
-                  {farmerName}
-                </span>
-              </h2>
-              <p className="text-xs sm:text-sm text-emerald-100/90 font-medium leading-relaxed mt-2 max-w-xl">
-                {language === 'ta'
-                  ? 'உங்கள் பண்ணைக்கான நேரடி நுண்ணறிவு, வானிலை முன்னறிவிப்பு மற்றும் நேரடி நெல் கொள்முதல் முன்பதிவு.'
-                  : 'Real-time microclimate advisory, data-driven irrigation advice, and regulated procurement tracking for your farm.'}
-              </p>
+            <div className="flex items-center gap-4">
+              {(user?.profilePhoto || farmer?.profilePhoto) ? (
+                <img
+                  src={user?.profilePhoto || farmer?.profilePhoto}
+                  alt={farmerName}
+                  className="w-14 h-14 rounded-full object-cover border-2 border-emerald-300 shadow-md shrink-0"
+                />
+              ) : null}
+              <div>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
+                  {t.welcome.greeting}{' '}
+                  <span className="text-emerald-300 font-black">
+                    {farmerName}
+                  </span>
+                </h2>
+                <p className="text-xs sm:text-sm text-emerald-100/90 font-medium leading-relaxed mt-2 max-w-xl">
+                  {language === 'ta'
+                    ? 'உங்கள் பண்ணைக்கான நேரடி நுண்ணறிவு, வானிலை முன்னறிவிப்பு மற்றும் நேரடி நெல் கொள்முதல் முன்பதிவு.'
+                    : 'Real-time microclimate advisory, data-driven irrigation advice, and regulated procurement tracking for your farm.'}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -90,6 +99,17 @@ export const FarmerWelcomeHero: React.FC<FarmerWelcomeHeroProps> = ({ onNavigate
                 <CalendarPlus className="w-4 h-4" />
               </div>
               <span>{t.welcome.quickMandiBtn}</span>
+              <ArrowUpRight className="w-4 h-4 text-emerald-300 ml-auto" />
+            </button>
+
+            <button
+              onClick={() => onNavigate('profile')}
+              className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-emerald-950/40 hover:bg-emerald-900/60 text-white font-bold text-xs sm:text-sm border border-emerald-500/40 shadow-xs transition-all active:scale-[0.98]"
+            >
+              <div className="p-1 rounded-lg bg-emerald-800/80 text-emerald-200">
+                <UserCog className="w-4 h-4" />
+              </div>
+              <span>{t.common.editProfile || 'Edit Profile'}</span>
               <ArrowUpRight className="w-4 h-4 text-emerald-300 ml-auto" />
             </button>
           </div>

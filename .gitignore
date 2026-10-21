@@ -61,3 +61,9 @@ htmlcov/
 *.sln
 *.sw?
 Thumbs.db
+
+# Backups & Scratch files
+backups/
+**/backups/
+scratch_*.json
+backend/scratch_*.json

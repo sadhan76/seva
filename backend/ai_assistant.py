@@ -477,7 +477,7 @@ def generate_agronomic_reply(
     # 8. General Agronomic Greeting or Broad Inquiry
     if is_tamil:
         reply = (
-            f"வணக்கம் {context.get('farmerName') or 'விவசாயி'}! நான் உங்கள் 'நம்ம விவசாயி' செயற்கை நுண்ணறிவு உதவியாளர்.\n\n"
+            f"வணக்கம் {context.get('farmerName') or 'விவசாயி'}! நான் உங்கள் 'அக்ரிபாரத்' செயற்கை நுண்ணறிவு உதவியாளர்.\n\n"
             f"உங்கள் பதிவு செய்யப்பட்ட பயிர்: **{crop}**, மாவட்டம்: **{district}** ({context.get('soilType')}, {context.get('totalLandAcres')} ஏக்கர்).\n\n"
             f"நீங்கள் என்னிடம் கேட்கக்கூடியவை:\n"
             f"1. **வானிலை & தெளிப்பு:** இன்றைய மழை வாய்ப்பு மற்றும் மருந்து தெளிக்க உகந்த நேரமா?\n"
@@ -489,7 +489,7 @@ def generate_agronomic_reply(
         follow_up = "உங்கள் பயிர் சாகுபடி குறித்த இன்றைய சந்தேகம் என்ன?"
     else:
         reply = (
-            f"Vanakkam {context.get('farmerName') or 'Farmer'}! I am your Namma Vivasayi AI Assistant.\n\n"
+            f"Vanakkam {context.get('farmerName') or 'Farmer'}! I am your AgriBharat AI Assistant.\n\n"
             f"I have loaded your profile: **{crop}** in **{district}** ({context.get('soilType')}, {context.get('totalLandAcres')} Acres).\n\n"
             f"I can assist you with:\n"
             f"1. **Weather & Spraying Advisory:** Real-time rainfall risk and optimal foliar spray windows.\n"
@@ -525,7 +525,7 @@ except ImportError:
 # GOOGLE GEMINI SYSTEM PROMPT & GROUNDING BUILDER
 # ============================================================================
 
-GEMINI_SYSTEM_INSTRUCTION = """You are 'Namma Vivasayi AI' (நம்ம விவசாயி AI), an expert, trusted agricultural assistant dedicated to empowering Tamil Nadu farmers.
+GEMINI_SYSTEM_INSTRUCTION = """You are 'AgriBharat' (அக்ரிபாரத்), an expert, trusted agricultural assistant dedicated to empowering Indian farmers.
 
 CORE OPERATIONAL PRINCIPLES:
 1. GROUNDED IN REALITY:
@@ -542,9 +542,11 @@ CORE OPERATIONAL PRINCIPLES:
    - ALWAYS include a brief recommendation advising on-field inspection and confirmation by local Village Agricultural Officers (VAO), Assistant Agricultural Officers (AAO), or Krishi Vigyan Kendra (KVK) extension specialists before applying hazardous chemical sprays.
    - Do NOT claim that an image or photo has been diagnosed unless an actual vision model has analyzed an image (this is a text consultation).
 
-4. BILINGUAL EXCELLENCE:
-   - If the requested language is Tamil ('ta'), generate your entire response in clear, fluent, natural Tamil (தமிழ்) using respectful and accessible farming terminology.
-   - If the requested language is English ('en'), respond in clear, practical, farmer-friendly English.
+4. MULTILINGUAL INDIAN REGIONAL EXCELLENCE:
+   - AgriBharat supports the 22 Eighth Schedule languages of India plus English (Assamese, Bengali, Bodo, Dogri, Gujarati, Hindi, Kannada, Kashmiri, Konkani, Maithili, Malayalam, Manipuri/Meitei, Marathi, Nepali, Odia, Punjabi, Sanskrit, Santali, Sindhi, Tamil, Telugu, Urdu, and English).
+   - Generate your entire answer in the farmer's requested language using natural, respectful, and accessible farming terminology.
+   - Strictly preserve agronomic accuracy, dosage metrics (kg/acre, ml/litre), fertilizer ratios (NPK), and pesticide application safety cautions.
+   - For RTL languages (Urdu, Kashmiri, Sindhi), structure sentences naturally with right-to-left linguistic flow.
 
 5. FORMATTING & READABILITY:
    - Keep replies focused, practical, and well-structured using short paragraphs, bullet points, or numbered steps.
@@ -694,26 +696,36 @@ async def generate_gemini_reply(
 
         context_prompt = build_grounded_farmer_prompt(context)
         regional_lang_map = {
-            "ta": "TAMIL (தமிழ்)",
-            "en": "ENGLISH",
-            "hi": "HINDI (हिंदी)",
-            "te": "TELUGU (తెలుగు)",
-            "kn": "KANNADA (ಕನ್ನಡ)",
-            "ml": "MALAYALAM (മലയാളം)",
-            "mr": "MARATHI (मराठी)",
-            "bn": "BENGALI (বাংলা)",
-            "gu": "GUJARATI (ગુજરાતી)",
-            "pa": "PUNJABI (ਪੰਜਾਬੀ)",
-            "or": "ODIA (ଓଡ଼ିଆ)",
             "as": "ASSAMESE (অসমীয়া)",
-            "ur": "URDU (اردو)",
+            "bn": "BENGALI (বাংলা)",
+            "brx": "BODO (बर')",
+            "doi": "DOGRI (डोगरी)",
+            "en": "ENGLISH",
+            "gu": "GUJARATI (ગુજરાતી)",
+            "hi": "HINDI (हिंदी)",
+            "kn": "KANNADA (ಕನ್ನಡ)",
+            "ks": "KASHMIRI (کٲشُر)",
+            "kok": "KONKANI (कोंकणी)",
+            "mai": "MAITHILI (मैथिली)",
+            "ml": "MALAYALAM (മലയാളം)",
+            "mni": "MANIPURI / MEITEI (ꯃꯤꯇꯩꯂꯣꯟ)",
+            "mr": "MARATHI (मराठी)",
             "ne": "NEPALI (नेपाली)",
+            "or": "ODIA (ଓଡ଼ିଆ)",
+            "pa": "PUNJABI (ਪੰਜਾਬੀ)",
             "sa": "SANSKRIT (संस्कृतम्)",
+            "sat": "SANTALI (ᱥᱟᱱᱛᱟᱲᱤ)",
+            "sd": "SINDHI (سنڌي)",
+            "ta": "TAMIL (தமிழ்)",
+            "te": "TELUGU (తెలుగు)",
+            "ur": "URDU (اردو)",
         }
         target_lang = regional_lang_map.get(language, language.upper() if language else "ENGLISH")
         lang_directive = (
             f"LANGUAGE INSTRUCTION: The farmer has requested the response in {target_lang}. "
-            f"Generate your entire answer in natural, respectful, agricultural, and clear {target_lang}."
+            f"Generate your entire answer in natural, respectful, agricultural, and clear {target_lang}. "
+            "Preserve verified agronomic metrics (e.g. kg/acre, ml/litre), crop variety names, and chemical safety cautions. "
+            "If quoting a government scheme or university advisory, preserve the official scheme name alongside regional translation."
         )
 
         user_content = f"{context_prompt}\n{lang_directive}\n\nFARMER QUESTION:\n{message}"

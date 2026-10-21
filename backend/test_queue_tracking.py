@@ -23,14 +23,22 @@ async def run_queue_tests():
         # ---------------------------------------------------------------------
         print("\n[Setup] Authenticating Users...")
 
-        # Farmer 1
-        f1_res = await client.post("/api/auth/login", json={
-            "phone": "9876543299", "password": "FarmerPassword@123", "role": "farmer"
+        # Farmer 1 (isolated test account)
+        f1_phone = f"98{secrets.randbelow(89999999) + 10000000}"
+        f1_reg = await client.post("/api/auth/register", json={
+            "name": "Queue Test Farmer",
+            "phone": f1_phone,
+            "village": "Thiruvaiyaru",
+            "state": "Tamil Nadu",
+            "district": "Thanjavur",
+            "password": "FarmerPassword@123",
+            "confirmPassword": "FarmerPassword@123"
         })
-        assert f1_res.status_code == 200, f"Farmer 1 login failed: {f1_res.text}"
-        f1_token = f1_res.json()["accessToken"]
+        assert f1_reg.status_code == 201, f"Farmer 1 reg failed: {f1_reg.text}"
+        f1_data = f1_reg.json()
+        f1_token = f1_data["accessToken"]
         f1_headers = {"Authorization": f"Bearer {f1_token}"}
-        f1_user = f1_res.json()["user"]
+        f1_user = f1_data["user"]
         print(f"  Farmer 1: {f1_user['name']} ({f1_user['farmerId']})")
 
         # Farmer 2 (Register if not already present, then login)
@@ -43,6 +51,7 @@ async def run_queue_tests():
                 "name": "Kandasamy V.",
                 "phone": f2_phone,
                 "village": "Thiruvaiyaru",
+                "state": "Tamil Nadu",
                 "district": "Thanjavur",
                 "password": "FarmerPassword@123",
                 "confirmPassword": "FarmerPassword@123"
@@ -67,16 +76,25 @@ async def run_queue_tests():
         staff_user = staff_res.json()["user"]
         print(f"  Staff: {staff_user['name']} (Assigned: {staff_user.get('mandiName')})")
 
-        # Pick unique isolated test date for this test run
-        test_date = (date.today() + timedelta(days=random.randint(60, 300))).isoformat()
+        # Pick unique isolated test date for this test run within 30 days
+        test_date = (date.today() + timedelta(days=random.randint(2, 25))).isoformat()
+        harvest_date = (date.today() + timedelta(days=1)).isoformat()
         mandi_name = staff_user.get("mandiName") or "Thanjavur Direct Procurement Centre #3 (Pillaiyarpatti)"
+
+        # Clean isolated test date to ensure fresh queue state
+        from database import get_bookings_collection
+        bcol = get_bookings_collection()
+        if bcol is not None:
+            await bcol.delete_many({"mandiName": mandi_name, "slotDate": test_date})
 
         # Create Booking A for Farmer 1
         b_payload_a = {
             "farmerName": f1_user["name"],
             "farmerId": f1_user["farmerId"],
             "mandiName": mandi_name,
-            "crop": "Paddy Grade A (Samba NL CR 1009)",
+            "crop": "Paddy Grade A (CR 1009)",
+            "cropVariety": "CR 1009",
+            "harvestDate": harvest_date,
             "quantityBags": 10,
             "preferredDate": test_date,
             "timeWindow": "08:30 AM - 11:30 AM"
@@ -169,18 +187,20 @@ async def run_queue_tests():
         # TEST 6: Queue positions update when bookings change
         # ---------------------------------------------------------------------
         print("\n--- [Test 6] Queue positions update dynamically as bookings change ---")
-        # Create Booking B for Farmer 1 at same centre and slot
+        # Create Booking B for Farmer 2 at same centre and slot
         b_payload_b = {
-            "farmerName": f1_user["name"],
-            "farmerId": f1_user["farmerId"],
+            "farmerName": f2_user["name"],
+            "farmerId": f2_user["farmerId"],
             "mandiName": mandi_name,
-            "crop": "Paddy Grade A (Samba NL CR 1009)",
+            "crop": "Paddy Grade A (CR 1009)",
+            "cropVariety": "CR 1009",
+            "harvestDate": harvest_date,
             "quantityBags": 15,
             "preferredDate": test_date,
             "timeWindow": "08:30 AM - 11:30 AM"
         }
-        res_b = await client.post("/api/procurement/bookings", json=b_payload_b, headers=f1_headers)
-        assert res_b.status_code == 201
+        res_b = await client.post("/api/procurement/bookings", json=b_payload_b, headers=f2_headers)
+        assert res_b.status_code == 201, f"Booking B failed: {res_b.text}"
         bid_b = res_b.json()["bookingId"]
         # Check in Booking B
         await client.post(f"/api/staff/bookings/{bid_b}/checkin", json={"notes": "Truck B arrived"}, headers=staff_headers)
@@ -197,12 +217,19 @@ async def run_queue_tests():
         print(f"  -> Booking A: QueuePosition={qa_track['queuePosition']}, Ahead={qa_track['vehiclesAhead']}")
 
         # Check queue status for Booking B: should be Pos #2 (1 ahead)
-        qb_track = (await client.get(f"/api/procurement/queue/{bid_b}", headers=f1_headers)).json()
+        qb_track = (await client.get(f"/api/procurement/queue/{bid_b}", headers=f2_headers)).json()
         assert qb_track["queuePosition"] == 2
         assert qb_track["vehiclesAhead"] == 1
         print(f"  -> Booking B: QueuePosition={qb_track['queuePosition']}, Ahead={qb_track['vehiclesAhead']}")
 
-        # Complete Booking A
+        # Quality inspect and Complete Booking A
+        await client.post(f"/api/staff/bookings/{bid_a}/quality-inspection", json={
+            "qualityStatus": "ACCEPTED",
+            "acceptedWeightKg": 400.0,
+            "rejectedWeightKg": 0.0,
+            "moisturePercent": 14.0,
+            "qualityGrade": "Grade A"
+        }, headers=staff_headers)
         await client.post(f"/api/staff/bookings/{bid_a}/processing", headers=staff_headers)
         tx_payload = {
             "actualNetWeightQuintals": 10.0,
@@ -216,7 +243,7 @@ async def run_queue_tests():
 
         # Now check Booking B again: since Booking A completed and left active queue,
         # Booking B moves forward to Pos #1 (0 ahead)!
-        qb_updated = (await client.get(f"/api/procurement/queue/{bid_b}", headers=f1_headers)).json()
+        qb_updated = (await client.get(f"/api/procurement/queue/{bid_b}", headers=f2_headers)).json()
         assert qb_updated["queuePosition"] == 1
         assert qb_updated["vehiclesAhead"] == 0
         print(f"  -> PASS: Dynamic Queue Update: Booking B moved to Pos #{qb_updated['queuePosition']} (Vehicles ahead: {qb_updated['vehiclesAhead']})")
@@ -234,8 +261,19 @@ async def run_queue_tests():
         print("  -> PASS: Completed booking removed from active queue position.")
 
         # Create Booking C and cancel it
-        b_payload_c = {**b_payload_a, "quantityBags": 5, "preferredDate": test_date, "timeWindow": "02:30 PM - 05:30 PM"}
+        b_payload_c = {
+            "farmerName": f1_user["name"],
+            "farmerId": f1_user["farmerId"],
+            "mandiName": mandi_name,
+            "crop": "Paddy Grade A (CR 1009)",
+            "cropVariety": "CR 1009",
+            "harvestDate": harvest_date,
+            "quantityBags": 5,
+            "preferredDate": test_date,
+            "timeWindow": "02:30 PM - 05:30 PM"
+        }
         res_c = await client.post("/api/procurement/bookings", json=b_payload_c, headers=f1_headers)
+        assert res_c.status_code == 201, f"Booking C failed: {res_c.text}"
         bid_c = res_c.json()["bookingId"]
         cancel_res = await client.post(f"/api/staff/bookings/{bid_c}/cancel", headers=staff_headers)
         assert cancel_res.status_code == 200 and cancel_res.json()["status"] == "CANCELLED"

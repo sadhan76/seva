@@ -22,14 +22,21 @@ async def run_weighing_and_bills_tests():
         # ---------------------------------------------------------------------
         print("\n[Setup] Authenticating Users...")
 
-        # Farmer 1
-        f1_res = await client.post("/api/auth/login", json={
-            "phone": "9876543299", "password": "FarmerPassword@123", "role": "farmer"
+        # Farmer 1 (isolated test account)
+        f1_phone = f"98{secrets.randbelow(89999999) + 10000000}"
+        f1_reg = await client.post("/api/auth/register", json={
+            "name": "Weighing Test Farmer",
+            "phone": f1_phone,
+            "village": "Thiruvaiyaru",
+            "district": "Thanjavur",
+            "password": "FarmerPassword@123",
+            "confirmPassword": "FarmerPassword@123"
         })
-        assert f1_res.status_code == 200, f"Farmer 1 login failed: {f1_res.text}"
-        f1_token = f1_res.json()["accessToken"]
+        assert f1_reg.status_code == 201, f"Farmer 1 reg failed: {f1_reg.text}"
+        f1_data = f1_reg.json()
+        f1_token = f1_data["accessToken"]
         f1_headers = {"Authorization": f"Bearer {f1_token}"}
-        f1_user = f1_res.json()["user"]
+        f1_user = f1_data["user"]
         print(f"  Farmer 1: {f1_user['name']} ({f1_user['farmerId']})")
 
         # Farmer 2 (ensure registered and login)
@@ -67,21 +74,24 @@ async def run_weighing_and_bills_tests():
         assigned_mandi = staff_user.get("mandiName") or "Thanjavur Direct Procurement Centre #3 (Pillaiyarpatti)"
         print(f"  Staff: {staff_user['name']} (Assigned: {assigned_mandi})")
 
-        # Pick unique isolated test date
-        test_date = (date.today() + timedelta(days=random.randint(40, 200))).isoformat()
+        # Pick unique isolated test date within 30 days
+        test_date = (date.today() + timedelta(days=random.randint(10, 28))).isoformat()
+        harvest_date = (date.today() + timedelta(days=1)).isoformat()
 
         # Create Booking for Farmer 1
         b_payload = {
             "farmerName": f1_user["name"],
             "farmerId": f1_user["farmerId"],
             "mandiName": assigned_mandi,
-            "crop": "Paddy Grade A (Samba NL CR 1009)",
-            "quantityBags": 20,
+            "crop": "Paddy Grade A (CR 1009)",
+            "cropVariety": "CR 1009",
+            "harvestDate": harvest_date,
+            "quantityBags": 40,
             "preferredDate": test_date,
             "timeWindow": "08:30 AM - 11:30 AM"
         }
         res_create = await client.post("/api/procurement/bookings", json=b_payload, headers=f1_headers)
-        assert res_create.status_code == 201
+        assert res_create.status_code == 201, f"Create booking failed: {res_create.text}"
         booking = res_create.json()
         bid = booking["bookingId"]
         print(f"\n  Created Booking: {bid} (Token: {booking['tokenNumber']})")
@@ -90,9 +100,19 @@ async def run_weighing_and_bills_tests():
         # TEST 2: Invalid weights, prices, and deductions are rejected
         # ---------------------------------------------------------------------
         print("\n--- [Test 2] Invalid weights, prices, and deductions are rejected ---")
-        # 2a. Gate check-in and queue progression
+        # 2a. Gate check-in, queue progression, and quality inspection
         await client.post(f"/api/staff/bookings/{bid}/checkin", json={"notes": "Arrived"}, headers=staff_headers)
         await client.post(f"/api/staff/bookings/{bid}/queue", headers=staff_headers)
+
+        # Quality inspection stage required before weighing
+        qi_res = await client.post(f"/api/staff/bookings/{bid}/quality-inspection", json={
+            "qualityStatus": "ACCEPTED",
+            "acceptedWeightKg": 1500.0,
+            "rejectedWeightKg": 0.0,
+            "moisturePercent": 14.2,
+            "qualityGrade": "Grade A"
+        }, headers=staff_headers)
+        assert qi_res.status_code == 200, f"Quality inspection failed: {qi_res.text}"
 
         # 2b. Zero / Negative weight
         inv_w = await client.post(f"/api/staff/bookings/{bid}/weighing", json={

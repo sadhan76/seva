@@ -1,0 +1,774 @@
+[
+    {
+        "id": "national-livestock-mission",
+        "name": "National Livestock Mission (NLM)",
+        "nameTa": "தேசிய கால்நடை இயக்கம் (NLM)",
+        "category": "Animals & Livestock",
+        "governmentLevel": "Central",
+        "department": "Department of Animal Husbandry and Dairying (DAHD), Ministry of Fisheries, Animal Husbandry & Dairying, Govt of India",
+        "description": "Comprehensive central mission to develop livestock entrepreneurship, improve native breeds of sheep, goat, poultry, and pigs, and bridge the feed-fodder supply deficit.",
+        "benefits": [
+            "Up to 50% capital subsidy (up to ₹50 Lakhs) for establishing sheep, goat, poultry, and pig breeding units.",
+            "Up to 50% capital subsidy (up to ₹50 Lakhs) for fodder block, silage, and Total Mixed Ration (TMR) processing plants.",
+            "Support for certified fodder seed production and livestock insurance premium sharing."
+        ],
+        "eligibility": [
+            "Individual farmers, rural entrepreneurs, Self Help Groups (SHGs), Joint Liability Groups (JLGs), and Farmer Producer Organizations (FPOs).",
+            "Must possess or lease suitable land for establishing the breeding or rearing farm.",
+            "Must have training or practical experience in animal rearing and livestock management."
+        ],
+        "requiredDocuments": [
+            "Detailed Project Report (DPR) with techno-economic feasibility",
+            "Aadhaar Card and PAN Card",
+            "Proof of land ownership (Patta) or registered lease deed (minimum 8-10 years)",
+            "Bank account details and bank loan sanction letter or self-finance proof",
+            "Training certificate in animal husbandry or livestock rearing"
+        ],
+        "livestockTypes": [
+            "Sheep",
+            "Goat",
+            "Poultry",
+            "Pig"
+        ],
+        "applicationUrl": "https://nlm.udyamimitra.in/",
+        "sourceUrl": "https://www.dahd.gov.in/schemes-programmes",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "NLM Udyami Mitra Portal",
+        "isVerifiedLink": true,
+        "notes": "Applications must be submitted digitally via the official NLM Udyami Mitra portal. Sanction is subject to State Level Executive Committee (SLEC) and bank appraisal."
+    },
+    {
+        "id": "rashtriya-gokul-mission",
+        "name": "Rashtriya Gokul Mission (RGM)",
+        "nameTa": "ராஷ்ட்ரிய கோகுல் இயக்கம் (நாட்டு மாடுகள் பாதுகாப்பு திட்டம்)",
+        "category": "Animals & Livestock",
+        "governmentLevel": "Central",
+        "department": "Department of Animal Husbandry and Dairying (DAHD), Govt of India",
+        "description": "National initiative for genetic upgradation of bovine population, development and scientific conservation of indigenous cattle and buffalo breeds, and enhancing per-animal milk productivity.",
+        "benefits": [
+            "Subsidies up to 50% on the cost of sex-sorted semen doses to ensure high probability of female calves (>90%).",
+            "Subsidized/free doorstep Artificial Insemination (AI) services delivered through Multi-Purpose AI Technicians in Rural India (MAITRIs).",
+            "Financial assistance per successful pregnancy achieved via In Vitro Fertilization (IVF) technology for registered farmers.",
+            "Up to 50% capital subsidy (up to ₹2 Crores) for establishing elite indigenous Breed Multiplication Farms."
+        ],
+        "eligibility": [
+            "Small and marginal farmers, dairy owners, and gaushalas rearing indigenous or crossbred bovines.",
+            "Breed multiplication farm component is open to entrepreneurs, cooperatives, and FPOs with suitable bovine holding capacity."
+        ],
+        "requiredDocuments": [
+            "Aadhaar Card copy",
+            "Pashu Aadhaar / Bharat Pashudhan 12-digit ear tag number",
+            "Bank passbook copy with IFSC code",
+            "Land Patta or shed ownership document (for breed farm component)"
+        ],
+        "livestockTypes": [
+            "Cattle",
+            "Buffalo"
+        ],
+        "applicationUrl": "https://dahd.gov.in/schemes-programmes",
+        "sourceUrl": "https://www.dahd.gov.in/schemes-programmes",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "DAHD National Bovine Portal",
+        "isVerifiedLink": true,
+        "notes": "Artificial insemination services are actively available at veterinary institutions. Capital subsidies for private breed multiplication farms require periodic departmental notification and call for proposals."
+    },
+    {
+        "id": "livestock-health-disease-control",
+        "name": "Livestock Health and Disease Control Programme (LHDCP)",
+        "nameTa": "கால்நடை நலம் மற்றும் நோய் தடுப்புத் திட்டம் (LHDCP)",
+        "category": "Animals & Livestock",
+        "governmentLevel": "Central",
+        "department": "Department of Animal Husbandry and Dairying, Govt of India & State Animal Husbandry Dept",
+        "description": "Centrally sponsored programme to eradicate economic animal diseases through systematic biannual mass vaccination, disease surveillance, and veterinary healthcare strengthening.",
+        "benefits": [
+            "100% free mass prophylactic vaccination of cattle and buffaloes against Foot and Mouth Disease (FMD) every 6 months.",
+            "100% free vaccination for female calves against Brucellosis and small ruminants against Peste des Petits Ruminants (PPR).",
+            "Free 12-digit unique polyurethane ear tagging and digital health tracking on the Bharat Pashudhan portal."
+        ],
+        "eligibility": [
+            "All livestock farmers owning cattle, buffaloes, sheep, goats, or pigs in all notified rural districts."
+        ],
+        "requiredDocuments": [
+            "Pashu Aadhaar Ear Tag identification",
+            "Farmer Aadhaar and mobile number for Bharat Pashudhan portal entry"
+        ],
+        "livestockTypes": [
+            "Cattle",
+            "Buffalo",
+            "Sheep",
+            "Goat",
+            "Pig"
+        ],
+        "applicationUrl": "https://dahd.gov.in/schemes-programmes/lhdcp",
+        "sourceUrl": "https://dahd.gov.in/schemes-programmes/lhdcp",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "DAHD Animal Health Portal",
+        "isVerifiedLink": true,
+        "notes": "Vaccination camps are conducted at village level twice annually by Tamil Nadu Animal Husbandry veterinary dispensaries."
+    },
+    {
+        "id": "national-programme-dairy-development",
+        "name": "National Programme for Dairy Development (NPDD)",
+        "nameTa": "தேசிய பால்வள மேம்பாட்டு திட்டம் (NPDD)",
+        "category": "Animals & Livestock",
+        "governmentLevel": "Central",
+        "department": "Department of Animal Husbandry and Dairying (DAHD) & National Dairy Development Board (NDDB)",
+        "description": "Strengthens rural dairy procurement infrastructure, promotes clean milk production, and equips primary dairy cooperative societies with electronic milk testing and chilling units.",
+        "benefits": [
+            "Financial assistance to set up Automated Milk Collection Units (AMCUs) and Data Processor Milk Collection Units (DPMCUs) at village societies.",
+            "Installation of Bulk Milk Coolers (BMCs) to prevent bacterial degradation and maintain milk quality before processing.",
+            "Subsidized testing kits to identify milk adulterants at village collection centers."
+        ],
+        "eligibility": [
+            "Primary Dairy Cooperative Societies (Aavin affiliated in Tamil Nadu), Milk Producer Companies (MPCs), and dairy-based FPOs.",
+            "Individual milk pouring farmers benefit directly through transparent fat/SNF-based instant digital payments."
+        ],
+        "requiredDocuments": [
+            "Dairy cooperative society registration certificate",
+            "Membership passbook of the milk pouring farmer",
+            "Society bank account details"
+        ],
+        "livestockTypes": [
+            "Cattle",
+            "Buffalo"
+        ],
+        "applicationUrl": "https://dahd.gov.in/schemes-programmes/npdd",
+        "sourceUrl": "https://dahd.gov.in/schemes-programmes/npdd",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "National Dairy Development Portal",
+        "isVerifiedLink": true,
+        "notes": "Institutional infrastructure assistance for State Dairy Federations (Aavin) and District Milk Unions. Individual farmers benefit through membership in Primary Dairy Cooperative Societies; no direct individual walk-in application portal."
+    },
+    {
+        "id": "supporting-dairy-cooperatives-fpo",
+        "name": "Supporting Dairy Cooperatives & Farmer Producer Organisations (SDCFPO)",
+        "nameTa": "பால் உற்பத்தியாளர்கள் கூட்டுறவு மற்றும் உழவர் உற்பத்தியாளர் நிறுவனங்களுக்கான ஆதரவுத் திட்டம்",
+        "category": "Animals & Livestock",
+        "governmentLevel": "Central",
+        "department": "Department of Animal Husbandry and Dairying (DAHD) & National Dairy Development Board (NDDB)",
+        "description": "Provides working capital interest subvention to dairy cooperative federations and farmer producer organizations to ensure uninterrupted milk procurement from rural farmers during market shocks.",
+        "benefits": [
+            "2% per annum regular interest subvention on working capital loans availed by dairy cooperatives and FPOs.",
+            "Additional 2% per annum incentive subvention for prompt and timely repayment of loans.",
+            "Assures stable, unhindered daily milk procurement and timely weekly payments to rural pouring farmers."
+        ],
+        "eligibility": [
+            "State Cooperative Dairy Federations, District Cooperative Milk Unions, and registered dairy-focused Farmer Producer Organisations (FPOs)."
+        ],
+        "requiredDocuments": [
+            "Audited financial statements of the cooperative/FPO",
+            "Bank sanction letter for working capital credit line",
+            "Proof of direct milk procurement from farmer members"
+        ],
+        "livestockTypes": [
+            "Cattle",
+            "Buffalo"
+        ],
+        "applicationUrl": "https://nddb.coop/",
+        "sourceUrl": "https://dahd.gov.in/schemes-programmes/sdcfpo",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "NDDB Official Cooperative Portal",
+        "isVerifiedLink": true,
+        "notes": "Loan interest subvention scheme administered by NDDB for State Milk Federations and FPOs. Not open for direct individual retail farmer applications."
+    },
+    {
+        "id": "tn-livestock-insurance-scheme",
+        "name": "Tamil Nadu Livestock Insurance Scheme",
+        "nameTa": "தமிழ்நாடு கால்நடை காப்பீட்டுத் திட்டம்",
+        "category": "Animals & Livestock",
+        "governmentLevel": "State",
+        "department": "Department of Animal Husbandry and Veterinary Services, Govt of Tamil Nadu & TNLDA",
+        "description": "Comprehensive risk mitigation scheme providing subsidized insurance cover against accidental mortality, disease epidemics, and transit hazards for cattle, buffaloes, sheep, and goats.",
+        "benefits": [
+            "50% to 70% government subsidy on insurance premiums for indigenous, crossbred milch cows, breeding bulls, and small ruminants.",
+            "Comprehensive insurance claim settlement (up to the full market value assessed by veterinary assistant surgeon) in event of accidental death or epidemic disease.",
+            "100% premium subsidy provided for eligible beneficiaries under designated special state welfare schemes."
+        ],
+        "eligibility": [
+            "Farmers owning crossbred or high-yielding indigenous milch cows, she-buffaloes, sheep, or goats in Tamil Nadu.",
+            "Animals must be certified healthy and non-pregnant by a registered Veterinary Assistant Surgeon.",
+            "Must have official Pashu Aadhaar ear tag affixed."
+        ],
+        "requiredDocuments": [
+            "Veterinary health certificate and valuation report",
+            "Pashu Aadhaar ear-tag photograph",
+            "Farmer Aadhaar Card and bank passbook copy",
+            "Signed insurance proposal form"
+        ],
+        "livestockTypes": [
+            "Cattle",
+            "Buffalo",
+            "Sheep",
+            "Goat"
+        ],
+        "applicationUrl": "https://tnlda.tn.gov.in/",
+        "sourceUrl": "https://tnlda.tn.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "TNLDA Livestock Insurance Portal",
+        "isVerifiedLink": true,
+        "notes": "Subsidized livestock insurance is sanctioned subject to annual district target quotas allocated by TNLDA to local Veterinary Dispensaries. Confirm quota availability with your local Veterinary Assistant Surgeon."
+    },
+    {
+        "id": "tn-free-milch-cows-scheme",
+        "name": "Tamil Nadu Free Distribution of Milch Cows Scheme",
+        "nameTa": "இலவச கறவை மாடுகள் வழங்கும் திட்டம் (தமிழ்நாடு அரசு)",
+        "category": "Animals & Livestock",
+        "governmentLevel": "State",
+        "department": "Department of Animal Husbandry and Veterinary Services, Govt of Tamil Nadu",
+        "description": "Flagship rural welfare initiative supplying productive crossbred milch cows to economically disadvantaged rural women and landless agricultural households to establish stable dairy income.",
+        "benefits": [
+            "100% government grant for purchasing productive lactating crossbred or indigenous milch cows.",
+            "Government-funded transport allowance to bring cows from shandies to beneficiary villages.",
+            "Free initial insurance coverage and veterinary vaccination support for 1 year.",
+            "Automatic linkage with primary dairy cooperative societies (Aavin) for daily milk sale."
+        ],
+        "eligibility": [
+            "Rural women, landless agricultural laborers, destitute widows, and economically weaker households residing in selected village panchayats.",
+            "Beneficiary family should not own cultivable wet land or existing milch cows.",
+            "Selection finalized through village Grama Sabha consensus."
+        ],
+        "requiredDocuments": [
+            "Ration Card / Smart Family Card copy",
+            "Aadhaar Card",
+            "Income and Community Certificate issued by Tahsildar",
+            "Bank passbook copy (Aadhaar linked)"
+        ],
+        "livestockTypes": [
+            "Cattle"
+        ],
+        "applicationUrl": "https://ahvs.tn.gov.in/",
+        "sourceUrl": "https://ahvs.tn.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "TN Animal Husbandry Dept Portal",
+        "isVerifiedLink": true,
+        "notes": "Departmental scheme for ultra-poor landless women. Beneficiaries are identified at the village panchayat level by a committee and approved in Grama Sabhas; no open public online portal. Contact local Veterinary Assistant Surgeon."
+    },
+    {
+        "id": "tn-goat-sheep-rearing-scheme",
+        "name": "Tamil Nadu Vetri Magalir Goat & Sheep Livelihood Scheme",
+        "nameTa": "வெற்றி மகளிர் ஆடுகள் வளர்ப்புத் திட்டம் (இலவச செம்மறி / வெள்ளாடுகள்)",
+        "category": "Animals & Livestock",
+        "governmentLevel": "State",
+        "department": "Department of Animal Husbandry and Veterinary Services, Govt of Tamil Nadu",
+        "description": "Targeted rural livelihood scheme providing units of female goats or sheep with 100% subsidy to rural women, widows, and marginalized households for supplementary income generation.",
+        "benefits": [
+            "100% government subsidy providing units of 5 sheep or goats per eligible rural woman beneficiary.",
+            "Comprehensive government funding covering transport allowance, deworming, vaccination, and first-year livestock insurance.",
+            "Training on scientific goat and sheep shelter management, nutrition, and disease prevention."
+        ],
+        "eligibility": [
+            "Rural women belonging to Below Poverty Line (BPL) families, destitute widows, deserted women, and agricultural labor households.",
+            "Applicant must be a permanent resident of the designated village panchayat."
+        ],
+        "requiredDocuments": [
+            "Smart Ration Card copy",
+            "Aadhaar Card copy",
+            "BPL Certificate or VAO Residence & Livelihood Certificate",
+            "Bank Account Passbook"
+        ],
+        "livestockTypes": [
+            "Goat",
+            "Sheep"
+        ],
+        "applicationUrl": "https://ahvs.tn.gov.in/",
+        "sourceUrl": "https://ahvs.tn.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "TN Animal Husbandry Welfare Portal",
+        "isVerifiedLink": true,
+        "notes": "Beneficiary selection (4 goats/sheep per eligible woman) conducted periodically through Grama Sabhas and Village Poverty Reduction Committees under Animal Husbandry department guidelines. Contact local Veterinary Assistant Surgeon."
+    },
+    {
+        "id": "tn-fodder-development-scheme",
+        "name": "Tamil Nadu Fodder Development & Seed Distribution Scheme",
+        "nameTa": "பசுந்தீவன அபிவிருத்தி மற்றும் தீவன விதை வழங்கல் திட்டம்",
+        "category": "Animals & Livestock",
+        "governmentLevel": "State",
+        "department": "Department of Animal Husbandry & Agriculture, Govt of Tamil Nadu",
+        "description": "Encourages cultivation of nutrient-dense perennial green fodder crops to eliminate feed shortages, enhance animal immunity, and reduce daily concentrate feeding expenses for dairy farmers.",
+        "benefits": [
+            "Free or 75% subsidized distribution of certified perennial green fodder stem cuttings and slips (Co-4, Co-5, Super Napier).",
+            "Supply of high-yielding fodder sorghum (CoFS-29 / CoFS-31) and legume seeds (Cowpea, Desmanthus).",
+            "Subsidized power-operated chaff cutters (up to 50% subsidy) to minimize fodder wastage during feeding."
+        ],
+        "eligibility": [
+            "Farmers owning cattle, buffaloes, sheep, or goats with minimum 0.25 to 1 acre of land having assured irrigation facilities."
+        ],
+        "requiredDocuments": [
+            "Land Patta / Chitta extract",
+            "Aadhaar Card copy",
+            "Animal holding certificate or Pashu Aadhaar ear tag details"
+        ],
+        "livestockTypes": [
+            "Cattle",
+            "Buffalo",
+            "Sheep",
+            "Goat"
+        ],
+        "applicationUrl": "https://ahvs.tn.gov.in/",
+        "sourceUrl": "https://ahvs.tn.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "TN Agrisnet & AHD Fodder Portal",
+        "isVerifiedLink": true,
+        "notes": "Fodder seeds, slips (Co-FS-29/Napier), and chaff cutter units distributed through Veterinary Dispensaries during seasonal agricultural campaigns subject to stock availability."
+    },
+    {
+        "id": "scheme_pmfby_crop_insurance",
+        "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY) - Crop Insurance",
+        "nameTa": "பிரதம மந்திரி பயிர் காப்பீட்டுத் திட்டம் (PMFBY)",
+        "category": "Insurance",
+        "governmentLevel": "Central",
+        "department": "Department of Agriculture and Farmers Welfare, Govt of India & State Agriculture Directorate",
+        "description": "Comprehensive yield-based crop insurance providing financial safety against non-preventable natural calamities (cyclones, drought, flood, pests) from pre-sowing to post-harvest storage.",
+        "benefits": [
+            "Maximum farmer premium capped at 2.0% for Kharif/Samba food crops, 1.5% for Rabi crops, and 5.0% for annual commercial/horticultural crops; remaining premium paid by State and Central Governments.",
+            "Direct Benefit Transfer (DBT) claim settlement based on satellite remote sensing and crop cutting experiments (CCE).",
+            "Localized calamity coverage (hailstorms, landslide, inundation) with claim intimation window within 72 hours."
+        ],
+        "eligibility": [
+            "All farmers growing notified crops (such as Samba Paddy, Millets, Cotton, Pulses, Groundnut, Sugarcane) in notified revenue villages.",
+            "Both loanee farmers (holding crop loans) and non-loanee farmers are equally eligible."
+        ],
+        "requiredDocuments": [
+            "Crop Sowing Certificate (Adangal) issued by Village Administrative Officer (VAO)",
+            "Land Patta / Chitta ownership extract",
+            "Aadhaar Card copy",
+            "Cancelled bank cheque or active passbook front page with IFSC code"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://pmfby.gov.in/",
+        "sourceUrl": "https://pmfby.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "PMFBY National Insurance Portal",
+        "isVerifiedLink": true,
+        "notes": "Non-loanee farmers can enroll via Common Service Centres (CSC), Primary Agricultural Cooperative Credit Societies (PACCS), or the PMFBY portal before the seasonal cut-off date."
+    },
+    {
+        "id": "scheme_rwbcis_weather_insurance",
+        "name": "Restructured Weather Based Crop Insurance Scheme (RWBCIS)",
+        "nameTa": "வானிலை அடிப்படையிலான மறுசீரமைக்கப்பட்ட பயிர் காப்பீட்டுத் திட்டம் (RWBCIS)",
+        "category": "Insurance",
+        "governmentLevel": "Central",
+        "department": "Ministry of Agriculture and Farmers Welfare, Govt of India",
+        "description": "Parametric weather-indexed insurance providing fast compensation against anticipated crop losses caused by adverse weather conditions such as unseasonal rainfall, temperature spikes, or relative humidity anomalies.",
+        "benefits": [
+            "Parametric payout triggered automatically whenever weather station readings breach pre-defined agronomic trigger levels, eliminating waiting time for crop cutting experiments.",
+            "Subsidized premium with farmer share capped at 5% for horticultural and commercial crops."
+        ],
+        "eligibility": [
+            "Cultivators of notified perennial horticultural crops (mango, banana, citrus, cashew) in reference weather station command areas."
+        ],
+        "requiredDocuments": [
+            "Adangal sowing proof from VAO",
+            "Land Patta and Chitta documents",
+            "Aadhaar Card and Bank Passbook"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://pmfby.gov.in/",
+        "sourceUrl": "https://pmfby.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "National Weather Crop Insurance Portal",
+        "isVerifiedLink": true,
+        "notes": "Weather data is recorded via Automatic Weather Stations (AWS) installed by the State Agricultural Department."
+    },
+    {
+        "id": "scheme_micro_irrigation",
+        "name": "Per Drop More Crop - Micro Irrigation Scheme (PMKSY-PDMC)",
+        "nameTa": "சொட்டு நீர் மற்றும் தெளிப்பு நீர் பாசன மானியத் திட்டம் (PMKSY)",
+        "category": "Irrigation",
+        "governmentLevel": "Central",
+        "department": "Department of Horticulture & Agricultural Engineering, Govt of Tamil Nadu",
+        "description": "Centrally sponsored scheme to maximize water use efficiency by subsidizing modern drip and sprinkler micro-irrigation systems for agricultural and horticultural farmlands.",
+        "benefits": [
+            "100% subsidy for Small & Marginal farmers (up to 5 acres) for installing ISI-standard drip/sprinkler systems.",
+            "75% subsidy for other larger landholding farmers.",
+            "Saves up to 40-60% irrigation water and increases crop yields by 20-30% via fertigation."
+        ],
+        "eligibility": [
+            "Farmers owning cultivable agricultural land with assured irrigation water source (open well, borewell, or farm pond).",
+            "Priority accorded to water-scarce and over-exploited groundwater blocks."
+        ],
+        "requiredDocuments": [
+            "Land Patta, Chitta, and FMB sketch",
+            "VAO Adangal certificate indicating current crops",
+            "Small / Marginal Farmer Certificate issued by Revenue Tahsildar",
+            "Water and soil testing report from an authorized laboratory",
+            "Field layout sketch and supplier quotation"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://pmksy.gov.in/",
+        "sourceUrl": "https://tnagrisnet.tn.gov.in/home/schemes/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "Pradhan Mantri Krishi Sinchayee Yojana Portal",
+        "isVerifiedLink": true,
+        "notes": "Applications are registered online via TNAgrisnet / MIMIS portal and inspected by horticulture field officers."
+    },
+    {
+        "id": "scheme_solar_pumpset_kusum",
+        "name": "Tamil Nadu Solar Powered Agricultural Pump Sets (PM-KUSUM Component B)",
+        "nameTa": "சூரிய சக்தியால் இயங்கும் பாசன பம்ப் செட்டுகள் திட்டம் (PM-KUSUM)",
+        "category": "Irrigation",
+        "governmentLevel": "State",
+        "department": "Agricultural Engineering Department, Govt of Tamil Nadu & MNRE",
+        "description": "Provides clean solar-powered agricultural pumping solutions to farmers located in off-grid farmlands, eliminating dependence on diesel pumps and erratic grid supply.",
+        "benefits": [
+            "Up to 70% capital subsidy (30% Central Ministry of New and Renewable Energy + 40% Govt of Tamil Nadu) on standalone AC/DC solar pumpsets (5 HP, 7.5 HP, 10 HP).",
+            "Farmer contribution restricted to approximately 30% of total installation cost.",
+            "Guaranteed daytime irrigation without electricity bills for 25-year panel warranty."
+        ],
+        "eligibility": [
+            "Individual farmers having borewells or open wells with sufficient water discharge in areas where grid connection is unavailable or delayed.",
+            "Must not have an existing TANGEDCO free electricity connection on the same survey number."
+        ],
+        "requiredDocuments": [
+            "Land Patta and Chitta with FMB sketch",
+            "VAO certificate of well existence and water discharge suitability",
+            "Aadhaar Card and bank passbook",
+            "Non-availability certificate of agricultural power service connection"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://pmkusum.mnre.gov.in/",
+        "sourceUrl": "https://aed.tn.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "National Solar Agriculture Portal",
+        "isVerifiedLink": true,
+        "notes": "Application intake is released in periodic batches through the Agricultural Engineering Department (AED) and Uzhavan App based on annual state subsidy releases. Confirm current active batch with AED."
+    },
+    {
+        "id": "scheme_farm_ponds_rainwater",
+        "name": "Tamil Nadu Rainwater Harvesting Farm Ponds Scheme",
+        "nameTa": "மழைநீர் சேகரிப்பு பண்ணைக் குட்டைகள் அமைக்கும் திட்டம்",
+        "category": "Irrigation",
+        "governmentLevel": "State",
+        "department": "Agricultural Engineering Department, Govt of Tamil Nadu",
+        "description": "Supports construction of on-farm earthen rainwater storage ponds to harvest runoff during monsoons, recharge groundwater, and provide critical supplemental irrigation.",
+        "benefits": [
+            "100% subsidy (up to ₹1,00,000 per unit) for creating standardized farm ponds (30m × 30m × 1.5m) using earthmoving machinery.",
+            "Stores up to 13.5 lakh liters of rainwater, protecting rainfed crops during mid-season drought.",
+            "Provides supplemental farm income through integrated fish culture and duck rearing."
+        ],
+        "eligibility": [
+            "Farmers owning rainfed or semi-irrigated agricultural holdings with natural catchment area.",
+            "Small and marginal farmers given priority in dryland delta and southern districts."
+        ],
+        "requiredDocuments": [
+            "Land revenue Patta and Chitta copy",
+            "VAO certified field sketch",
+            "Aadhaar Card and bank passbook"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://aed.tn.gov.in/",
+        "sourceUrl": "https://aed.tn.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "TN Agricultural Engineering Portal",
+        "isVerifiedLink": true,
+        "notes": "Pond subsidies are subject to annual block-wise watershed targets sanctioned by Agricultural Engineering Department. Confirm current watershed allocation with local Assistant Executive Engineer (AED)."
+    },
+    {
+        "id": "scheme_farm_mechanization",
+        "name": "Sub-Mission on Agricultural Mechanization (SMAM)",
+        "nameTa": "வேளாண் இயந்திரமயமாக்கல் துணை இயக்கம் (SMAM)",
+        "category": "Machinery",
+        "governmentLevel": "Central",
+        "department": "Department of Agriculture & Farmers Welfare, Govt of India & TN AED",
+        "description": "Promotes modern farm mechanization to offset agricultural labor shortages, improve field operation timeliness, and reduce input costs through subsidized machinery.",
+        "benefits": [
+            "40% to 50% capital subsidy (up to ₹2.00 Lakhs for Tractors, ₹1.00 Lakh for Power Tillers, and ₹4.00 Lakhs for Paddy Transplanters).",
+            "Special 50% subsidy concession for Small/Marginal, SC/ST, and women farmers.",
+            "Subsidies on laser land levelers, rotavators, multi-crop threshers, and straw balers."
+        ],
+        "eligibility": [
+            "Individual farmers holding cultivable land in their own name or family name.",
+            "Farmer must not have availed machinery subsidy for the same category in the preceding 5 years."
+        ],
+        "requiredDocuments": [
+            "Aadhaar Card copy",
+            "Land Patta and Chitta extract",
+            "Small / Marginal farmer certificate (if claiming 50% subsidy rate)",
+            "Quotation from registered, tested machinery manufacturer or dealer",
+            "Bank passbook copy with IFSC code"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://agrimachinery.nic.in/",
+        "sourceUrl": "https://agrimachinery.nic.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "Central Agrimachinery Portal",
+        "isVerifiedLink": true,
+        "notes": "Applications are selected via online lottery/seniority token system on the Central Agricultural Mechanization Portal."
+    },
+    {
+        "id": "scheme_custom_hiring_centers",
+        "name": "Establishment of Custom Hiring Centres (CHC) for Agricultural Machinery",
+        "nameTa": "கிராமப்புற வேளாண் இயந்திரங்கள் வாடகை மையங்கள் அமைக்கும் திட்டம் (CHC)",
+        "category": "Machinery",
+        "governmentLevel": "State",
+        "department": "Agricultural Engineering Department, Govt of Tamil Nadu",
+        "description": "Establishes village-level agricultural machinery rental hubs so small and marginal farmers can hire expensive modern machinery at reasonable, regulated hourly rental rates.",
+        "benefits": [
+            "40% capital subsidy (up to ₹10 Lakhs to ₹25 Lakhs per project) for purchasing a package of high-end farm machinery.",
+            "Enables Farmer Producer Organizations (FPOs) and entrepreneur groups to operate commercial farm equipment rental services.",
+            "Provides small farmers access to combine harvesters, laser levelers, and balers without capital debt."
+        ],
+        "eligibility": [
+            "Farmer Producer Organisations (FPOs), Primary Agricultural Cooperative Credit Societies (PACCS), village youth Self Help Groups, and rural entrepreneurs.",
+            "Must have suitable space for garaging machinery."
+        ],
+        "requiredDocuments": [
+            "FPO / Society registration certificate and resolution",
+            "Detailed project report (DPR) with machinery package quotation",
+            "Bank loan sanction letter for promoter and bank contribution share",
+            "Land or shed ownership/lease document for machinery yard"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://agrimachinery.nic.in/",
+        "sourceUrl": "https://aed.tn.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "TN AED Custom Hiring Portal",
+        "isVerifiedLink": true,
+        "notes": "Target-based capital assistance for FPOs, Cooperative Societies, and rural entrepreneur groups. Proposals submitted through Agricultural Engineering Department."
+    },
+    {
+        "id": "scheme_subsidized_power_tillers",
+        "name": "Tamil Nadu Distribution of Subsidized Power Tillers and Weeders",
+        "nameTa": "மானிய விலையில் பவர் டில்லர்கள் மற்றும் களை எடுக்கும் கருவிகள் வழங்கும் திட்டம்",
+        "category": "Machinery",
+        "governmentLevel": "State",
+        "department": "Agricultural Engineering Department, Govt of Tamil Nadu",
+        "description": "Provides targeted capital subsidies on compact power tillers and power weeders to assist smallholders and women farmers in inter-cultivation and seedbed preparation.",
+        "benefits": [
+            "Fixed back-ended capital subsidy of up to ₹85,000 for power tillers (8 HP and above) and up to ₹63,000 for power weeders.",
+            "Priority allocation for delta paddy growers and horticultural farmers.",
+            "Reduces manual weeding expenses by 60%."
+        ],
+        "eligibility": [
+            "Small and marginal farmers cultivating wet or dry crops in Tamil Nadu.",
+            "Applicant must own a minimum of 1 acre cultivable land."
+        ],
+        "requiredDocuments": [
+            "Land Patta and Chitta",
+            "Aadhaar Card copy",
+            "Small farmer certificate issued by Tahsildar",
+            "Dealer proforma invoice for tested model"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://tnagrisnet.tn.gov.in/",
+        "sourceUrl": "https://aed.tn.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Application Window Unknown",
+        "portalName": "TNAgrisnet Machinery Portal",
+        "isVerifiedLink": true,
+        "notes": "Subsidies allocated periodically through Uzhavan App and Agricultural Engineering Department. Confirm current district quota with local Assistant Executive Engineer (AED)."
+    },
+    {
+        "id": "scheme_kalaignar_village",
+        "name": "Kalaignar All Village Integrated Agriculture Development Programme",
+        "nameTa": "கலைஞரின் அனைத்து கிராம ஒருங்கிணைந்த வேளாண் வளர்ச்சி திட்டம்",
+        "category": "State",
+        "governmentLevel": "State",
+        "department": "Department of Agriculture & Farmers Welfare, Govt of Tamil Nadu",
+        "description": "Multi-departmental convergence programme transforming all village panchayats into self-sufficient agricultural hubs through fallow land rejuvenation, tree sapling distribution, and farm infrastructure.",
+        "benefits": [
+            "Free distribution of high-yielding coconut seedlings (2 seedlings per household).",
+            "100% subsidy for community borewells to rejuvenate contiguous dry fallow land clusters (minimum 15 acres).",
+            "Distribution of subsidized tarpaulin sheets, micro-nutrient kits, and horticulture saplings.",
+            "Soil health test cards issued free of cost to all landholders in notified phase villages."
+        ],
+        "eligibility": [
+            "All resident farmers in village panchayats notified under the current financial year phase.",
+            "Small, marginal, and tenant farmers holding Patta, Chitta, or Uzhavar Sandhai ID."
+        ],
+        "requiredDocuments": [
+            "Aadhaar Card copy",
+            "Land Revenue Patta / Chitta extract",
+            "Smart Ration Card copy",
+            "Active bank passbook with IFSC code"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://tnagrisnet.tn.gov.in/",
+        "sourceUrl": "https://www.tnagrisnet.tn.gov.in/home/schemes/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "TNAgrisnet Official Portal",
+        "isVerifiedLink": true,
+        "notes": "Implemented across 2,500+ village panchayats annually through joint inspections by Revenue and Agriculture officers."
+    },
+    {
+        "id": "scheme_free_electricity",
+        "name": "Tamil Nadu Free Agricultural Power Supply Scheme",
+        "nameTa": "விவசாயத்திற்கான இலவச மும்முனை மின்சாரத் திட்டம்",
+        "category": "State",
+        "governmentLevel": "State",
+        "department": "TANGEDCO (Tamil Nadu Generation and Distribution Corporation), Govt of Tamil Nadu",
+        "description": "Pioneering state welfare initiative providing completely free electrical energy for approved agricultural motor pump sets, guaranteeing irrigation security for millions of farmers.",
+        "benefits": [
+            "100% free unmetered electrical power supply for approved agricultural open-well and borewell electric pump sets.",
+            "Subsidized tatkal fast-track electricity service connections for farmers requiring immediate agricultural energized lines."
+        ],
+        "eligibility": [
+            "Agricultural landholders owning authorized borewells or open wells with verified cultivable agricultural land.",
+            "Must not use the connection for commercial or non-farming activities."
+        ],
+        "requiredDocuments": [
+            "TANGEDCO Agricultural Application Form (Form 1)",
+            "Land Patta and Chitta documents in applicant's name",
+            "Well ownership / Co-ownership certificate from VAO",
+            "Aadhaar Card and smart card copy"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://www.tangedco.org/",
+        "sourceUrl": "https://www.tangedco.org/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "TANGEDCO Official Portal",
+        "isVerifiedLink": true,
+        "notes": "Administered locally by TANGEDCO section executive engineers; requires submission of annual non-commercial utilization declaration."
+    },
+    {
+        "id": "scheme_uzhavar_pathukappu",
+        "name": "Chief Minister's Uzhavar Pathukappu Thittam (Farmers Social Security Scheme)",
+        "nameTa": "முதலமைச்சரின் உழவர் பாதுகாப்புத் திட்டம்",
+        "category": "State",
+        "governmentLevel": "State",
+        "department": "Revenue and Disaster Management Department, Govt of Tamil Nadu",
+        "description": "Comprehensive socio-economic security umbrella offering financial relief, educational scholarships, accidental death compensation, and pensions to farmers and landless agricultural workers.",
+        "benefits": [
+            "Accidental death relief compensation of ₹1,00,000 to the nominated family members of deceased registered farmers.",
+            "Permanent total disability relief of up to ₹1,00,000 in case of farm accidents.",
+            "Monthly old-age social security pension (₹1,000/month) for destitute elderly agricultural laborers.",
+            "Educational grants for farmers' children pursuing ITI, Polytechnic, Engineering, and Medical degrees."
+        ],
+        "eligibility": [
+            "Small and marginal farmers holding cultivable wet land up to 2.5 acres or dry land up to 5.0 acres.",
+            "Landless agricultural laborers engaged in farming activities in Tamil Nadu."
+        ],
+        "requiredDocuments": [
+            "Uzhavar Pathukappu Thittam Member ID card / number",
+            "Aadhaar Card and Ration Card",
+            "Land revenue Patta or VAO Agricultural Laborer Certificate",
+            "Bank account details"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://www.tn.gov.in/",
+        "sourceUrl": "https://www.tn.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "TN Government Social Security Portal",
+        "isVerifiedLink": true,
+        "notes": "Administered through Special Tahsildars (Social Security Schemes) at taluk headquarters across Tamil Nadu."
+    },
+    {
+        "id": "scheme_pm_kisan",
+        "name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+        "nameTa": "பிரதம மந்திரி கிசான் சம்மான் நிதி திட்டம் (PM-KISAN)",
+        "category": "Central",
+        "governmentLevel": "Central",
+        "department": "Ministry of Agriculture and Farmers Welfare, Govt of India",
+        "description": "Direct income support programme transferring ₹6,000 annually to all eligible landholding farmer families across India to supplement domestic and farming input procurement expenses.",
+        "benefits": [
+            "₹6,000 per year directly transferred to bank accounts in three equal installments of ₹2,000 every 4 months via Direct Benefit Transfer (DBT).",
+            "Direct Aadhaar-seeded automated payment with zero intermediary deductions.",
+            "Provides financial liquidity ahead of major sowing windows (Kharif, Rabi, Summer)."
+        ],
+        "eligibility": [
+            "All landholding farmer families who have cultivable land recorded in their names in state revenue land registries.",
+            "Excludes institutional landholders, income tax payees, and constitutional post holders."
+        ],
+        "requiredDocuments": [
+            "Aadhaar Card with mobile linkage for e-KYC authentication",
+            "Land Patta / Land Holding Ownership Record",
+            "Active bank account linked with Aadhaar (NPCI Aadhaar mapping)"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://pmkisan.gov.in/",
+        "sourceUrl": "https://pmkisan.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "PM-KISAN National Portal",
+        "isVerifiedLink": true,
+        "notes": "Biometric or facial recognition e-KYC must be completed online via the PM-KISAN mobile app or at Common Service Centres."
+    },
+    {
+        "id": "scheme_kisan_credit_card",
+        "name": "Kisan Credit Card (KCC) for Crop & Animal Husbandry Working Capital",
+        "nameTa": "விவசாயம் மற்றும் கால்நடை பராமரிப்புக்கான கிசான் கடன் அட்டை (KCC)",
+        "category": "Central",
+        "governmentLevel": "Central",
+        "department": "Department of Agriculture & DAHD, Ministry of Finance, Govt of India & RBI/NABARD",
+        "description": "Institutional institutional credit framework providing affordable short-term working capital loans to farmers, dairy producers, and livestock rearers with central interest subvention.",
+        "benefits": [
+            "Collateral-free institutional working capital credit up to ₹1.60 Lakhs (and up to ₹3.00 Lakhs for existing account holders).",
+            "Attractive concessional interest rate of 7.0% per annum with 3.0% prompt repayment incentive, reducing net effective interest rate to just 4.0% per annum.",
+            "Covers recurring costs for seeds, fertilizers, veterinary medicines, concentrate cattle feeds, and labor."
+        ],
+        "eligibility": [
+            "All farmers, dairy farmers, cattle owners, sheep/goat rearers, and poultry producers.",
+            "Tenant farmers, sharecroppers, and SHG groups are also eligible."
+        ],
+        "requiredDocuments": [
+            "Completed KCC application form",
+            "Aadhaar Card and PAN Card / Form 60",
+            "Land Patta and Chitta or animal ownership proof (Pashu Aadhaar tag)",
+            "Passport size photographs"
+        ],
+        "livestockTypes": [
+            "Cattle",
+            "Buffalo",
+            "Sheep",
+            "Goat",
+            "Poultry"
+        ],
+        "applicationUrl": "https://www.myscheme.gov.in/schemes/kcc",
+        "sourceUrl": "https://www.dahd.gov.in/schemes-programmes",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "National myScheme KCC Portal",
+        "isVerifiedLink": true,
+        "notes": "Available through all Commercial Banks, Regional Rural Banks (Tamil Nadu Grama Bank), and Cooperative Banks."
+    },
+    {
+        "id": "scheme_agriculture_infrastructure_fund",
+        "name": "Agriculture Infrastructure Fund (AIF)",
+        "nameTa": "வேளாண் உட்கட்டமைப்பு நிதித் திட்டம் (AIF)",
+        "category": "Central",
+        "governmentLevel": "Central",
+        "department": "Department of Agriculture and Farmers Welfare, Govt of India",
+        "description": "Financing facility providing medium-to-long term debt financing for investment in post-harvest management infrastructure and community agricultural assets such as modern warehouses, cold storage, and processing units.",
+        "benefits": [
+            "3% per annum interest subvention on bank term loans up to ₹2.00 Crores for a maximum tenure of 7 years.",
+            "Credit guarantee fee coverage under the Credit Guarantee Fund Trust for Micro and Small Enterprises (CGTMSE) for loans up to ₹2 Crores.",
+            "Encourages construction of digital mandi yards, grading units, pack houses, and assaying labs."
+        ],
+        "eligibility": [
+            "Primary Agricultural Cooperative Credit Societies (PACCS), Farmer Producer Organizations (FPOs), Agricultural Entrepreneurs, and Start-ups."
+        ],
+        "requiredDocuments": [
+            "Detailed Project Report (DPR) with cash-flow projection",
+            "Entity registration certificate and audited financial statements",
+            "Land ownership or registered lease agreement for project site",
+            "Bank loan application form"
+        ],
+        "livestockTypes": [],
+        "applicationUrl": "https://agriinfra.dac.gov.in/",
+        "sourceUrl": "https://agriinfra.dac.gov.in/",
+        "verificationDate": "2026-10-20",
+        "applicationStatus": "Active",
+        "portalName": "AIF National Financing Portal",
+        "isVerifiedLink": true,
+        "notes": "Loan applications are submitted directly through the online AIF portal and tracked transparently with participating lending institutions."
+    }
+]

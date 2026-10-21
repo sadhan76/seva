@@ -1,0 +1,16 @@
+{
+  "name": "AgriBharat — Smart Farming Intelligence & Agricultural Marketplace",
+  "short_name": "AgriBharat",
+  "description": "Smart Farming Intelligence & Agricultural Marketplace for Indian Farmers",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#064e3b",
+  "theme_color": "#059669",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "48x48 72x72 96x96 144x144 192x192 512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

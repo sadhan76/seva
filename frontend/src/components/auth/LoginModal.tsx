@@ -13,8 +13,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitc
   const { t } = useLanguage();
   const { login } = useAuth();
 
-  const [phone, setPhone] = useState('9876543299');
-  const [password, setPassword] = useState('FarmerPassword@123');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
   const [role, setRole] = useState<'farmer' | 'staff'>('farmer');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,10 +31,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitc
       await login({ phone, password, role });
       onClose();
     } catch (err: any) {
-      setErrorMessage(err.message || 'Authentication failed. Please verify credentials.');
+      const msg = err.message || '';
+      if (msg.includes('fetch') || msg.includes('Unable to connect') || msg.includes('NetworkError')) {
+        setErrorMessage('Unable to connect to AgriBharat server. Please ensure the backend is running at http://127.0.0.1:8000.');
+      } else {
+        setErrorMessage(err.message || 'Authentication failed. Please verify credentials.');
+      }
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSelectRole = (targetRole: 'farmer' | 'staff') => {
+    setRole(targetRole);
+    setErrorMessage(null);
   };
 
   const handleQuickFill = (targetRole: 'farmer' | 'staff') => {
@@ -80,7 +90,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitc
           <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-2xl border border-slate-200">
             <button
               type="button"
-              onClick={() => handleQuickFill('farmer')}
+              onClick={() => handleSelectRole('farmer')}
               className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
                 role === 'farmer'
                   ? 'bg-emerald-600 text-white shadow-sm'
@@ -92,7 +102,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitc
             </button>
             <button
               type="button"
-              onClick={() => handleQuickFill('staff')}
+              onClick={() => handleSelectRole('staff')}
               className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-xs font-bold transition-all ${
                 role === 'staff'
                   ? 'bg-emerald-600 text-white shadow-sm'
@@ -109,33 +119,36 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitc
         </div>
 
         {/* Quick Demo Helper Chips */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-emerald-600" /> Demo:
-          </span>
-          <button
-            type="button"
-            onClick={() => handleQuickFill('farmer')}
-            className={`text-[11px] px-2.5 py-1 rounded-lg border font-semibold transition-all ${
-              role === 'farmer'
-                ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-            }`}
-          >
-            Farmer (Murugesan)
-          </button>
-          <button
-            type="button"
-            onClick={() => handleQuickFill('staff')}
-            className={`text-[11px] px-2.5 py-1 rounded-lg border font-semibold transition-all ${
-              role === 'staff'
-                ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
-            }`}
-          >
-            Staff Inspector
-          </button>
-        </div>
+        {/* Demo Quick Fill (Local Development Only) */}
+        {import.meta.env.DEV && (
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-emerald-600" /> Demo:
+            </span>
+            <button
+              type="button"
+              onClick={() => handleQuickFill('farmer')}
+              className={`text-[11px] px-2.5 py-1 rounded-lg border font-semibold transition-all ${
+                role === 'farmer'
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              Farmer (Murugesan)
+            </button>
+            <button
+              type="button"
+              onClick={() => handleQuickFill('staff')}
+              className={`text-[11px] px-2.5 py-1 rounded-lg border font-semibold transition-all ${
+                role === 'staff'
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+              }`}
+            >
+              Staff Inspector
+            </button>
+          </div>
+        )}
 
         {/* Error Alert */}
         {errorMessage && (

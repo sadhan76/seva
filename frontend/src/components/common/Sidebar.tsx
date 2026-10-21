@@ -15,6 +15,11 @@ import {
   Building2,
   Bell,
   LogOut,
+  GraduationCap,
+  Store,
+  Compass,
+  Briefcase,
+  Layers,
 } from 'lucide-react';
 import type { NavTab } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -65,6 +70,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
           category: 'agri',
         },
         {
+          id: 'support_hub' as NavTab,
+          label: t.nav.support_hub,
+          icon: GraduationCap,
+          category: 'agri',
+        },
+        {
           id: 'notifications' as NavTab,
           label: t.nav.notifications,
           icon: Bell,
@@ -79,7 +90,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'disease', label: t.nav.disease, icon: Bug, category: 'agri' },
         { id: 'recommendations', label: t.nav.recommendations, icon: Sprout, category: 'agri' },
         { id: 'market', label: t.nav.market, icon: TrendingUp, category: 'mandi' },
+        { id: 'marketplace', label: t.nav.marketplace, icon: Store, category: 'mandi' },
+        { id: 'agri_entrepreneurship', label: t.nav.agri_entrepreneurship, icon: Briefcase, category: 'mandi' },
+        { id: 'value_addition', label: t.nav.value_addition, icon: Layers, category: 'mandi' },
         { id: 'schemes', label: t.nav.schemes, icon: Landmark, category: 'mandi' },
+        { id: 'support_hub', label: t.nav.support_hub, icon: GraduationCap, category: 'agri' },
+        { id: 'special_operation', label: t.nav.special_operation, icon: Compass, category: 'agri' },
         { id: 'procurement', label: t.nav.procurement, icon: CalendarCheck, category: 'mandi' },
         { id: 'queue', label: t.nav.queue, icon: ListOrdered, category: 'mandi' },
         { id: 'notifications', label: t.nav.notifications, icon: Bell, category: 'account' },

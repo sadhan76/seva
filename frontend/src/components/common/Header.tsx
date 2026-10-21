@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, LogIn, LogOut, UserPlus, Bell } from 'lucide-react';
+import { Menu, LogIn, LogOut, UserPlus, Bell, UserCog } from 'lucide-react';
 import { LanguageToggle } from './LanguageToggle';
 import type { ViewState, NavTab } from '../../types';
 import { useLanguage } from '../../context/LanguageContext';
@@ -25,12 +25,13 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenRegister,
   onNavigate,
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { user, token, isAuthenticated, logout } = useAuth();
   // Notification State
   const [notifications, setNotifications] = useState<InAppNotification[]>([]);
   const [showNotifs, setShowNotifs] = useState(false);
   const [isLoadingNotifs, setIsLoadingNotifs] = useState(false);
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
 
   const fetchNotifs = async () => {
     if (!token) return;
@@ -138,24 +139,33 @@ export const Header: React.FC<HeaderProps> = ({
                     ) : notifications.length === 0 ? (
                       <p className="text-xs text-slate-400 py-4 text-center">No notifications yet.</p>
                     ) : (
-                      notifications.map((n) => (
-                        <div
-                          key={n.id}
-                          onClick={() => handleMarkAsRead(n.id)}
-                          className={`pt-2 cursor-pointer transition-colors p-2 rounded-xl text-left ${
-                            n.isRead ? 'opacity-70 bg-transparent' : 'bg-emerald-50/60 font-medium'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-slate-900">{n.title}</span>
-                            <span className="text-[10px] text-slate-400 font-mono">{n.createdAt}</span>
+                      notifications.map((n) => {
+                        const title = language === 'ta' && n.titleTa ? n.titleTa : n.title;
+                        const message = language === 'ta' && n.messageTa ? n.messageTa : n.message;
+                        return (
+                          <div
+                            key={n.id}
+                            onClick={() => handleMarkAsRead(n.id)}
+                            className={`pt-2 cursor-pointer transition-colors p-2 rounded-xl text-left ${
+                              n.isRead ? 'opacity-70 bg-transparent' : 'bg-emerald-50/60 font-medium'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-bold text-slate-900 line-clamp-1">{title}</span>
+                              <span className="text-[10px] text-slate-400 font-mono shrink-0 ml-1">{n.createdAt}</span>
+                            </div>
+                            <p className="text-[11px] text-slate-600 mt-0.5 line-clamp-2">{message}</p>
+                            {n.sourceDataTime && (
+                              <span className="text-[9px] text-teal-700 block font-mono mt-0.5">
+                                {language === 'ta' ? `வானிலை நேரம்: ${n.sourceDataTime}` : `Weather observed: ${n.sourceDataTime}`}
+                              </span>
+                            )}
+                            <span className="text-[9px] uppercase font-bold text-emerald-700 tracking-wider mt-1 block">
+                              Type: {n.eventType || n.type}
+                            </span>
                           </div>
-                          <p className="text-[11px] text-slate-600 mt-0.5">{n.message}</p>
-                          <span className="text-[9px] uppercase font-bold text-emerald-700 tracking-wider mt-1 block">
-                            Type: {n.type}
-                          </span>
-                        </div>
-                      ))
+                        );
+                      })
                     )}
                   </div>
 
@@ -181,19 +191,32 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           )}
 
-          {/* Authentication Badge / Buttons */}
+          {/* Authentication Badge / Account Menu */}
           {isAuthenticated && user ? (
-            <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-              <div className="flex items-center gap-2">
-                <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
-                    user.role === 'staff'
-                      ? 'bg-purple-100 text-purple-800 border border-purple-200'
-                      : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                  }`}
-                >
-                  {userName.substring(0, 2).toUpperCase()}
-                </div>
+            <div className="relative pl-2 border-l border-slate-200">
+              <button
+                type="button"
+                onClick={() => setShowAccountMenu(!showAccountMenu)}
+                className="flex items-center gap-2 p-1.5 rounded-2xl hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                aria-label="Open account menu"
+              >
+                {user.profilePhoto ? (
+                  <img
+                    src={user.profilePhoto}
+                    alt={userName}
+                    className="w-8 h-8 rounded-full object-cover border border-emerald-300 shadow-xs"
+                  />
+                ) : (
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs shadow-xs ${
+                      user.role === 'staff'
+                        ? 'bg-purple-100 text-purple-800 border border-purple-200'
+                        : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                    }`}
+                  >
+                    {userName.substring(0, 2).toUpperCase()}
+                  </div>
+                )}
                 <div className="hidden md:block text-left">
                   <div className="flex items-center gap-1.5">
                     <p className="text-xs font-bold text-slate-800 leading-tight">
@@ -209,21 +232,97 @@ export const Header: React.FC<HeaderProps> = ({
                       {user.role === 'staff' ? 'Staff' : 'Farmer'}
                     </span>
                   </div>
-                  <p className="text-[10px] text-slate-500 leading-none mt-0.5">
-                    {user.role === 'staff' ? (user.mandiAssigned || user.mandiName || 'Direct Purchase Centre') : (user.village || 'Thanjavur')}
+                  <p className="text-[10px] text-slate-500 leading-none mt-0.5 truncate max-w-[140px]">
+                    {user.role === 'staff'
+                      ? (user.mandiAssigned || user.mandiName || 'Direct Purchase Centre')
+                      : (user.village ? `${user.village}, ${user.district || ''}` : (user.district || 'India'))}
                   </p>
                 </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={logout}
-                title="Log out"
-                className="p-1.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors ml-1"
-                aria-label="Log out"
-              >
-                <LogOut className="w-4 h-4" />
               </button>
+
+              {/* Farmer Account Dropdown Menu */}
+              {showAccountMenu && (
+                <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 p-4 space-y-3 animate-fade-in text-left">
+                  <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
+                    {user.profilePhoto ? (
+                      <img
+                        src={user.profilePhoto}
+                        alt={userName}
+                        className="w-12 h-12 rounded-full object-cover border border-emerald-300 shadow-sm"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-base shadow-sm">
+                        {userName.substring(0, 2).toUpperCase()}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-bold text-slate-900 truncate">{userName}</p>
+                      <p className="text-[11px] font-mono font-bold text-emerald-700 truncate">
+                        {user.farmerId || 'Farmer Account'}
+                      </p>
+                      <p className="text-[11px] text-slate-500 font-mono mt-0.5">
+                        {user.phone}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Location:</span>
+                      <span className="font-semibold text-slate-800 text-right truncate max-w-[160px]">
+                        {user.village ? `${user.village}, ${user.district || ''}` : (user.district || 'India')}
+                      </span>
+                    </div>
+                    {user.state && (
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">State:</span>
+                        <span className="font-semibold text-slate-800">{user.state}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span className="text-slate-400">Language:</span>
+                      <span className="font-bold text-emerald-700 uppercase">{user.preferredLanguage || 'en'}</span>
+                    </div>
+                    {user.totalLandAcres && (
+                      <div className="flex justify-between">
+                        <span className="text-slate-400">Land Holding:</span>
+                        <span className="font-semibold text-slate-800">
+                          {user.totalLandAcres} {user.landUnit || 'Acres'}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-1 pt-1">
+                    {onNavigate && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowAccountMenu(false);
+                          onNavigate('profile');
+                        }}
+                        className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                      >
+                        <UserCog className="w-4 h-4 text-emerald-700" />
+                        <span>{t.common.editProfile || 'Edit Profile'}</span>
+                        <span className="ml-auto text-[10px] text-emerald-600">→</span>
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowAccountMenu(false);
+                        logout();
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-rose-700 hover:bg-rose-50 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4 text-rose-500" />
+                      <span>{t.auth.signOut || 'Log Out'}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200">

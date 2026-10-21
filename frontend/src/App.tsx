@@ -7,6 +7,7 @@ import { Sidebar } from './components/common/Sidebar';
 import { Header } from './components/common/Header';
 import { NoticeBanner } from './components/common/NoticeBanner';
 import { LoadingState, EmptyState, ErrorState } from './components/common/StateViews';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { FarmerWelcomeHero } from './components/dashboard/FarmerWelcomeHero';
 import { FarmDetailsCard } from './components/dashboard/FarmDetailsCard';
 import { WeatherCard } from './components/dashboard/WeatherCard';
@@ -35,6 +36,11 @@ import { QueueTrackingView } from './components/views/QueueTrackingView';
 import { ProfileView } from './components/views/ProfileView';
 import { StaffPortalView } from './components/views/StaffPortalView';
 import { NotificationsView } from './components/views/NotificationsView';
+import { FarmerSupportHubView } from './components/views/FarmerSupportHubView';
+import { MarketplaceView } from './components/views/MarketplaceView';
+import { SpecialOperationJourneyView } from './components/views/SpecialOperationJourneyView';
+import { AgriEntrepreneurshipView } from './components/views/AgriEntrepreneurshipView';
+import { ValueAddedProductsView } from './components/views/ValueAddedProductsView';
 
 // Sample Mock Data Fallbacks (Only used when no live data exists)
 import {
@@ -114,8 +120,18 @@ const MainDashboardContent: React.FC<{
       return <CropRecommendationView />;
     case 'market':
       return <MarketPricesView />;
+    case 'marketplace':
+      return <MarketplaceView onNavigate={onNavigate} />;
+    case 'agri_entrepreneurship':
+      return <AgriEntrepreneurshipView onNavigate={onNavigate} />;
+    case 'value_addition':
+      return <ValueAddedProductsView onNavigate={onNavigate} />;
     case 'schemes':
       return <GovernmentSchemesView />;
+    case 'support_hub':
+      return <FarmerSupportHubView onNavigate={onNavigate} />;
+    case 'special_operation':
+      return <SpecialOperationJourneyView onNavigate={onNavigate} />;
     case 'procurement':
       return (
         <ProcurementBookingView
@@ -362,7 +378,7 @@ export const AppContent: React.FC = () => {
         <div className="w-16 h-16 rounded-3xl bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/20 mb-4 animate-bounce">
           <Sprout className="w-9 h-9" />
         </div>
-        <h2 className="text-lg font-black text-slate-800 tracking-tight">Namma Vivasayi AI</h2>
+        <h2 className="text-lg font-black text-slate-800 tracking-tight">AgriBharat</h2>
         <div className="flex items-center gap-2 mt-2 text-xs font-semibold text-slate-500">
           <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
           <span>Verifying authenticated session...</span>
@@ -419,7 +435,7 @@ export const AppContent: React.FC = () => {
           <footer className="border-t border-slate-200/80 bg-white/70 backdrop-blur-xs py-4 px-6 text-center text-xs text-slate-500">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
               <p>
-                <strong>Namma Vivasayi AI (நம்ம விவசாயி AI)</strong> — AI-Powered Farming & Smart Procurement Platform
+                <strong>AgriBharat (அக்ரிபாரத்)</strong> — Smart Farming Intelligence & Agricultural Marketplace
               </p>
               <p className="text-[11px] text-slate-400">
                 Logged in as <strong>{user?.name}</strong> ({user?.role?.toUpperCase()}) • Tamil Nadu Agriculture & Mandi Procurement System
@@ -459,11 +475,13 @@ export const AppContent: React.FC = () => {
 
 export function App() {
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
-    </LanguageProvider>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </LanguageProvider>
+    </ErrorBoundary>
   );
 }
 

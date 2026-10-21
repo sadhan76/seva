@@ -69,7 +69,7 @@ async def run_checklist():
         centre_id = first_centre["id"]
         print(f"  Centre 1: {first_centre['name']} | DemoData: {first_centre.get('isDemoData')}")
 
-        target_date = (date.today() + timedelta(days=5)).isoformat()
+        target_date = (date.today() + timedelta(days=random.randint(8, 35))).isoformat()
         slots_res = await client.get(f"/api/procurement/centres/{centre_id}/slots?date={target_date}")
         slots_data = slots_res.json()
         print(f"  Slots returned for {target_date}: {len(slots_data.get('slots', []))} windows")

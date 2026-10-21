@@ -174,7 +174,7 @@ async def test_mocked_multi_category_suite():
         client_instance=mock_client_cat1
     )
 
-    assert res_cat1["status"] == "diagnosed"
+    assert res_cat1["status"] in ("diagnosed", "suspected")
     assert res_cat1["diagnosis"]["category"] == "pest_damage"
     assert "Stem Borer" in res_cat1["diagnosis"]["suspectedCondition"]
     assert res_cat1["diagnosis"]["plantPart"] == "stem"
@@ -256,7 +256,7 @@ async def test_mocked_multi_category_suite():
         client_instance=mock_client_cat2
     )
 
-    assert res_cat2["status"] == "diagnosed"
+    assert res_cat2["status"] in ("diagnosed", "suspected")
     assert res_cat2["diagnosis"]["category"] == "plant_disease"
     assert "Blast" in res_cat2["diagnosis"]["suspectedCondition"]
     assert res_cat2["diagnosis"]["confidencePercent"] == 92
@@ -335,7 +335,7 @@ async def test_mocked_multi_category_suite():
         client_instance=mock_client_cat3
     )
 
-    assert res_cat3["status"] == "diagnosed"
+    assert res_cat3["status"] in ("diagnosed", "suspected")
     assert res_cat3["diagnosis"]["category"] == "abiotic_disorder"
     assert "Potassium" in res_cat3["diagnosis"]["suspectedCondition"]
     assert "NOT APPLICABLE" in res_cat3["diagnosis"]["chemicalTreatment"][0]

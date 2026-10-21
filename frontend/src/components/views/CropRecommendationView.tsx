@@ -15,9 +15,11 @@ import {
 } from 'lucide-react';
 import { Card } from '../common/Card';
 import { Badge } from '../common/Badge';
+import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import {
   recommendCropsApi,
+  getDistrictsApi,
   type CropRecommendResponse,
 } from '../../services/api';
 
@@ -59,12 +61,38 @@ const WATER_LEVELS = [
 
 export const CropRecommendationView: React.FC = () => {
   const { t, language } = useLanguage();
+  const { user } = useAuth();
 
-  const [district, setDistrict] = useState<string>('Thanjavur');
+  const [district, setDistrict] = useState<string>(user?.district || 'Thanjavur');
+  const [availableDistricts, setAvailableDistricts] = useState<string[]>([]);
   const [soilType, setSoilType] = useState<string>('Alluvial Clay Loam');
   const [season, setSeason] = useState<string>('Samba (Aug - Jan)');
   const [waterAvailability, setWaterAvailability] = useState<string>('High');
   const [cropPreference, setCropPreference] = useState<string>('All');
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadDistricts() {
+      const stateToQuery = user?.state || 'Tamil Nadu';
+      const dList = await getDistrictsApi(stateToQuery);
+      if (isMounted) {
+        const names = dList.map((d) => d.name);
+        if (user?.district && !names.includes(user.district)) {
+          names.unshift(user.district);
+        }
+        setAvailableDistricts(names);
+        if (user?.district) {
+          setDistrict(user.district);
+        } else if (names.length > 0 && !district) {
+          setDistrict(names[0]);
+        }
+      }
+    }
+    loadDistricts();
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.state, user?.district]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<CropRecommendResponse | null>(null);
@@ -132,7 +160,7 @@ export const CropRecommendationView: React.FC = () => {
                   onChange={(e) => setDistrict(e.target.value)}
                   className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl font-medium focus:ring-2 focus:ring-emerald-500/20"
                 >
-                  {DISTRICTS.map((d) => (
+                  {(availableDistricts.length > 0 ? availableDistricts : DISTRICTS).map((d) => (
                     <option key={d} value={d}>
                       {d}
                     </option>

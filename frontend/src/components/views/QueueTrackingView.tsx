@@ -9,6 +9,8 @@ import {
   Loader2,
   Info,
   Check,
+  Megaphone,
+  ClipboardCheck,
 } from 'lucide-react';
 import { Card } from '../common/Card';
 import { Badge } from '../common/Badge';
@@ -17,8 +19,10 @@ import { useAuth } from '../../context/AuthContext';
 import {
   getQueueTracking,
   getProcurementBookings,
+  getNowServingApi,
   type QueueTrackingResponse,
   type ProcurementBookingEntity,
+  type NowServingResponse,
 } from '../../services/api';
 
 interface QueueTrackingViewProps {
@@ -29,11 +33,11 @@ export const QueueTrackingView: React.FC<QueueTrackingViewProps> = ({ initialBoo
   const { t, language } = useLanguage();
   const { token } = useAuth();
 
-
   const [bookingIdInput, setBookingIdInput] = useState<string>(initialBookingId || '');
   const [activeBookings, setActiveBookings] = useState<ProcurementBookingEntity[]>([]);
   const [selectedBookingId, setSelectedBookingId] = useState<string>(initialBookingId || '');
   const [queueData, setQueueData] = useState<QueueTrackingResponse | null>(null);
+  const [nowServing, setNowServing] = useState<NowServingResponse | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -74,6 +78,14 @@ export const QueueTrackingView: React.FC<QueueTrackingViewProps> = ({ initialBoo
     try {
       const data = await getQueueTracking(idToFetch, token || undefined);
       setQueueData(data);
+      if (data.centreCode) {
+        try {
+          const ns = await getNowServingApi(data.centreCode);
+          setNowServing(ns);
+        } catch {
+          // Graceful fallback
+        }
+      }
     } catch (err: any) {
       setErrorMsg(err.message || 'Failed to fetch queue information for this booking.');
       setQueueData(null);
@@ -193,26 +205,95 @@ export const QueueTrackingView: React.FC<QueueTrackingViewProps> = ({ initialBoo
           <p className="font-semibold text-slate-700">Connecting to Mandi Yard Backend...</p>
         </div>
       ) : queueData ? (
-        <Card
-          title={`Token #${queueData.tokenNumber}`}
-          subtitle={`${queueData.mandiName} • ${queueData.slotDate} (${queueData.timeWindow})`}
-          icon={<Clock className="w-5 h-5 text-emerald-700" />}
-          headerAction={
-            <Badge
-              variant={
-                queueData.status === 'COMPLETED'
-                  ? 'emerald'
-                  : queueData.status === 'CHECKED_IN' || queueData.status === 'IN_QUEUE'
-                  ? 'blue'
-                  : queueData.status === 'CANCELLED'
-                  ? 'rose'
-                  : 'amber'
-              }
-              dot
-            >
-              {queueData.status}
-            </Badge>
-          }
+        <>
+          {/* PHASE 3: Live "Now Serving" Alert for this Farmer */}
+          {queueData.isNowServing && (
+            <div className="p-4 rounded-3xl bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg animate-pulse flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
+                  <Megaphone className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-sm uppercase tracking-wide">
+                    🎉 Your Token Is Now Being Served!
+                  </h4>
+                  <p className="text-xs text-amber-100 font-medium">
+                    Please drive your vehicle directly onto {queueData.counterName || queueData.counterId || nowServing?.counterName || 'Weighbridge Counter #1'}.
+                  </p>
+                </div>
+              </div>
+              <span className="px-3 py-1 bg-white text-slate-900 font-black text-xs rounded-xl shrink-0 shadow-sm">
+                {queueData.counterName || queueData.counterId || nowServing?.counterName || 'Counter-1'} Calling
+              </span>
+            </div>
+          )}
+
+          {/* Multi-Counter & Now Serving Notice */}
+          {nowServing?.counters && nowServing.counters.length > 1 ? (
+            <div className="p-3.5 rounded-2xl bg-slate-900 text-white space-y-2 text-xs shadow-sm">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
+                  Active Weighbridge Counters ({nowServing.counters.length})
+                </span>
+                <span className="text-[10px] text-slate-400 font-mono">Multi-Weighbridge Live Status</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {nowServing.counters.map((c) => (
+                  <div key={c.counterId} className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-between">
+                    <div>
+                      <span className="text-slate-400 text-[10px] font-bold block">{c.name}</span>
+                      {c.currentToken ? (
+                        <span className="font-mono font-bold text-amber-300 text-xs">
+                          Serving #{c.currentToken} {c.farmerName ? `(${c.farmerName})` : ''}
+                        </span>
+                      ) : (
+                        <span className="text-slate-500 text-xs italic">Idle / Waiting</span>
+                      )}
+                    </div>
+                    <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold uppercase ${c.isNowServing ? 'bg-amber-400 text-slate-950' : 'bg-slate-700 text-slate-300'}`}>
+                      {c.isNowServing ? 'Active' : 'Idle'}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : nowServing?.currentToken && !queueData.isNowServing && (
+            <div className="p-3.5 rounded-2xl bg-slate-900 text-white flex items-center justify-between text-xs shadow-sm">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
+                <span className="text-slate-400 font-bold uppercase text-[10px]">Now Serving at {nowServing.counterName || 'Counter-1'}:</span>
+                <span className="font-mono font-black text-amber-300 text-sm">#{nowServing.currentToken.tokenNumber}</span>
+                <span className="text-slate-300 hidden sm:inline">({nowServing.currentToken.farmerName})</span>
+              </div>
+              <span className="text-[10px] text-slate-400 font-mono">Single Weighbridge Queue</span>
+            </div>
+          )}
+
+          <Card
+            title={`Token #${queueData.tokenNumber}`}
+            subtitle={`${queueData.mandiName} • ${queueData.slotDate} (${queueData.timeWindow})${
+              queueData.cropVariety ? ` • Var: ${queueData.cropVariety}` : ''
+            }${queueData.harvestDate ? ` • Harvest: ${queueData.harvestDate}` : ''}`}
+            icon={<Clock className="w-5 h-5 text-emerald-700" />}
+            headerAction={
+              <Badge
+                variant={
+                  queueData.status === 'COMPLETED'
+                    ? 'emerald'
+                    : queueData.status === 'QUALITY_CHECKED'
+                    ? 'emerald'
+                    : queueData.status === 'CHECKED_IN' || queueData.status === 'IN_QUEUE' || queueData.status === 'PROCESSING'
+                    ? 'blue'
+                    : queueData.status === 'CANCELLED' || queueData.status === 'REJECTED' || queueData.status === 'NO_SHOW'
+                    ? 'rose'
+                    : 'amber'
+                }
+                dot
+              >
+                {queueData.status}
+              </Badge>
+            }
           footer={
             <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
               <span className="font-mono text-[11px]">
@@ -328,6 +409,83 @@ export const QueueTrackingView: React.FC<QueueTrackingViewProps> = ({ initialBoo
                 ))}
               </div>
             </div>
+
+            {/* PHASE 3: QUALITY INSPECTION OUTCOME CARD */}
+            {queueData.qualityInspection && (
+              <div className="rounded-3xl bg-teal-50/70 border border-teal-200 p-5 space-y-3 text-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-teal-200 pb-2.5">
+                  <div className="flex items-center gap-2">
+                    <ClipboardCheck className="w-5 h-5 text-teal-700" />
+                    <div>
+                      <h4 className="text-sm font-bold text-teal-950">
+                        Official Mandi Quality Inspection Results
+                      </h4>
+                      <p className="text-[11px] text-teal-700">
+                        Inspected by {queueData.qualityInspection.inspectedByStaff || 'Officer'}
+                        {queueData.qualityInspection.inspectedAt ? ` on ${queueData.qualityInspection.inspectedAt}` : ''}
+                      </p>
+                    </div>
+                  </div>
+                  <Badge
+                    variant={
+                      queueData.qualityInspection.status === 'ACCEPTED'
+                        ? 'emerald'
+                        : queueData.qualityInspection.status === 'PARTIALLY_ACCEPTED'
+                        ? 'amber'
+                        : 'rose'
+                    }
+                    size="sm"
+                  >
+                    {queueData.qualityInspection.status}
+                  </Badge>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                  <div className="bg-white p-3 rounded-2xl border border-teal-200">
+                    <span className="text-slate-400 block text-[10px] uppercase font-bold">Accepted Weight</span>
+                    <span className="text-sm font-extrabold font-mono text-emerald-800">
+                      {queueData.qualityInspection.acceptedWeightKg} kg
+                    </span>
+                    <span className="text-[10px] text-slate-500 block">
+                      ~{(queueData.qualityInspection.acceptedWeightKg / 100).toFixed(2)} Qtl
+                    </span>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-2xl border border-teal-200">
+                    <span className="text-slate-400 block text-[10px] uppercase font-bold">Rejected Weight</span>
+                    <span className="text-sm font-extrabold font-mono text-rose-700">
+                      {queueData.qualityInspection.rejectedWeightKg} kg
+                    </span>
+                    <span className="text-[10px] text-slate-500 block">Dockage / sub-grade</span>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-2xl border border-teal-200">
+                    <span className="text-slate-400 block text-[10px] uppercase font-bold">Moisture Content</span>
+                    <span className="text-sm font-extrabold font-mono text-teal-900">
+                      {queueData.qualityInspection.moisturePercent}%
+                    </span>
+                    <span className="text-[10px] text-slate-500 block">FAQ standard ≤ 17%</span>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-2xl border border-teal-200">
+                    <span className="text-slate-400 block text-[10px] uppercase font-bold">Quality Standard</span>
+                    <span className="text-xs font-bold text-slate-800 block truncate">
+                      {queueData.qualityInspection.qualityGrade}
+                    </span>
+                  </div>
+                </div>
+
+                {queueData.qualityInspection.rejectionReason && (
+                  <div className="p-3 bg-rose-50 border border-rose-200 rounded-2xl text-rose-900 text-xs flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="block text-rose-800 font-bold">Rejection Justification:</strong>
+                      <span>{queueData.qualityInspection.rejectionReason}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* FEATURE 6: TRANSACTION & PAYMENT TRACKING */}
             {queueData.transaction ? (
@@ -452,6 +610,7 @@ export const QueueTrackingView: React.FC<QueueTrackingViewProps> = ({ initialBoo
             )}
           </div>
         </Card>
+      </>
       ) : (
         <div className="p-12 text-center text-xs text-slate-400 bg-white rounded-3xl border border-slate-200">
           Search for a booking ID or select one of your reservations above to view its live status.

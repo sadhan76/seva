@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   User,
   Phone,
   FileText,
   ShieldCheck,
-  Plus,
   CheckCircle2,
   AlertCircle,
   Loader2,
@@ -12,7 +11,12 @@ import {
   Database,
   Globe2,
   Droplets,
-  Send,
+  Lock,
+  Camera,
+  Trash2,
+  Edit3,
+  MapPin,
+  Info,
 } from 'lucide-react';
 import { Card } from '../common/Card';
 import { Badge } from '../common/Badge';
@@ -23,41 +27,79 @@ import {
   getFarmers,
   createFarmer,
   updateFarmerProfileApi,
+  uploadProfilePhotoApi,
   type FarmerProfileEntity,
   type FarmerProfileInput,
 } from '../../services/api';
 import { REGIONAL_LANGUAGE_OPTIONS, IRRIGATION_OPTIONS } from '../../i18n/translations';
+import { GeoLocationSelect, type GeoLocationValue } from '../common/GeoLocationSelect';
 
 interface ProfileViewProps {
   farmer: FarmerProfile;
   onFarmerUpdated?: (updated: FarmerProfile) => void;
 }
 
+const COMMON_CROPS = [
+  'Paddy (Samba)',
+  'Paddy (Kuruvai)',
+  'Paddy (Thaladi)',
+  'Wheat',
+  'Sugarcane',
+  'Cotton',
+  'Maize',
+  'Groundnut',
+  'Banana',
+  'Turmeric',
+  'Millets',
+  'Black Gram / Urad',
+];
+
+const COMMON_SOILS = [
+  'Alluvial Clay Loam',
+  'Black Cotton Soil',
+  'Red Sandy Loam',
+  'Laterite Soil',
+  'Clay Loam',
+  'Coastal Sandy Soil',
+  'Saline / Alkaline Soil',
+];
+
+const LAND_UNITS = ['Acres', 'Hectares', 'Cents', 'Bigha', 'Guntha'];
+
 export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdated }) => {
   const { t, language, setLanguage } = useLanguage();
+  const { user, token, updateUser } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [activeFarmer, setActiveFarmer] = useState<FarmerProfile>(farmer);
   const [dbFarmers, setDbFarmers] = useState<FarmerProfileEntity[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { user, token, updateUser } = useAuth();
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [isLoadingList, setIsLoadingList] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Form state initialized from authenticated user
-  const [formData, setFormData] = useState<FarmerProfileInput>({
-    name: user?.fullName || user?.name || farmer.name || '',
-    phone: user?.phone || farmer.phone || '',
-    location: user?.village ? `${user.village}, ${user.district || 'Tamil Nadu'}` : farmer.location,
-    district: user?.district || farmer.district || 'Thanjavur',
+  // Form Fields - Loaded strictly from authenticated user / active farmer
+  const [name, setName] = useState(user?.fullName || user?.name || farmer.name || '');
+  const [phone, setPhone] = useState(user?.phone || farmer.phone || '');
+  const [profilePhoto, setProfilePhoto] = useState<string | null>(user?.profilePhoto || farmer.profilePhoto || null);
+  const [landAcresInput, setLandAcresInput] = useState<string>(() => {
+    const val = user?.totalLandAcres ?? farmer.totalLandAcres ?? 3;
+    return String(Math.round(Number(val)) || 3);
+  });
+  const [landUnit, setLandUnit] = useState<string>(user?.landUnit || farmer.landUnit || 'Acres');
+  const [primaryCrop, setPrimaryCrop] = useState(user?.primaryCrop || farmer.primaryCrop || 'Paddy (Samba)');
+  const [soilType, setSoilType] = useState(user?.soilType || farmer.soilType || 'Alluvial Clay Loam');
+  const [preferredLang, setPreferredLang] = useState<string>(user?.preferredLanguage || farmer.preferredLanguage || language);
+
+  const [profileGeoLoc, setProfileGeoLoc] = useState<GeoLocationValue>({
+    country: user?.country || farmer.country || 'India',
     state: user?.state || farmer.state || 'Tamil Nadu',
-    totalLandAcres: typeof user?.totalLandAcres === 'number' ? Math.round(user.totalLandAcres) : (farmer.totalLandAcres ? Math.round(farmer.totalLandAcres) : 2),
-    primaryCrop: user?.primaryCrop || farmer.primaryCrop || 'Paddy (Samba)',
-    soilType: user?.soilType || farmer.soilType || 'Alluvial Clay Loam',
-    irrigationSource: user?.irrigationSource || farmer.irrigationSource || 'Borewell / Tube Well',
-    irrigationSources: user?.irrigationSources || (farmer.irrigationSources && farmer.irrigationSources.length > 0 ? farmer.irrigationSources : ['Borewell / Tube Well']),
-    otherIrrigationDetail: user?.otherIrrigationDetail || '',
-    preferredLanguage: user?.preferredLanguage || language,
-    aadhaarMasked: user?.aadhaarMasked || farmer.aadhaarMasked || undefined,
+    stateCode: user?.stateCode || farmer.stateCode || 'IN-TN',
+    district: user?.district || farmer.district || 'Thanjavur',
+    districtCode: user?.districtCode || farmer.districtCode || 'IN-TN-THAN',
+    village: user?.village || farmer.location || 'Kabisthalam',
+    taluk: user?.taluk || farmer.taluk || 'Papanasam',
   });
 
   const [selectedIrrigationSources, setSelectedIrrigationSources] = useState<string[]>(() => {
@@ -65,69 +107,82 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
     if (farmer.irrigationSources && farmer.irrigationSources.length > 0) return farmer.irrigationSources;
     return ['Borewell / Tube Well'];
   });
-
   const [otherIrrigationDetail, setOtherIrrigationDetail] = useState(user?.otherIrrigationDetail || '');
-  const [landAcresInput, setLandAcresInput] = useState<string>(() => {
-    const val = user?.totalLandAcres ?? farmer.totalLandAcres ?? 3;
-    return String(Math.round(Number(val)) || 3);
-  });
-  const [preferredLang, setPreferredLang] = useState<string>(user?.preferredLanguage || language);
 
-  // Sync active farmer when user changes
+  // Reset all edit fields back to saved user state
+  const resetFormToSaved = () => {
+    const targetUser = user;
+    setName(targetUser?.fullName || targetUser?.name || farmer.name || '');
+    setPhone(targetUser?.phone || farmer.phone || '');
+    setProfilePhoto(targetUser?.profilePhoto || farmer.profilePhoto || null);
+    setLandAcresInput(String(Math.round(Number(targetUser?.totalLandAcres ?? farmer.totalLandAcres ?? 3)) || 3));
+    setLandUnit(targetUser?.landUnit || farmer.landUnit || 'Acres');
+    setPrimaryCrop(targetUser?.primaryCrop || farmer.primaryCrop || 'Paddy (Samba)');
+    setSoilType(targetUser?.soilType || farmer.soilType || 'Alluvial Clay Loam');
+    setPreferredLang(targetUser?.preferredLanguage || farmer.preferredLanguage || language);
+
+    setProfileGeoLoc({
+      country: targetUser?.country || farmer.country || 'India',
+      state: targetUser?.state || farmer.state || 'Tamil Nadu',
+      stateCode: targetUser?.stateCode || farmer.stateCode || 'IN-TN',
+      district: targetUser?.district || farmer.district || 'Thanjavur',
+      districtCode: targetUser?.districtCode || farmer.districtCode || 'IN-TN-THAN',
+      village: targetUser?.village || farmer.location || '',
+      taluk: targetUser?.taluk || farmer.taluk || '',
+    });
+
+    if (targetUser?.irrigationSources && targetUser.irrigationSources.length > 0) {
+      setSelectedIrrigationSources(targetUser.irrigationSources);
+    } else if (farmer.irrigationSources && farmer.irrigationSources.length > 0) {
+      setSelectedIrrigationSources(farmer.irrigationSources);
+    } else {
+      setSelectedIrrigationSources(['Borewell / Tube Well']);
+    }
+    setOtherIrrigationDetail(targetUser?.otherIrrigationDetail || '');
+  };
+
+  // Sync activeFarmer when user updates
   useEffect(() => {
     if (user) {
       const updated: FarmerProfile = {
         name: user.fullName || user.name,
         phone: user.phone,
-        location: user.village ? `${user.village}, ${user.district || 'Tamil Nadu'}` : (user.district || 'Tamil Nadu'),
-        district: user.district || 'Thanjavur',
-        state: user.state || 'Tamil Nadu',
+        location: user.village ? `${user.village}, ${user.district || ''}` : (user.district || ''),
+        village: user.village,
+        country: user.country || farmer.country || 'India',
+        district: user.district || farmer.district || '',
+        districtCode: user.districtCode || farmer.districtCode,
+        state: user.state || farmer.state || '',
+        stateCode: user.stateCode || farmer.stateCode,
+        taluk: user.taluk || farmer.taluk,
         totalLandAcres: user.totalLandAcres || farmer.totalLandAcres,
+        landUnit: user.landUnit || farmer.landUnit || 'Acres',
         primaryCrop: user.primaryCrop || farmer.primaryCrop,
         soilType: user.soilType || farmer.soilType,
         irrigationSource: user.irrigationSource || farmer.irrigationSource,
         irrigationSources: user.irrigationSources || farmer.irrigationSources,
         preferredLanguage: (user.preferredLanguage as Language) || undefined,
+        profilePhoto: user.profilePhoto || farmer.profilePhoto,
         telegramLinked: user.telegramLinked,
         telegramUsername: user.telegramUsername,
         aadhaarMasked: user.aadhaarMasked,
         farmerId: user.farmerId || farmer.farmerId,
+        isPhoneVerified: user.isPhoneVerified,
         isFromDb: true,
       };
       setActiveFarmer(updated);
-      setFormData((prev) => ({
-        ...prev,
-        name: updated.name,
-        phone: updated.phone,
-        location: updated.location,
-        district: updated.district,
-        totalLandAcres: Math.round(Number(updated.totalLandAcres)) || 2,
-        primaryCrop: updated.primaryCrop || 'Paddy (Samba)',
-        soilType: updated.soilType || 'Alluvial Clay Loam',
-        irrigationSource: updated.irrigationSource || 'Borewell / Tube Well',
-        irrigationSources: updated.irrigationSources || ['Borewell / Tube Well'],
-        preferredLanguage: updated.preferredLanguage || language,
-      }));
-      if (updated.irrigationSources && updated.irrigationSources.length > 0) {
-        setSelectedIrrigationSources(updated.irrigationSources);
-      }
-      if (updated.totalLandAcres) {
-        setLandAcresInput(String(Math.round(Number(updated.totalLandAcres))));
-      }
-      if (updated.preferredLanguage) {
-        setPreferredLang(updated.preferredLanguage);
-      }
+      resetFormToSaved();
     }
   }, [user]);
 
-  // Fetch farmers list for directory
+  // Fetch farmers directory
   const loadDbFarmers = async () => {
     setIsLoadingList(true);
     try {
       const records = await getFarmers();
       setDbFarmers(records);
     } catch {
-      // Backend not running or DB empty - graceful
+      // Graceful fallback
     } finally {
       setIsLoadingList(false);
     }
@@ -148,12 +203,88 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
     });
   };
 
-  const handleRegisterOrUpdateFarmer = async (e: React.FormEvent) => {
+  // Safe file upload handler
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.match(/^image\/(jpeg|png|webp)$/)) {
+      setStatusMessage({
+        type: 'error',
+        text: 'Unsupported image format. Please select a valid JPG, PNG, or WEBP photo.',
+      });
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setStatusMessage({
+        type: 'error',
+        text: 'Image exceeds 2MB limit. Please upload a smaller photo.',
+      });
+      return;
+    }
+
+    setIsUploadingPhoto(true);
+    try {
+      if (token) {
+        const uploadRes = await uploadProfilePhotoApi(file, token);
+        setProfilePhoto(uploadRes.profilePhoto);
+        setStatusMessage({
+          type: 'success',
+          text: 'Profile photo updated successfully!',
+        });
+      } else {
+        // Local preview via FileReader
+        const reader = new FileReader();
+        reader.onload = (uploadEvent) => {
+          setProfilePhoto(uploadEvent.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch (err: any) {
+      setStatusMessage({
+        type: 'error',
+        text: err.message || 'Failed to upload photo.',
+      });
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setProfilePhoto(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setStatusMessage(null);
 
-    // Validate whole number integer acres
+    // 1. Validate full name
+    const cleanName = name.trim();
+    if (cleanName.length < 2) {
+      setStatusMessage({
+        type: 'error',
+        text: 'Farmer full name must be at least 2 characters long.',
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // 2. Validate mobile number (10 digits starting with 6-9)
+    const cleanPhone = phone.replace(/[^\d]/g, '');
+    const normalizedPhone = cleanPhone.length === 12 && cleanPhone.startsWith('91') ? cleanPhone.slice(2) : cleanPhone;
+    if (!/^[6-9]\d{9}$/.test(normalizedPhone)) {
+      setStatusMessage({
+        type: 'error',
+        text: 'Please enter a valid 10-digit Indian mobile number starting with 6, 7, 8, or 9.',
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    // 3. Validate land holding (positive whole integer)
     const acresStr = landAcresInput.trim();
     if (!acresStr || !/^\d+$/.test(acresStr)) {
       setStatusMessage({
@@ -167,12 +298,13 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
     if (acresNum <= 0) {
       setStatusMessage({
         type: 'error',
-        text: 'Land area must be at least 1 acre.',
+        text: 'Land holding must be at least 1.',
       });
       setIsSubmitting(false);
       return;
     }
 
+    // 4. Validate irrigation sources
     if (selectedIrrigationSources.length === 0) {
       setStatusMessage({
         type: 'error',
@@ -191,13 +323,36 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
       return;
     }
 
+    // 5. Validate geographic location
+    if (!profileGeoLoc.state || !profileGeoLoc.district) {
+      setStatusMessage({
+        type: 'error',
+        text: 'Please select a valid State / UT and District from the official directory.',
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
     const payload: FarmerProfileInput = {
-      ...formData,
+      name: cleanName,
+      phone: normalizedPhone,
+      country: profileGeoLoc.country || 'India',
+      state: profileGeoLoc.state,
+      stateCode: profileGeoLoc.stateCode,
+      district: profileGeoLoc.district,
+      districtCode: profileGeoLoc.districtCode,
+      taluk: profileGeoLoc.taluk,
+      village: profileGeoLoc.village,
+      location: profileGeoLoc.village ? `${profileGeoLoc.village}, ${profileGeoLoc.district}` : profileGeoLoc.district,
       totalLandAcres: acresNum,
+      landUnit: landUnit || 'Acres',
+      primaryCrop: primaryCrop.trim() || 'Paddy (Samba)',
+      soilType: soilType.trim() || 'Alluvial Clay Loam',
       irrigationSources: selectedIrrigationSources,
       irrigationSource: selectedIrrigationSources.join(', '),
       otherIrrigationDetail: selectedIrrigationSources.includes('Other') ? otherIrrigationDetail.trim() : undefined,
       preferredLanguage: preferredLang,
+      profilePhoto: profilePhoto || undefined,
     };
 
     try {
@@ -206,6 +361,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
         const updatedUser = await updateFarmerProfileApi(payload, token);
         updateUser(updatedUser);
 
+        // Immediate application-wide language switch
         if (payload.preferredLanguage && payload.preferredLanguage !== language) {
           setLanguage(payload.preferredLanguage as Language);
         }
@@ -213,19 +369,27 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
         const profileMapped: FarmerProfile = {
           name: updatedUser.name || updatedUser.fullName || payload.name,
           phone: updatedUser.phone || payload.phone,
-          location: updatedUser.village ? `${updatedUser.village}, ${updatedUser.district || 'Tamil Nadu'}` : payload.location,
-          district: updatedUser.district || payload.district || 'Thanjavur',
-          state: updatedUser.state || 'Tamil Nadu',
+          location: updatedUser.village ? `${updatedUser.village}, ${updatedUser.district || ''}` : payload.location,
+          village: updatedUser.village || payload.village,
+          country: updatedUser.country || payload.country || 'India',
+          district: updatedUser.district || payload.district || '',
+          districtCode: updatedUser.districtCode || payload.districtCode,
+          state: updatedUser.state || payload.state || '',
+          stateCode: updatedUser.stateCode || payload.stateCode,
+          taluk: updatedUser.taluk || payload.taluk,
           totalLandAcres: updatedUser.totalLandAcres || acresNum,
+          landUnit: updatedUser.landUnit || payload.landUnit || 'Acres',
           primaryCrop: updatedUser.primaryCrop || payload.primaryCrop,
           soilType: updatedUser.soilType || payload.soilType,
           irrigationSource: updatedUser.irrigationSource || payload.irrigationSource,
           irrigationSources: updatedUser.irrigationSources || selectedIrrigationSources,
           preferredLanguage: (updatedUser.preferredLanguage as Language) || (preferredLang as Language),
+          profilePhoto: updatedUser.profilePhoto || profilePhoto || undefined,
           telegramLinked: updatedUser.telegramLinked,
           telegramUsername: updatedUser.telegramUsername,
-          aadhaarMasked: updatedUser.aadhaarMasked || payload.aadhaarMasked,
+          aadhaarMasked: updatedUser.aadhaarMasked || activeFarmer.aadhaarMasked,
           farmerId: updatedUser.farmerId || activeFarmer.farmerId,
+          isPhoneVerified: updatedUser.isPhoneVerified,
           isFromDb: true,
         };
 
@@ -236,27 +400,30 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
 
         setStatusMessage({
           type: 'success',
-          text: 'Farm profile, multi-select irrigation sources, and language preference updated successfully in MongoDB!',
+          text: 'Farmer profile and regional preferences updated successfully in MongoDB!',
         });
       } else {
-        // Fallback: create new record
+        // Unauthenticated demo fallback: create new record
         const created = await createFarmer(payload, token);
         setStatusMessage({
           type: 'success',
-          text: `Farmer profile registered successfully! Assigned ID: ${created.farmerId}`,
+          text: `Farmer profile created successfully! Assigned ID: ${created.farmerId}`,
         });
         const profileMapped: FarmerProfile = {
           name: created.name,
           phone: created.phone,
           location: created.location,
+          village: created.village || payload.village,
           district: created.district || payload.district || 'Thanjavur',
           state: created.state || 'Tamil Nadu',
           totalLandAcres: created.totalLandAcres,
+          landUnit: created.landUnit || 'Acres',
           primaryCrop: created.primaryCrop,
           soilType: created.soilType || 'Alluvial Clay Loam',
           irrigationSource: created.irrigationSource || 'Borewell / Tube Well',
           irrigationSources: created.irrigationSources || selectedIrrigationSources,
           preferredLanguage: (created.preferredLanguage as Language) || (preferredLang as Language),
+          profilePhoto: profilePhoto || undefined,
           aadhaarMasked: created.aadhaarMasked,
           farmerId: created.farmerId,
           isFromDb: true,
@@ -282,14 +449,14 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
   );
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
       {/* Status Alert Banner */}
       {statusMessage && (
         <div
-          className={`p-4 rounded-xl border flex items-start gap-3 transition-all ${
+          className={`p-4 rounded-2xl border flex items-start gap-3 transition-all ${
             statusMessage.type === 'success'
-              ? 'bg-emerald-50 border-emerald-300 text-emerald-900'
-              : 'bg-rose-50 border-rose-300 text-rose-900'
+              ? 'bg-emerald-50 border-emerald-300 text-emerald-950 shadow-xs'
+              : 'bg-rose-50 border-rose-300 text-rose-950 shadow-xs'
           }`}
         >
           {statusMessage.type === 'success' ? (
@@ -302,7 +469,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
           </div>
           <button
             onClick={() => setStatusMessage(null)}
-            className="text-xs font-bold opacity-60 hover:opacity-100"
+            className="text-xs font-bold opacity-60 hover:opacity-100 p-1"
+            aria-label="Dismiss alert"
           >
             ✕
           </button>
@@ -322,41 +490,50 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
               </Badge>
             ) : null}
             <button
-              onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shadow-xs transition-colors"
+              onClick={() => {
+                resetFormToSaved();
+                setIsModalOpen(true);
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-xs transition-colors"
             >
-              <Plus className="w-3.5 h-3.5" />
-              Update Farm Details
+              <Edit3 className="w-3.5 h-3.5" />
+              <span>{t.common.editProfile || 'Edit Profile'}</span>
             </button>
           </div>
         }
       >
         <div className="space-y-6">
           {/* Identity Header */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-200">
-            <div className="w-16 h-16 rounded-full bg-emerald-700 text-white flex items-center justify-center font-extrabold text-xl shadow-md">
-              {activeFarmer.name.substring(0, 2).toUpperCase()}
-            </div>
-            <div className="text-center sm:text-left flex-1">
-              <h3 className="text-lg font-bold text-slate-900">{activeFarmer.name}</h3>
-              <p className="text-xs font-mono text-emerald-800 font-bold">{activeFarmer.farmerId}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{activeFarmer.location}</p>
+          <div className="flex flex-col sm:flex-row items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-slate-50 via-emerald-50/20 to-slate-50 border border-slate-200 shadow-xs">
+            {activeFarmer.profilePhoto ? (
+              <img
+                src={activeFarmer.profilePhoto}
+                alt={activeFarmer.name}
+                className="w-16 h-16 rounded-full object-cover border-2 border-emerald-400 shadow-md shrink-0"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-emerald-700 text-white flex items-center justify-center font-extrabold text-xl shadow-md shrink-0">
+                {activeFarmer.name ? activeFarmer.name.substring(0, 2).toUpperCase() : 'AG'}
+              </div>
+            )}
+            <div className="text-center sm:text-left flex-1 min-w-0">
+              <h3 className="text-lg font-bold text-slate-900 truncate">{activeFarmer.name}</h3>
+              <p className="text-xs font-mono text-emerald-800 font-bold truncate">{activeFarmer.farmerId}</p>
+              <p className="text-xs text-slate-500 mt-0.5 flex items-center justify-center sm:justify-start gap-1">
+                <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                <span>{activeFarmer.location || activeFarmer.district || 'India'}</span>
+                {activeFarmer.state && <span className="text-slate-400">({activeFarmer.state})</span>}
+              </p>
             </div>
             <div className="flex flex-col sm:items-end gap-1.5">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-100/70 px-3 py-1.5 rounded-full">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-100/70 px-3 py-1.5 rounded-full border border-emerald-200">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                e-KYC Completed
+                <span>e-KYC Verified</span>
               </div>
-              {activeFarmer.telegramLinked ? (
-                <div className="flex items-center gap-1 text-[11px] font-semibold text-sky-800 bg-sky-100 px-2.5 py-1 rounded-full border border-sky-200">
-                  <Send className="w-3 h-3 text-sky-600" />
-                  <span>Telegram Linked: @{activeFarmer.telegramUsername || 'Verified'}</span>
-                </div>
-              ) : (
-                <div className="text-[10px] text-slate-500">
-                  Telegram OTP Login Available
-                </div>
-              )}
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200">
+                <Lock className="w-3.5 h-3.5 text-slate-500" />
+                <span>Role: Farmer (Protected)</span>
+              </div>
             </div>
           </div>
 
@@ -365,15 +542,13 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
             <div className="p-4 rounded-xl border border-slate-100 bg-white space-y-2.5">
               <h4 className="font-bold text-slate-800 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
                 <FileText className="w-3.5 h-3.5 text-emerald-600" />
-                Land Revenue Records (Patta / Chitta)
+                Agricultural & Holding Records
               </h4>
               <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500">Patta Number:</span>
-                <span className="font-semibold text-slate-800">Patta #1294 (Kabisthalam)</span>
-              </div>
-              <div className="flex justify-between border-b border-slate-100 pb-1.5">
                 <span className="text-slate-500">Total Cultivable Area:</span>
-                <span className="font-bold text-emerald-800">{activeFarmer.totalLandAcres} Whole Acres</span>
+                <span className="font-bold text-emerald-800">
+                  {activeFarmer.totalLandAcres} {activeFarmer.landUnit || 'Acres'}
+                </span>
               </div>
               <div className="flex justify-between border-b border-slate-100 pb-1.5">
                 <span className="text-slate-500">Primary Crop:</span>
@@ -403,7 +578,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
                       </span>
                     ))
                   ) : (
-                    <span className="font-semibold text-slate-800">{activeFarmer.irrigationSource}</span>
+                    <span className="font-semibold text-slate-800">{activeFarmer.irrigationSource || 'Borewell'}</span>
                   )}
                 </div>
               </div>
@@ -412,10 +587,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
             <div className="p-4 rounded-xl border border-slate-100 bg-white space-y-2.5">
               <h4 className="font-bold text-slate-800 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
                 <Phone className="w-3.5 h-3.5 text-blue-600" />
-                Contact & Banking Direct Transfer (DBT)
+                Contact & Account Details
               </h4>
               <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500">Linked Mobile:</span>
+                <span className="text-slate-500">Registered Mobile:</span>
                 <span className="font-semibold text-slate-800 font-mono">{activeFarmer.phone}</span>
               </div>
               <div className="flex justify-between border-b border-slate-100 pb-1.5">
@@ -423,17 +598,21 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
                 <span className="font-semibold text-slate-800 font-mono">{activeFarmer.aadhaarMasked || '•••• •••• 9182'}</span>
               </div>
               <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500">DBT Bank Account:</span>
-                <span className="font-semibold text-slate-800 font-mono">Canara Bank (*****3198)</span>
+                <span className="text-slate-500">State / Region:</span>
+                <span className="font-semibold text-slate-800">{activeFarmer.state || 'Tamil Nadu'}</span>
               </div>
               <div className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span className="text-slate-500">IFSC Code:</span>
-                <span className="font-semibold text-slate-800 font-mono">CNRB0001042</span>
+                <span className="text-slate-500">District:</span>
+                <span className="font-semibold text-slate-800">{activeFarmer.district || 'Thanjavur'}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Telegram Status:</span>
-                <span className="font-semibold text-sky-800">
-                  {activeFarmer.telegramLinked ? `Linked (@${activeFarmer.telegramUsername || 'Verified'})` : 'Not Linked'}
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500">Phone Verification:</span>
+                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded border ${
+                  activeFarmer.isPhoneVerified
+                    ? 'text-emerald-800 bg-emerald-50 border-emerald-200'
+                    : 'text-amber-800 bg-amber-50 border-amber-200'
+                }`}>
+                  {activeFarmer.isPhoneVerified ? 'Verified via SMS' : 'Unverified (No SMS Gateway)'}
                 </span>
               </div>
             </div>
@@ -452,7 +631,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
             className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold inline-flex items-center gap-1"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isLoadingList ? 'animate-spin' : ''}`} />
-            Refresh
+            <span>Refresh</span>
           </button>
         }
       >
@@ -480,7 +659,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
                     <td className="py-2.5 px-3 font-mono font-bold text-emerald-700">{f.farmerId}</td>
                     <td className="py-2.5 px-3 font-semibold text-slate-800">{f.name}</td>
                     <td className="py-2.5 px-3 text-slate-600">{f.location}</td>
-                    <td className="py-2.5 px-3 font-bold text-slate-900">{f.totalLandAcres} Acres</td>
+                    <td className="py-2.5 px-3 font-bold text-slate-900">{f.totalLandAcres} {f.landUnit || 'Acres'}</td>
                     <td className="py-2.5 px-3 text-slate-700">{f.primaryCrop}</td>
                     <td className="py-2.5 px-3 text-slate-600 uppercase font-semibold">{f.preferredLanguage || 'ta'}</td>
                     <td className="py-2.5 px-3 text-slate-600 truncate max-w-xs">{f.irrigationSource}</td>
@@ -492,70 +671,145 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
         )}
       </Card>
 
-      {/* Modal Dialog for Farmer Profile Update */}
+      {/* Edit Profile Modal Dialog */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative max-h-[92vh] overflow-y-auto">
             <button
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-5 right-5 p-1.5 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+              onClick={() => {
+                resetFormToSaved();
+                setIsModalOpen(false);
+              }}
+              className="absolute top-5 right-5 p-2 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+              aria-label="Close modal"
             >
               ✕
             </button>
 
             <div className="flex items-center gap-3 mb-5 border-b border-slate-100 pb-3">
               <div className="p-2.5 rounded-2xl bg-emerald-100 text-emerald-800">
-                <User className="w-5 h-5" />
+                <Edit3 className="w-5 h-5" />
               </div>
               <div>
                 <h4 className="text-base font-bold text-slate-900">
-                  Update Farm Profile & Preferences
+                  {t.common.editProfile || 'Edit Farmer Profile'}
                 </h4>
                 <p className="text-xs text-slate-500">
-                  Persists changes to MongoDB with server-side whole-integer land validation
+                  Updates your saved agricultural profile, location, and regional language in MongoDB
                 </p>
               </div>
             </div>
 
-            <form onSubmit={handleRegisterOrUpdateFarmer} className="space-y-4 text-xs">
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Farmer Full Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                />
+            <form onSubmit={handleSaveProfile} className="space-y-4 text-xs">
+              {/* Profile Photo Uploader */}
+              <div className="flex items-center gap-4 p-3 bg-slate-50 rounded-2xl border border-slate-200">
+                <div className="relative">
+                  {profilePhoto ? (
+                    <img
+                      src={profilePhoto}
+                      alt="Profile preview"
+                      className="w-16 h-16 rounded-full object-cover border-2 border-emerald-500 shadow-sm"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xl shadow-sm">
+                      {name ? name.substring(0, 2).toUpperCase() : 'AG'}
+                    </div>
+                  )}
+                  {isUploadingPhoto && (
+                    <div className="absolute inset-0 rounded-full bg-slate-900/50 flex items-center justify-center">
+                      <Loader2 className="w-5 h-5 text-white animate-spin" />
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <p className="font-bold text-slate-800">Profile Photo (Optional)</p>
+                  <p className="text-[11px] text-slate-500">Supports JPG, PNG, WEBP (Max 2MB)</p>
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 text-[11px] font-bold shadow-2xs transition-colors"
+                    >
+                      <Camera className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>{profilePhoto ? 'Change Photo' : 'Upload Photo'}</span>
+                    </button>
+                    {profilePhoto && (
+                      <button
+                        type="button"
+                        onClick={handleRemovePhoto}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 text-[11px] font-bold transition-colors"
+                      >
+                        <Trash2 className="w-3 h-3 text-rose-600" />
+                        <span>Remove</span>
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="hidden"
+                    onChange={handlePhotoUpload}
+                  />
+                </div>
               </div>
 
+              {/* Protected Read-Only Identity Row */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-2.5 rounded-xl bg-amber-50/70 border border-amber-200 text-[11px]">
+                <div>
+                  <span className="text-amber-800/80 block">Farmer ID (Protected):</span>
+                  <span className="font-mono font-bold text-amber-950">{activeFarmer.farmerId || 'Auto-allocated'}</span>
+                </div>
+                <div>
+                  <span className="text-amber-800/80 block">Account Role:</span>
+                  <span className="font-bold text-amber-950">Farmer</span>
+                </div>
+                <div>
+                  <span className="text-amber-800/80 block">Ownership Status:</span>
+                  <span className="font-bold text-emerald-700">Authenticated</span>
+                </div>
+              </div>
+
+              {/* Full Name & Mobile Number */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Phone Number *</label>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Farmer Full Name *
+                  </label>
                   <input
-                    type="tel"
+                    type="text"
                     required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="e.g. Ramesh Kumar"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
                 </div>
-                {/* Total Land Area: Positive Whole Number Integer */}
+
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">
-                    Land Holding (Whole Acres Only) *
+                  <label className="block font-bold text-slate-700 mb-1 flex items-center justify-between">
+                    <span>Mobile Number *</span>
+                    {phone !== (user?.phone || '') && (
+                      <span className="text-[10px] text-amber-700 font-semibold">Number changed</span>
+                    )}
                   </label>
                   <input
-                    type="number"
-                    step="1"
-                    min="1"
+                    type="tel"
                     required
-                    value={landAcresInput}
-                    onChange={(e) => setLandAcresInput(e.target.value)}
-                    placeholder="e.g. 5"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="10-digit mobile number"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-mono font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
-                  <p className="text-[10px] text-slate-500 mt-0.5">Whole integers only (e.g., 1, 3, 8)</p>
+                  {phone !== (user?.phone || '') ? (
+                    <p className="text-[10px] text-amber-700 mt-0.5 flex items-center gap-1">
+                      <Info className="w-3 h-3 shrink-0" />
+                      <span>Changing mobile number will reset SMS verification status.</span>
+                    </p>
+                  ) : (
+                    <p className="text-[10px] text-slate-400 mt-0.5">10-digit Indian number starting with 6-9</p>
+                  )}
                 </div>
               </div>
 
@@ -564,7 +818,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
                 <label className="block font-bold text-slate-700 mb-1 flex items-center justify-between">
                   <span className="flex items-center gap-1.5">
                     <Globe2 className="w-3.5 h-3.5 text-emerald-600" />
-                    Preferred Regional Language (16 Languages) *
+                    Preferred Regional Language (22 Eighth Schedule + English) *
                   </span>
                 </label>
                 <select
@@ -574,45 +828,114 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
                 >
                   {REGIONAL_LANGUAGE_OPTIONS.map((opt) => (
                     <option key={opt.code} value={opt.code}>
-                      {opt.name} ({opt.nativeName}) {opt.isFullyTranslated ? '• Full UI' : '• AI & Voice'}
+                      {opt.name} ({opt.nativeName}) {opt.isFullyTranslated ? '• Full UI' : '• Core Translation'} {opt.direction === 'rtl' ? '[RTL]' : ''}
                     </option>
                   ))}
                 </select>
                 <p className="text-[10px] text-slate-500 mt-0.5">
-                  AI assistant responses, weather advisory, and voice recognition will converse in this dialect.
+                  Saving updates your preferred language application-wide, including voice and AI assistant.
                 </p>
               </div>
 
-              <div>
-                <label className="block font-bold text-slate-700 mb-1">Village & Block / Location *</label>
-                <input
-                  type="text"
+              {/* Geographic Location Selection (State, District, Taluk, Village) */}
+              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200 space-y-2">
+                <p className="font-bold text-slate-800 text-[11px] flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Geographic Location (State / Union Territory & District) *</span>
+                </p>
+                <GeoLocationSelect
+                  value={profileGeoLoc}
+                  onChange={setProfileGeoLoc}
                   required
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                  compact
+                  showAttribution
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              {/* Farm Area & Unit + Primary Crop */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Land Area and Unit */}
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Primary Crop *</label>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Land Holding Area & Unit *
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="number"
+                      step="1"
+                      min="1"
+                      required
+                      value={landAcresInput}
+                      onChange={(e) => setLandAcresInput(e.target.value)}
+                      placeholder="e.g. 5"
+                      className="w-2/3 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                    />
+                    <select
+                      value={landUnit}
+                      onChange={(e) => setLandUnit(e.target.value)}
+                      className="w-1/3 bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 font-bold text-slate-800 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                    >
+                      {LAND_UNITS.map((u) => (
+                        <option key={u} value={u}>
+                          {u}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <p className="text-[10px] text-slate-500 mt-0.5">Whole integers only (e.g., 1, 3, 5)</p>
+                </div>
+
+                {/* Primary Crop */}
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">
+                    Primary Crop *
+                  </label>
                   <input
                     type="text"
                     required
-                    value={formData.primaryCrop}
-                    onChange={(e) => setFormData({ ...formData, primaryCrop: e.target.value })}
+                    value={primaryCrop}
+                    onChange={(e) => setPrimaryCrop(e.target.value)}
+                    placeholder="e.g. Paddy (Samba)"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
                   />
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {COMMON_CROPS.slice(0, 4).map((c) => (
+                      <button
+                        key={c}
+                        type="button"
+                        onClick={() => setPrimaryCrop(c)}
+                        className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-semibold"
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Soil Type</label>
-                  <input
-                    type="text"
-                    value={formData.soilType}
-                    onChange={(e) => setFormData({ ...formData, soilType: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
-                  />
+              </div>
+
+              {/* Soil Type */}
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Soil Type
+                </label>
+                <input
+                  type="text"
+                  value={soilType}
+                  onChange={(e) => setSoilType(e.target.value)}
+                  placeholder="e.g. Alluvial Clay Loam"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500"
+                />
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {COMMON_SOILS.slice(0, 4).map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setSoilType(s)}
+                      className="text-[9px] px-1.5 py-0.5 rounded bg-amber-50 text-amber-800 hover:bg-amber-100 font-semibold"
+                    >
+                      {s}
+                    </button>
+                  ))}
                 </div>
               </div>
 
@@ -662,20 +985,24 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
                       required
                       value={otherIrrigationDetail}
                       onChange={(e) => setOtherIrrigationDetail(e.target.value)}
-                      placeholder="e.g. Solar Lift Pump from stream"
+                      placeholder="e.g. Solar Lift Pump from canal"
                       className="w-full px-3 py-1.5 bg-white border border-blue-300 rounded-xl text-xs font-medium"
                     />
                   </div>
                 )}
               </div>
 
+              {/* Form Actions: Cancel & Save */}
               <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
                 <button
                   type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold"
+                  onClick={() => {
+                    resetFormToSaved();
+                    setIsModalOpen(false);
+                  }}
+                  className="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold transition-colors"
                 >
-                  Cancel
+                  {t.common.cancel || 'Cancel'}
                 </button>
                 <button
                   type="submit"
@@ -685,10 +1012,10 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ farmer, onFarmerUpdate
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Saving to MongoDB...
+                      <span>Saving to MongoDB...</span>
                     </>
                   ) : (
-                    'Save to MongoDB'
+                    <span>{t.common.saveChanges || 'Save Changes'}</span>
                   )}
                 </button>
               </div>

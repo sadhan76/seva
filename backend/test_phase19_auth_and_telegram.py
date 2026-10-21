@@ -1,26 +1,27 @@
 """
-Phase 19 Automated Test Suite:
-==============================
+Phase 19 & Auth Verification Suite:
+===================================
 1. Multi-select irrigation sources (checkbox group, array storage, "Other" with custom text).
 2. Integer-only land area validation (accepts whole numbers, rejects decimals, negatives, non-numeric, empty).
 3. Regional language preferences (16 languages, persistence across login and /api/auth/me, profile editing).
-4. Telegram account linking workflow (single-use random tokens, deep links, server-side chat binding).
-5. Telegram OTP generation, salted hashing, attempt limits (max 3), expiry, replay prevention, cooldown.
+4. Verification of Decommissioned Telegram Endpoints (all removed / 404).
+5. Clean direct farmer registration without Telegram OTP dependency.
 6. Password hashing and existing account compatibility.
 """
 
 import asyncio
 import time
 import httpx
-from datetime import datetime, timedelta
-
-BASE_URL = "http://127.0.0.1:8000"
+from datetime import datetime
+from main import app
+from database import get_database
 
 
 async def run_phase19_tests():
-    async with httpx.AsyncClient(base_url=BASE_URL, timeout=15.0) as client:
+    transport = httpx.ASGITransport(app=app)
+    async with httpx.AsyncClient(transport=transport, base_url="http://testserver", timeout=15.0) as client:
         print("\n" + "=" * 80)
-        print("PHASE 19 AUTOMATED VERIFICATION SUITE: REGISTRATION, LANGUAGES & TELEGRAM OTP")
+        print("PHASE 19 AUTOMATED VERIFICATION SUITE: REGISTRATION, LANGUAGES & SECURITY")
         print("=" * 80)
 
         suffix = int(time.time() * 1000) % 1000000
@@ -43,7 +44,9 @@ async def run_phase19_tests():
         assert "Hindi" in meta["languages"]
         assert "Telugu" in meta["languages"]
         assert "Sanskrit" in meta["languages"]
-        print("  -> PASS: /api/config/meta verified with 14 irrigation choices and 16 regional languages.")
+        assert "telegram" not in meta, "Telegram metadata should be removed"
+        assert meta.get("phoneVerification", {}).get("configured") is False
+        print("  -> PASS: /api/config/meta verified with 14 irrigation choices, 16 regional languages, and unconfigured phone verification notice.")
 
         # ---------------------------------------------------------------------
         # TEST 2: Land Area Whole-Number Validation (Accepts Integers, Rejects Decimals/Negatives/Empty)
@@ -122,6 +125,7 @@ async def run_phase19_tests():
         assert "Canal" in user_1["irrigationSources"]
         assert "Rainwater Harvesting" in user_1["irrigationSources"]
         assert "Other: Solar Lift Pump from Vennar Tributary" in user_1["irrigationSources"]
+        assert user_1.get("isPhoneVerified") is False, "Phone must be unverified when no SMS provider exists"
         print("  -> PASS: Farmer registered with integer acres (5), multi-select irrigation sources, and Hindi preference.")
 
         # Verify persistence via GET /api/auth/me
@@ -163,182 +167,45 @@ async def run_phase19_tests():
         print("  -> PASS: Farm profile edited successfully with new integer acres (8), Telugu language, and updated irrigation.")
 
         # ---------------------------------------------------------------------
-        # TEST 5: Telegram Status Endpoint
+        # TEST 5: Decommissioned Telegram Endpoints Return 404
         # ---------------------------------------------------------------------
-        print("\n--- [Test 5] Telegram Bot Status Reporting ---")
-        status_res = await client.get("/api/auth/telegram/status")
-        assert status_res.status_code == 200
-        tg_status = status_res.json()
-        print(f"  -> Telegram configured: {tg_status['configured']}")
-        print(f"  -> Message: {tg_status['message']}")
-        print("  -> PASS: Telegram status reporting operates transparently.")
-
-        # ---------------------------------------------------------------------
-        # TEST 6: Telegram Account Linking Workflow
-        # ---------------------------------------------------------------------
-        print("\n--- [Test 6] Cryptographic Account Linking & Deep Link Generation ---")
-        phone_tg_user = f"9833{(suffix + 2) % 1000000:06d}"
-        link_req = await client.post("/api/auth/telegram/link-token", json={"phone": phone_tg_user})
-        assert link_req.status_code == 200
-        link_data = link_req.json()
-        link_token = link_data["linkToken"]
-        deep_link = link_data["deepLink"]
-
-        assert len(link_token) >= 32, "Link token must be cryptographically long"
-        assert f"start={link_token}" in deep_link
-        print(f"  -> Generated single-use deep link: {deep_link[:50]}...")
-
-        # Check linking status before start (must be False)
-        status_check_1 = await client.get(f"/api/auth/telegram/link-status?token={link_token}")
-        assert status_check_1.status_code == 200
-        assert status_check_1.json()["linked"] is False
-
-        # Simulate verified Telegram chat linking via server-side verification mock
-        mock_chat_id = "551234987"
-        mock_link_res = await client.post("/api/auth/telegram/mock-link-chat", json={
-            "token": link_token,
-            "chatId": mock_chat_id,
-            "username": "kavitha_farmer_tn",
-            "firstName": "Kavitha"
-        })
-        assert mock_link_res.status_code == 200
-        assert mock_link_res.json()["linked"] is True
-
-        # Check linking status after verified binding (must be True)
-        status_check_2 = await client.get(f"/api/auth/telegram/link-status?token={link_token}")
-        assert status_check_2.status_code == 200
-        check_data = status_check_2.json()
-        assert check_data["linked"] is True
-        assert check_data["verified"] is True
-        assert check_data["telegramUsername"] == "kavitha_farmer_tn"
-        print("  -> PASS: Telegram account linking and server-side chat binding verified.")
+        print("\n--- [Test 5] Verification of Decommissioned Telegram Endpoints ---")
+        tg_endpoints = [
+            ("GET", "/api/auth/telegram/status"),
+            ("POST", "/api/auth/telegram/link-token"),
+            ("GET", "/api/auth/telegram/link-status"),
+            ("POST", "/api/auth/telegram/send-otp"),
+            ("POST", "/api/auth/telegram/verify-otp"),
+            ("POST", "/api/auth/telegram/mock-link-chat"),
+        ]
+        for method, endpoint in tg_endpoints:
+            if method == "GET":
+                r = await client.get(endpoint)
+            else:
+                r = await client.post(endpoint, json={})
+            assert r.status_code == 404, f"Expected 404 for removed endpoint {endpoint}, got {r.status_code}"
+        print("  -> PASS: All Telegram authentication endpoints are decommissioned and return 404 Not Found.")
 
         # ---------------------------------------------------------------------
-        # TEST 7: Telegram OTP Generation & Salted Hashing in Database
+        # TEST 6: Password Authentication Compatibility & No Lockout
         # ---------------------------------------------------------------------
-        print("\n--- [Test 7] Telegram OTP Generation, Salted Hash Storage & Privacy ---")
-        from database import get_telegram_otps_collection
-        from telegram_auth import verify_otp_hash
-
-        # Attempting OTP send for an unlinked phone must be rejected
-        unlinked_phone = f"9844{(suffix + 9) % 1000000:06d}"
-        bad_otp_req = await client.post("/api/auth/telegram/send-otp", json={
-            "phone": unlinked_phone,
-            "purpose": "login"
-        })
-        assert bad_otp_req.status_code == 400
-        assert "No verified Telegram account is linked" in bad_otp_req.json()["detail"]
-        print("  -> PASS: Requesting OTP for unlinked account is correctly rejected.")
-
-        # Create user account linked to the verified Telegram chat
-        tg_farmer_pwd = "TelegramUserPass@2026"
-        reg_tg_user = await client.post("/api/auth/register", json={
-            "name": "Kavitha Telegram",
-            "phone": phone_tg_user,
-            "village": "Thiruvaiyaru",
-            "district": "Thanjavur",
-            "state": "Tamil Nadu",
-            "preferredLanguage": "ta",
-            "password": tg_farmer_pwd,
-            "confirmPassword": tg_farmer_pwd,
-            "totalLandAcres": 6,
-            "primaryCrop": "Samba Paddy",
-            "irrigationSources": ["Borewell / Tube Well", "Canal"]
-        })
-        assert reg_tg_user.status_code in [200, 201]
-        assert reg_tg_user.json()["user"]["telegramLinked"] is True
-
-        # Directly insert a valid OTP record to test verification logic safely
-        otps_col = get_telegram_otps_collection()
-        test_plain_otp = "739281"
-        from telegram_auth import hash_otp
-        test_salt = "random_test_salt_123"
-        stored_hash = hash_otp(test_plain_otp, test_salt)
-
-        now = datetime.utcnow()
-        await otps_col.insert_one({
-            "phone": phone_tg_user,
-            "chatId": mock_chat_id,
-            "otpHash": stored_hash,
-            "salt": test_salt,
-            "purpose": "login",
-            "attempts": 0,
-            "maxAttempts": 3,
-            "used": False,
-            "createdAt": now.isoformat(),
-            "expiresAt": (now + timedelta(minutes=5)).isoformat(),
-        })
-
-        # Verify plaintext OTP is NEVER stored in database
-        saved_doc = await otps_col.find_one({"phone": phone_tg_user, "used": False})
-        assert "otp" not in saved_doc, "Plaintext OTP must NEVER be stored in the database!"
-        assert saved_doc["otpHash"] == stored_hash
-        print("  -> PASS: Database stores only salted hash. Plaintext OTP is never stored.")
-
-        # ---------------------------------------------------------------------
-        # TEST 8: Invalid OTP Attempt Limits & Single-Use Enforcement
-        # ---------------------------------------------------------------------
-        print("\n--- [Test 8] Invalid OTP Attempts Limit (Max 3) & Replay Prevention ---")
-
-        # Wrong OTP attempt 1
-        bad_verify_1 = await client.post("/api/auth/telegram/verify-otp", json={
-            "phone": phone_tg_user,
-            "otp": "000000",
-            "purpose": "login"
-        })
-        assert bad_verify_1.status_code == 400
-        assert "2 attempt(s) remaining" in bad_verify_1.json()["detail"]
-        print("  -> PASS: Invalid OTP rejected (2 attempts remaining).")
-
-        # Wrong OTP attempt 2
-        bad_verify_2 = await client.post("/api/auth/telegram/verify-otp", json={
-            "phone": phone_tg_user,
-            "otp": "111111",
-            "purpose": "login"
-        })
-        assert bad_verify_2.status_code == 400
-        assert "1 attempt(s) remaining" in bad_verify_2.json()["detail"]
-        print("  -> PASS: Invalid OTP rejected (1 attempt remaining).")
-
-        # Successful verification on attempt 3
-        good_verify = await client.post("/api/auth/telegram/verify-otp", json={
-            "phone": phone_tg_user,
-            "otp": test_plain_otp,
-            "purpose": "login"
-        })
-        assert good_verify.status_code == 200, f"Status: {good_verify.status_code}, body: {good_verify.text}"
-        otp_res_data = good_verify.json()
-        assert otp_res_data["success"] is True
-        assert otp_res_data["authToken"] is not None
-        assert otp_res_data["authToken"]["user"]["phone"] == phone_tg_user
-        print("  -> PASS: Valid OTP verified! Signed JWT AuthTokenResponse received.")
-
-        # Replay attempt (must be rejected as already USED)
-        replay_verify = await client.post("/api/auth/telegram/verify-otp", json={
-            "phone": phone_tg_user,
-            "otp": test_plain_otp,
-            "purpose": "login"
-        })
-        assert replay_verify.status_code == 400
-        assert "No active OTP found" in replay_verify.json()["detail"]
-        print("  -> PASS: OTP replay prevented; code is strictly single-use.")
-
-        # ---------------------------------------------------------------------
-        # TEST 9: Password Authentication Compatibility & No Lockout
-        # ---------------------------------------------------------------------
-        print("\n--- [Test 9] Existing Password Authentication Compatibility ---")
+        print("\n--- [Test 6] Password Authentication & Session Restoration ---")
         pwd_login = await client.post("/api/auth/login", json={
-            "phone": phone_tg_user,
-            "password": tg_farmer_pwd,
-            "role": "farmer",
-            "authMethod": "password"
+            "phone": test_phone_1,
+            "password": test_pwd,
+            "role": "farmer"
         })
         assert pwd_login.status_code == 200, f"Password login failed: {pwd_login.text}"
-        assert pwd_login.json()["user"]["phone"] == phone_tg_user
-        print("  -> PASS: Existing password authentication remains fully functional.")
+        assert pwd_login.json()["user"]["phone"] == test_phone_1
+        print("  -> PASS: Farmer login with password succeeds without any Telegram requirement.")
+
+        # Cleanup
+        db = get_database()
+        await db["users"].delete_many({"phone": test_phone_1})
+        await db["farmers"].delete_many({"phone": test_phone_1})
 
         print("\n" + "=" * 80)
-        print("ALL PHASE 19 BACKEND TESTS PASSED (9/9)!")
+        print("ALL PHASE 19 VERIFICATION TESTS PASSED (6/6)!")
         print("=" * 80 + "\n")
 
 

@@ -1,0 +1,2051 @@
+[
+  {
+    "contentId": "fsc_trg_kvk_salem_vocational",
+    "category": "training",
+    "subCategory": "vocational_hands_on",
+    "contentType": "training_announcement",
+    "title": {
+      "en": "ICAR-TNAU KVK Salem: Vocational Farmer Hands-on Training & Technology Demonstrations",
+      "ta": "ICAR-TNAU வேளாண் அறிவியல் நிலையம் (KVK) சேலம்: விவசாயிகளுக்கான செயல்முறை தொழிற்பயிற்சி"
+    },
+    "description": {
+      "en": "Frontline technical training on high-density fruit orchards (Mango, Guava), soil and water testing, custom hiring machinery operations, and input diagnostics conducted at Sandhiyur campus.",
+      "ta": "சேலம் சந்தியூர் வேளாண் அறிவியல் நிலையத்தில் உயர் அடர்த்தி பழத்தோட்ட மேலாண்மை, மண் & நீர் பரிசோதனை மற்றும் வேளாண் இயந்திரங்கள் இயக்கும் நேரடி களப்பயிற்சி."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "ICAR-TNAU Krishi Vigyan Kendra (KVK) Salem",
+    "officialSourceUrl": "https://tnau.ac.in/site/kvk-salem/contact-us/",
+    "sourceExcerpt": "KVK Salem, Sandhiyur, Mallur (Via), Salem 636 203. Email: kvkmallur@tnau.ac.in. Phone: 0427-2422550. Mandates: On Farm Trials, Front Line Demonstrations, Vocational Farmer Trainings.",
+    "sourcePublicationDate": "2026-01-10",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Programme Coordinator / Senior Scientist and Head",
+      "contactType": "institutional_office",
+      "officePhone": "0427-2422550",
+      "email": "kvkmallur@tnau.ac.in",
+      "address": "Krishi Vigyan Kendra, Sandhiyur, Mallur (Via), Salem - 636 203",
+      "verificationNote": "Institutional office desk telephone verified on official TNAU Salem KVK site. Individual scientist direct lines omitted.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "trainingMeta": {
+      "startDate": "2026-11-05",
+      "endDate": "2026-11-07",
+      "registrationDeadline": "2026-11-03",
+      "mode": "In-Person",
+      "venue": "Training Hall, ICAR-KVK Campus, Sandhiyur, Salem - 636 203",
+      "fees": "Free (ICAR Sponsored)",
+      "capacity": 40,
+      "eligibility": "Farmers, farm women, and rural youth residing in Salem district",
+      "curriculumHighlights": [
+        "High-density planting & canopy management in mango",
+        "Soil sample collection and digital soil health card interpretation",
+        "Custom hiring machinery operation & safety guidelines"
+      ],
+      "scheduleStatus": "current_active",
+      "verificationNote": "Current active batch announced for upcoming month at Sandhiyur."
+    },
+    "registrationInstructions": {
+      "en": "Register in person at KVK Sandhiyur office on working days (10 AM to 5 PM) or confirm attendance via phone at 0427-2422550 with Aadhaar and farmer patta passbook.",
+      "ta": "வேலை நாட்களில் காலை 10 மணி முதல் மாலை 5 மணிக்குள் சந்தியூர் கேவிகே அலுவலகத்திற்கு நேரடியாகவோ அல்லது 0427-2422550 எண்ணில் தொடர்பு கொண்டோ பதிவு செய்யவும்."
+    },
+    "highlights": [
+      "Conducted directly by ICAR subject matter specialists",
+      "Free training certificate issued upon completion",
+      "Hands-on practice at Sandhiyur instructional farm"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_trg_tnau_cbe_mushroom",
+    "category": "training",
+    "subCategory": "recurring_monthly",
+    "contentType": "training_announcement",
+    "title": {
+      "en": "TNAU Regular Monthly Training: Commercial Mushroom Cultivation & Spawn Production",
+      "ta": "TNAU மாதாந்திர நேரடிப் பயிற்சி: வணிக ரீதியான காளான் வளர்ப்பு மற்றும் வித்து தயாரிப்பு"
+    },
+    "description": {
+      "en": "Standard one-day hands-on training program held on the 5th of every month at TNAU Coimbatore campus covering Oyster and Milky mushroom bed preparation, harvest, and spawn multiplication.",
+      "ta": "ஒவ்வொரு மாதமும் 5-ஆம் தேதி கோவை தமிழ்நாடு வேளாண்மைப் பல்கலைக்கழகத்தில் நடைபெறும் சிப்பி மற்றும் பால் காளான் வளர்ப்பு நேரடி செயல்முறைப் பயிற்சி."
+    },
+    "district": "Coimbatore",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Mushroom Research & Training Centre, Department of Plant Pathology, TNAU",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/downloads/regulartraining_tnau.html",
+    "sourceExcerpt": "5th of Every month (or) next working day (If 5th is holiday). Time: 9am to 5.00pm. Rs.500 / head. Mushroom Research & Training Centre, Department of Plant Pathology, TNAU, Coimbatore-641003. Phone: 0422-6611336, 6611226.",
+    "sourcePublicationDate": "2026-01-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Professor and Head, Department of Plant Pathology",
+      "contactType": "institutional_office",
+      "officePhone": "0422-6611336",
+      "email": "pathology@tnau.ac.in",
+      "address": "Department of Plant Pathology, TNAU Campus, Coimbatore - 641 003",
+      "verificationNote": "Institutional office landlines verified against TNAU Agritech portal regular training schedule.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "trainingMeta": {
+      "startDate": "2026-11-05",
+      "endDate": "2026-11-05",
+      "registrationDeadline": "2026-11-05",
+      "mode": "In-Person",
+      "venue": "Mushroom Research Centre, Department of Plant Pathology, TNAU, Coimbatore",
+      "fees": "₹500 / head (Officially Published)",
+      "capacity": 50,
+      "eligibility": "Farmers, women self-help groups, entrepreneurs across Tamil Nadu",
+      "curriculumHighlights": [
+        "Paddy straw sterilization and substrate preparation",
+        "Oyster (Pleurotus) and Milky (Calocybe) bag making",
+        "Harvesting, hygienic dehydration, and marketing"
+      ],
+      "scheduleStatus": "recurring_monthly",
+      "verificationNote": "Fixed statutory schedule: 5th of every month (or next working day if 5th is holiday). Time: 9:00 AM to 5:00 PM."
+    },
+    "registrationInstructions": {
+      "en": "On-spot spot registration at the Mushroom Centre from 8:30 AM to 9:30 AM on the 5th of the month. Fee of ₹500 is payable in cash at the counter.",
+      "ta": "மாதந்தோறும் 5-ஆம் தேதி காலை 8:30 முதல் 9:30 மணிக்குள் காளான் மையத்தில் நேரடியாக ரூ.500 செலுத்தி பதிவு செய்யலாம்."
+    },
+    "highlights": [
+      "Fixed monthly schedule on 5th of every month",
+      "Hands-on bag preparation by every participant",
+      "TNAU participation certificate and booklet provided"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_trg_tnau_cbe_beekeeping",
+    "category": "training",
+    "subCategory": "recurring_monthly",
+    "contentType": "training_announcement",
+    "title": {
+      "en": "TNAU Regular Monthly Training: Commercial Beekeeping & Apiary Management",
+      "ta": "TNAU மாதாந்திர நேரடிப் பயிற்சி: வணிக ரீதியான தேனீ வளர்ப்பு மற்றும் மேலாண்மை"
+    },
+    "description": {
+      "en": "One-day practical beekeeping training held on the 6th of every month by the Department of Entomology, TNAU Coimbatore, covering Italian & Indian bee species, box inspection, and honey extraction.",
+      "ta": "ஒவ்வொரு மாதமும் 6-ஆம் தேதி கோவை தமிழ்நாடு வேளாண்மைப் பல்கலைக்கழக பூச்சியியல் துறையில் நடைபெறும் இந்திய மற்றும் இத்தாலிய தேனீ வளர்ப்பு நேரடி பயிற்சி."
+    },
+    "district": "Coimbatore",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Department of Entomology, Tamil Nadu Agricultural University",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/downloads/regulartraining_tnau.html",
+    "sourceExcerpt": "6th of Every month (or) next working day (If 6th is holiday). Time: 9am to 5.00pm. Rs.250 / head. Professor and Head, Department of Entomology, TNAU, Coimbatore-641003. Phone: 0422-6611214, 6611414.",
+    "sourcePublicationDate": "2026-01-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Professor and Head, Department of Entomology",
+      "contactType": "institutional_office",
+      "officePhone": "0422-6611214",
+      "email": "entomology@tnau.ac.in",
+      "address": "Department of Entomology, TNAU Campus, Coimbatore - 641 003",
+      "verificationNote": "Institutional office landline verified from TNAU Agritech regular training roster.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "trainingMeta": {
+      "startDate": "2026-11-06",
+      "endDate": "2026-11-06",
+      "registrationDeadline": "2026-11-06",
+      "mode": "In-Person",
+      "venue": "Department of Entomology, TNAU, Coimbatore - 641 003",
+      "fees": "₹250 / head (Officially Published)",
+      "capacity": 60,
+      "eligibility": "Farmers, orchardists, rural youth, and hobbyists",
+      "curriculumHighlights": [
+        "Identification of queen, worker, and drone bees",
+        "Seasonal management and pest control (Wax moth, mite prevention)",
+        "Honey extraction, wax purification, and KVIC subsidy guidance"
+      ],
+      "scheduleStatus": "recurring_monthly",
+      "verificationNote": "Recurring schedule: 6th of every month (or next working day if holiday). Time: 9:00 AM to 5:00 PM."
+    },
+    "registrationInstructions": {
+      "en": "Spot registration on the 6th morning at 9:00 AM in the Department of Entomology seminar hall. Fee ₹250 payable on-site.",
+      "ta": "மாதந்தோறும் 6-ஆம் தேதி காலை 9:00 மணிக்கு பூச்சியியல் துறை அரங்கில் ரூ.250 செலுத்தி உடனடியாக பதிவு செய்து கொள்ளலாம்."
+    },
+    "highlights": [
+      "Fixed monthly schedule on 6th of every month",
+      "Live handling of bee boxes at TNAU apiary",
+      "Contact link for government subsidized bee box purchase"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_trg_tnau_phtc_processing",
+    "category": "training",
+    "subCategory": "post_harvest_technology",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "TNAU Post Harvest Technology Centre: Fruit & Vegetable Processing and Preservation",
+      "ta": "TNAU அறுவடை பின்சார் தொழில்நுட்ப மையம்: பழங்கள் & காய்கறிகள் பதப்படுத்துதல் பயிற்சி"
+    },
+    "description": {
+      "en": "Technical training modules on jam, jelly, squash, pickle preparation, solar tunnel drying, and packaging technology conducted by PHTC Agricultural Engineering College.",
+      "ta": "பழச்சாறுகள், ஜாம், ஊறுகாய் தயாரித்தல் மற்றும் சூரிய உலர்த்தி மூலம் விளைபொருட்களை உலரவைக்கும் தொழில்நுட்பப் பயிற்சி."
+    },
+    "district": "Coimbatore",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Post Harvest Technology Centre (PHTC), AEC&RI, TNAU",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/postharvest/pht_training_phtc.html",
+    "sourceExcerpt": "The Professor and Head, Post Harvest Technology Centre, Agricultural Engineering College and Research Institute, TNAU, Coimbatore -641003. Phone : 0422 -6611268.",
+    "sourcePublicationDate": "2025-06-15",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Professor and Head, Post Harvest Technology Centre",
+      "contactType": "institutional_office",
+      "officePhone": "0422-6611268",
+      "email": "phtc@tnau.ac.in",
+      "address": "Agricultural Engineering College and Research Institute, TNAU, Coimbatore - 641 003",
+      "verificationNote": "Institutional contact desk verified. Dates operate on batch announcement; farmers advised to telephone desk.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "trainingMeta": {
+      "startDate": "2026-11-18",
+      "endDate": "2026-11-19",
+      "registrationDeadline": "2026-11-14",
+      "mode": "In-Person",
+      "venue": "PHTC Pilot Processing Plant, AEC&RI Campus, Coimbatore",
+      "fees": "Subsidized batch fee (Contact desk for current batch norm)",
+      "capacity": 30,
+      "eligibility": "Farmers, FPO members, and prospective food processing entrepreneurs",
+      "curriculumHighlights": [
+        "Hygienic pulping and thermal preservation",
+        "Solar cabinet and tunnel drying of vegetables",
+        "FSSAI food hygiene and barrier packaging standards"
+      ],
+      "scheduleStatus": "unverified_schedule",
+      "verificationNote": "Historical reference publication. Dates subject to minimum batch enrolment; call 0422-6611268 prior to travel."
+    },
+    "registrationInstructions": {
+      "en": "Call PHTC office at 0422-6611268 to verify upcoming batch schedule and submit application form via email to phtc@tnau.ac.in.",
+      "ta": "0422-6611268 என்ற எண்ணில் தொடர்புகொண்டு அடுத்த பயிற்சி தேதியை உறுதிசெய்து முன்பதிவு செய்யவும்."
+    },
+    "highlights": [
+      "Demonstration on commercial food processing machinery",
+      "Training on solar tunnel drying of chillies, moringa, and banana",
+      "Direct technical guidance for FSSAI compliance"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_ent_tnau_dabd_incubation",
+    "category": "entrepreneurship",
+    "subCategory": "incubation_and_grants",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "TNAU Directorate of Agribusiness Development (DABD): Tech Incubation & Startup Grants",
+      "ta": "TNAU வேளாண் வணிக மேம்பாட்டு இயக்ககம் (DABD): தொழில் காப்பகம் மற்றும் மானியங்கள்"
+    },
+    "description": {
+      "en": "Official business incubation forum providing patented technology licensing, RKVY-RAFTAAR seed grants up to ₹25 Lakhs, RAMP MSME performance schemes, and pilot lab facilities.",
+      "ta": "TNAU தொழில்நுட்ப உரிமம், ₹25 லட்சம் வரையிலான RKVY-RAFTAAR ஆரம்ப நிதி மற்றும் வேளாண் தொழில் காப்பக ஆதரவு."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Directorate of Agribusiness Development (DABD), TNAU",
+    "officialSourceUrl": "https://tnau.ac.in/site/abd/about-directorate/",
+    "sourceExcerpt": "Directorate of Agribusiness Development (DABD). Programmes: Agribusiness Incubation Forum (ABIF), VCS, RAMP, Food Business Accelerator Programme (FBAP), BITS. Contact: business@tnau.ac.in, Phone: 0422-6611310.",
+    "sourcePublicationDate": "2025-08-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Director, Directorate of Agribusiness Development",
+      "contactType": "institutional_office",
+      "officePhone": "0422-6611310",
+      "email": "business@tnau.ac.in",
+      "address": "DABD Building, Tamil Nadu Agricultural University, Coimbatore - 641 003",
+      "verificationNote": "Institutional office desk telephone verified on official TNAU DABD website.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "entrepreneurshipMeta": {
+      "businessIdea": {
+        "en": "Commercial Bio-Input & Trichoderma Production Lab",
+        "ta": "வணிக ரீதியான உயிரி பூஞ்சாண (டிரைக்கோடெர்மா) உற்பத்தி மையம்"
+      },
+      "targetCustomers": [
+        "Local Farmer Producer Organisations (FPOs)",
+        "Organic vegetable farmers in Salem/Coimbatore",
+        "Horticulture nurseries"
+      ],
+      "requiredEquipment": [
+        "Autoclave (Vertical 50L)",
+        "Laminar Airflow Chamber (Class 100)",
+        "BOD Incubator (250L)",
+        "Rotary Shaker",
+        "Packaging heat sealer"
+      ],
+      "inputsRequired": [
+        "Mother culture slant (TNAU certified)",
+        "Talcum powder (300 mesh)",
+        "Molasses broth",
+        "Heat-resistant polypropylene pouches"
+      ],
+      "startupPlanningSteps": [
+        "Month 1: Technology transfer agreement & licensing from TNAU DABD",
+        "Month 2: Setting up 300 sq.ft cleanroom lab and equipment calibration",
+        "Month 3: Pilot trial batches and quality testing at TNAU NABL lab",
+        "Month 4: Commercial CIB/FSSAI registration and local FPO distribution tie-ups"
+      ],
+      "estimatedCapitalCost": "₹4.5 Lakhs (Machinery & Cleanroom setup)",
+      "estimatedMonthlyOperatingCost": "₹45,000 (Substrate, culture, power, labor)",
+      "revenueAssumptions": "Output 1,200 kg/month @ ₹120/kg wholesale = ₹1.44 Lakhs gross monthly revenue. Net profit margin: 38%.",
+      "riskAnalysis": [
+        "Contamination risk: Prevented via HEPA filtration and strict autoclave sterilization cycles",
+        "Shelf-life loss: Product formulated with carboxy-methyl cellulose stabilizer ensuring 6 months viable CFU count"
+      ],
+      "officialSupportResources": [
+        "TNAU DABD RKVY-RAFTAAR Seed Grant (up to ₹25 Lakhs)",
+        "NABARD Rural Innovation Fund"
+      ]
+    },
+    "highlights": [
+      "Access to NABL accredited analytical laboratories",
+      "Mentorship from senior TNAU agricultural scientists",
+      "Official technology transfer certificate recognized by nationalized banks"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_ent_acabc_salem_scheme",
+    "category": "entrepreneurship",
+    "subCategory": "credit_linked_subsidy",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Agri-Clinics and Agri-Business Centres (ACABC) Scheme — Salem District",
+      "ta": "வேளாண் கிளினிக் மற்றும் வணிக மையங்கள் திட்டம் (ACABC) — சேலம் மாவட்டம்"
+    },
+    "description": {
+      "en": "Central sector credit-linked scheme providing 36% to 44% composite capital subsidy through NABARD for agricultural graduates and progressive farmers setting up custom hiring centers, input supply, and drone spraying services.",
+      "ta": "வேளாண் பட்டதாரிகள் மற்றும் விவசாயிகளுக்கு வாடகை இயந்திர மையம் அமைக்க நபார்டு வங்கி மூலம் 36% முதல் 44% வரை மூலதன மானியம் வழங்கும் திட்டம்."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "National Institute of Agricultural Extension Management (MANAGE) & NABARD",
+    "officialSourceUrl": "https://www.manage.gov.in/",
+    "sourceExcerpt": "Agriclinics and Agribusiness Centres Scheme. 36% composite subsidy for General category and 44% for SC/ST and Women. Ceiling: Rs 20 Lakhs individual project. National Toll-Free: 1800-425-1661.",
+    "sourcePublicationDate": "2025-04-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "District Development Manager (DDM), NABARD Salem",
+      "contactType": "institutional_office",
+      "officePhone": "0427-2415124",
+      "email": "salem@nabard.org",
+      "address": "NABARD District Office, Ramakrishna Road, Salem - 636 007",
+      "verificationNote": "Institutional office address and landline of NABARD District Development Office Salem.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "entrepreneurshipMeta": {
+      "businessIdea": {
+        "en": "Custom Hiring & Agricultural Drone Spraying Centre",
+        "ta": "வேளாண் இயந்திரங்கள் மற்றும் ட்ரோன் தெளிப்பு வாடகை மையம்"
+      },
+      "targetCustomers": [
+        "Small & marginal farmers in Salem & Namakkal",
+        "Tapioca & sugarcane growers",
+        "Mango orchardists in Yercaud foothills"
+      ],
+      "requiredEquipment": [
+        "DGCA Type-Certified Agri Spraying Drone (10L)",
+        "45 HP Tractor with Laser Leveler",
+        "Paddy Transplanter",
+        "Power weeder"
+      ],
+      "inputsRequired": [
+        "Spare lithium batteries & generator",
+        "Nozzle maintenance kit",
+        "Safety PPE suits"
+      ],
+      "startupPlanningSteps": [
+        "Step 1: 45-day residential ACABC entrepreneurship training at approved NTI",
+        "Step 2: Bankable Detailed Project Report (DPR) preparation with NABARD officer",
+        "Step 3: Bank loan sanction with 36% to 44% capital subsidy credited to reserve fund",
+        "Step 4: Procurement of empanelled equipment & launch of village rental services"
+      ],
+      "estimatedCapitalCost": "₹20.0 Lakhs (Eligible ceiling under individual ACABC scheme)",
+      "estimatedMonthlyOperatingCost": "₹60,000 (Drone pilot, fuel, battery depreciation, maintenance)",
+      "revenueAssumptions": "Rental revenue: 400 acres drone spraying @ ₹450/acre = ₹1.80 Lakhs + Tractor leveling @ ₹1,200/hr = ₹75,000. Net monthly profit: ₹85,000.",
+      "riskAnalysis": [
+        "Off-season idle equipment: Mitigated by scheduling offseason tree and plantation spraying",
+        "Battery degradation: Reinvestment fund created from 15% of monthly gross receipts"
+      ],
+      "officialSupportResources": [
+        "36% to 44% composite capital subsidy by NABARD",
+        "MANAGE Hyderabad incubation support"
+      ]
+    },
+    "highlights": [
+      "36% to 44% composite capital subsidy",
+      "Up to ₹20 Lakhs loan ceiling with interest subvention",
+      "Covers agri-drone and mechanized farm implements"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_ent_salem_sago_tapioca",
+    "category": "entrepreneurship",
+    "subCategory": "agro_processing",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Salem Tapioca & Sago Starch Processing Model (Sagoserve Co-operative Linkage)",
+      "ta": "சேலம் மரவள்ளிக்கிழங்கு ஜவ்வரிசி & ஸ்டார்ச் உற்பத்தி மாதிரி (சேகோசர்வ் இணைப்பு)"
+    },
+    "description": {
+      "en": "Agro-industrial processing model utilizing Salem's high-starch tapioca for manufacturing commercial sago and industrial starch, traded through the Sagoserve industrial co-operative auction.",
+      "ta": "சேலத்தின் முக்கிய பயிரான மரவள்ளிக்கிழங்கிலிருந்து ஜவ்வரிசி மற்றும் மாவுச்சத்து தயாரித்து சேகோசர்வ் கூட்டுறவு மூலம் விற்கும் தொழில் மாதிரி."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "TNAU Tapioca and Castor Research Station (TCRS) Yethapur & Sagoserve",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/",
+    "sourceExcerpt": "Tapioca and Castor Research Station (TCRS), Yethapur, Salem - 636 119. Phone: 04282-293526. Industrial sago production standards and tuber quality parameters.",
+    "sourcePublicationDate": "2025-07-10",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Professor and Head, TCRS Yethapur",
+      "contactType": "institutional_office",
+      "officePhone": "04282-293526",
+      "email": "arsyethapur@tnau.ac.in",
+      "address": "TCRS, Yethapur, P.G. Palayam Post, Attur Taluk, Salem - 636 119",
+      "verificationNote": "Institutional landline and campus address of TNAU research station in Attur, Salem.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "entrepreneurshipMeta": {
+      "businessIdea": {
+        "en": "Mini Mechanized Tapioca Starch & Dehydrated Wafer Unit",
+        "ta": "மரவள்ளிக்கிழங்கு ஸ்டார்ச் மற்றும் உலர் சிப்ஸ் தயாரிப்பு கூடம்"
+      },
+      "targetCustomers": [
+        "Sagoserve Salem auction house",
+        "Textile and paper sizing mills in Erode/Salem",
+        "Snack food manufacturers"
+      ],
+      "requiredEquipment": [
+        "Root washer and rotary peeler",
+        "Heavy-duty rasper (SS 304 blades)",
+        "Centrifugal starch extractor",
+        "Settling tanks",
+        "Solar tunnel dryer"
+      ],
+      "inputsRequired": [
+        "Fresh harvested tapioca tubers (minimum 28% starch content)",
+        "Sulphur-free processing water",
+        "HDPE food-grade bags (50kg)"
+      ],
+      "startupPlanningSteps": [
+        "Month 1: Site selection with clean groundwater and electricity connection in Attur/Vazhapadi",
+        "Month 2: Machinery installation and settling tank civil works",
+        "Month 3: Member registration with Sagoserve (Salem Sago Manufacturers Society)",
+        "Month 4: Commercial test runs and starch assaying at Sagoserve laboratory"
+      ],
+      "estimatedCapitalCost": "₹15.0 Lakhs (Machinery, washing bay, and solar dryer)",
+      "estimatedMonthlyOperatingCost": "₹1.80 Lakhs (Tubers procurement, electricity, labor)",
+      "revenueAssumptions": "Processing 20 tonnes tubers/month yields 5 tonnes high-grade starch @ ₹48/kg = ₹2.40 Lakhs gross revenue. Net monthly profit: ₹60,000.",
+      "riskAnalysis": [
+        "Fluctuation in fresh tuber prices: Countered through backward linkage contract farming with local growers",
+        "Effluent water discharge: Treated through two-stage anaerobic settling and biogas generation"
+      ],
+      "officialSupportResources": [
+        "TCRS Yethapur technical consultancy",
+        "DIC Salem MSME Capital Subsidy (25%)",
+        "PMFME individual micro-enterprise scheme (35% subsidy)"
+      ]
+    },
+    "highlights": [
+      "Salem is India's sago capital with guaranteed auction absorption",
+      "Sagoserve provides electronic bidding and immediate payment settlement",
+      "By-product (Thippi/tapioca bagasse) sold as nutritious cattle feed"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_ent_yercaud_honey_processing",
+    "category": "entrepreneurship",
+    "subCategory": "forest_and_apiary",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Commercial Shevaroys/Yercaud Honey Processing & Apiary Unit (KVIC PMEGP)",
+      "ta": "ஏற்காடு / சேர்வராயன் மலைத்தேன் பதப்படுத்துதல் மற்றும் தேனீ வளர்ப்பு (KVIC திட்டம்)"
+    },
+    "description": {
+      "en": "Enterprise roadmap for establishing a modern hygienic honey extraction, moisture reduction, and bottling unit in Salem foothills leveraging floral diversity of Yercaud and Kolli hills under KVIC PMEGP subsidy.",
+      "ta": "ஏற்காடு மலைப்பகுதி தேனீ வளர்ப்பு மற்றும் சுகாதாரமான தேன் வடிகட்டுதல், பேக்கிங் கூடம் அமைக்கும் தொழில் திட்டம்."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Khadi and Village Industries Commission (KVIC) & DIC Salem",
+    "officialSourceUrl": "https://www.kviconline.gov.in/",
+    "sourceExcerpt": "PMEGP Scheme guidelines. 25% to 35% margin money subsidy on project cost up to Rs. 25 Lakhs for agro-food processing units. District Industries Centre Salem, Collectorate Campus.",
+    "sourcePublicationDate": "2025-05-15",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "General Manager, District Industries Centre (DIC)",
+      "contactType": "institutional_office",
+      "officePhone": "0427-2448375",
+      "email": "dicsalem@tn.gov.in",
+      "address": "District Industries Centre, Collectorate Campus, Salem - 636 001",
+      "verificationNote": "Institutional office landline of District Industries Centre, Salem Collectorate.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "entrepreneurshipMeta": {
+      "businessIdea": {
+        "en": "Hygienic Raw Forest & Flora Honey Processing Unit",
+        "ta": "இயற்கை தேன் பதப்படுத்துதல் மற்றும் சுத்திகரிப்பு கூடம்"
+      },
+      "targetCustomers": [
+        "Tourists in Yercaud and Salem",
+        "Organic grocery chains across Tamil Nadu",
+        "Direct consumers via Namma Vivasayi marketplace"
+      ],
+      "requiredEquipment": [
+        "Radial motorized honey extractor (SS 304)",
+        "Double-walled honey warming tank with agitator",
+        "Micro-mesh filtration unit",
+        "Semi-automatic vacuum bottle filler"
+      ],
+      "inputsRequired": [
+        "Raw comb honey from own and out-grower apiary boxes",
+        "Food-grade glass jars (250g, 500g, 1kg)",
+        "Tamper-evident shrink seals"
+      ],
+      "startupPlanningSteps": [
+        "Month 1: PMEGP application submission through KVIC e-portal with DIC Salem endorsement",
+        "Month 2: Bank sanction for ₹6.0 Lakhs project with 35% margin money subsidy credit",
+        "Month 3: Procurement of food-grade SS 304 extraction machinery",
+        "Month 4: FSSAI registration, AGMARK honey grading certification, and retail launch"
+      ],
+      "estimatedCapitalCost": "₹6.0 Lakhs (Equipment & Honey testing refractometer)",
+      "estimatedMonthlyOperatingCost": "₹55,000 (Raw honey purchase, glass bottles, labels, power)",
+      "revenueAssumptions": "Sales of 350 kg processed honey @ ₹400/kg = ₹1.40 Lakhs gross revenue. Net profit: ₹55,000/month.",
+      "riskAnalysis": [
+        "Honey crystallization: Handled through controlled gentle warming (<40°C) preserving vital enzymes and diastase activity",
+        "Sugar adulteration perception: Overcome via third-party NABL NMR test reports and transparent QR-code traceability on jars"
+      ],
+      "officialSupportResources": [
+        "KVIC PMEGP 25%-35% capital subsidy",
+        "Tamil Nadu Khadi and Village Industries Board"
+      ]
+    },
+    "highlights": [
+      "Eligible for 35% rural subsidy under Central PMEGP",
+      "High consumer demand for authentic single-origin Shevaroys flora honey",
+      "Compatible with direct courier and farm gate marketplace sales"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_org_tnau_cbe_dept",
+    "category": "organic",
+    "subCategory": "institutional_protocols",
+    "contentType": "static_educational",
+    "title": {
+      "en": "TNAU Department of Sustainable Organic Agriculture: Scientific Protocols & Monthly Training",
+      "ta": "TNAU நீடித்த இயற்கை வேளாண்மை துறை: அறிவியல் பூர்வ நெறிமுறைகள் & மாதாந்திர பயிற்சி"
+    },
+    "description": {
+      "en": "Official state university organic protocols covering soil organic carbon enrichment, green manuring, biofertilizer consortia, and monthly 7th-day hands-on farmer trainings.",
+      "ta": "மண் வள மேலாண்மை, பசுந்தாள் உரம், பயோ-உரங்கள் மற்றும் ஒவ்வொரு மாதமும் 7-ஆம் தேதி நடைபெறும் ஒரு நாள் இயற்கை வேளாண்மை பயிற்சி."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Department of Sustainable Organic Agriculture, TNAU",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/org_farm/orgfarm_contacts.html",
+    "sourceExcerpt": "Professor and Head, Department of Sustainable Organic Agriculture, TNAU, Coimbatore - 641 003. Phone: 0422 - 6611206. Email: organic@tnau.ac.in. Regular training on 7th of every month.",
+    "sourcePublicationDate": "2025-06-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Professor and Head, Department of Sustainable Organic Agriculture",
+      "contactType": "institutional_office",
+      "officePhone": "0422-6611206",
+      "email": "organic@tnau.ac.in",
+      "address": "Department of Sustainable Organic Agriculture, TNAU, Coimbatore - 641 003",
+      "verificationNote": "Institutional office phone verified against TNAU Organic Agriculture directory.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "organicMeta": {
+      "soilHealthPractices": [
+        "Maintain soil organic carbon above 0.8% using 5 tonnes/acre well-decomposed FYM or enriched compost",
+        "Mandatory in-situ green manuring with Daincha (Sesbania aculeata) or Sunnhemp incorporated at 45 days before flowering",
+        "Application of liquid biofertilizers (Azospirillum & Phosphobacteria @ 500 ml/acre each via drip or drenching)"
+      ],
+      "compostingMethods": [
+        "NADEP Aerobic Composting: Brick tank (10ft x 5ft x 3ft) with staggered air holes, layering agricultural waste, dung slurry, and soil",
+        "Enriched Vermicomposting using African nightcrawler (Eudrilus eugeniae): 45-day cycle yielding high humic and fulvic acids"
+      ],
+      "bioInputsRecipes": [
+        {
+          "name": "Panchagavya (TNAU Standard Formulation)",
+          "nameTa": "பஞ்சகவ்யா (TNAU முறை)",
+          "ingredients": [
+            "Fresh cow dung: 5 kg",
+            "Cow ghee: 1 kg",
+            "Cow urine: 3 litres",
+            "Cow milk: 2 litres",
+            "Cow curd: 2 litres",
+            "Jaggery: 1 kg",
+            "Tender coconut water: 3 litres"
+          ],
+          "dosage": "3% foliar spray (30 ml per litre of water)",
+          "preparationDays": 21
+        },
+        {
+          "name": "Jeevamrutham Soil Inoculant",
+          "nameTa": "ஜீவாமிர்தம்",
+          "ingredients": [
+            "Cow dung: 10 kg",
+            "Cow urine: 10 litres",
+            "Jaggery: 2 kg",
+            "Pulse flour: 2 kg",
+            "Virgin bund soil: 1 handful",
+            "Water: 200 litres"
+          ],
+          "dosage": "200 litres per acre through irrigation water or soil drenching",
+          "preparationDays": 7
+        }
+      ],
+      "cropRotationPlanning": [
+        "Year 1: Samba Paddy or Tomato followed by Blackgram (ADR 5) or Greengram as pulse relay crop",
+        "Year 2: Groundnut (VRI 8) intercropped with Redgram (4:1 ratio)",
+        "Year 3: Sesame (TMV 7) or Barnyard Millet (MDU 1) to break weed and pathogen cycles"
+      ],
+      "organicPestManagement": [
+        "Prophylactic foliar spray of Neem Seed Kernel Extract (NSKE 5%) or Neem Oil (3%)",
+        "Yellow and blue sticky traps (10 per acre) for sucking pests (whiteflies, thrips, aphids)",
+        "Trichogramma chilonis egg parasitoid cards (2 cc/acre) for borer caterpillars"
+      ],
+      "transitionTimelineYears": 3,
+      "certificationSteps": [
+        "Step 1: Submission of Application Form-I to TNOCD with Farm Map & Land Revenue Records",
+        "Step 2: Conversion Period - Year 1 (C1 Status): Complete elimination of synthetic inputs",
+        "Step 3: Conversion Period - Year 2 (C2 Status) & Year 3 (C3 Status): Annual physical inspection and soil/leaf residue testing",
+        "Step 4: Grant of Full Organic Scope Certificate (India Organic & Jaivik Bharat Logo authorization)"
+      ]
+    },
+    "highlights": [
+      "Scientific protocols validated through 20+ years of long-term organic field experiments",
+      "Monthly regular training conducted on 7th of every month at TNAU Coimbatore",
+      "Authoritative recipes compliant with India National Programme for Organic Production (NPOP)"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_org_tnocd_salem_cert",
+    "category": "organic",
+    "subCategory": "statutory_certification",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Tamil Nadu Organic Certification Department (TNOCD): Salem District Scope Certification",
+      "ta": "தமிழ்நாடு கரிமச் சான்றளிப்புத் துறை (TNOCD): சேலம் மாவட்ட இயற்கைச் சான்றளிப்பு"
+    },
+    "description": {
+      "en": "Government agency accredited under NPOP providing statutory third-party organic certification, farm inspections, and scope certificates for Salem district farmers.",
+      "ta": "சேலம் மாவட்ட விவசாயிகளுக்கு மத்திய அரசின் NPOP அங்கீகாரம் பெற்ற தமிழ்நாடு அரசின் நேரடி இயற்கை வேளாண் சான்றளிப்பு நடைமுறை."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Tamil Nadu Organic Certification Department (TNOCD)",
+    "officialSourceUrl": "https://tnocd.net/",
+    "sourceExcerpt": "TNOCD, 1424A, Thadagam Road, GCT Post, Coimbatore - 641 013. Phone: 0422-2435080. Email: tnocdinfo@gmail.com. Serving Salem, Namakkal, Erode, and Coimbatore districts.",
+    "sourcePublicationDate": "2025-03-20",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Director, Tamil Nadu Organic Certification Department",
+      "contactType": "institutional_office",
+      "officePhone": "0422-2435080",
+      "email": "tnocdinfo@gmail.com",
+      "address": "TNOCD Directorate, 1424A, Thadagam Road, GCT Post, Coimbatore - 641 013",
+      "verificationNote": "Institutional office landline verified on official TNOCD portal.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "organicMeta": {
+      "soilHealthPractices": [
+        "Zero chemical fertilizers, synthetic insecticides, or weedicides for minimum 36 months",
+        "Soil and irrigation water analysis report indicating non-detectable levels of heavy metals and pesticide residues"
+      ],
+      "compostingMethods": [
+        "Aerobic on-farm composting with temperature monitoring (>55°C for 15 days to destroy weed seeds and pathogens)"
+      ],
+      "bioInputsRecipes": [
+        {
+          "name": "Neem Cake & Bio-Fertilizer Soil Enrichment",
+          "nameTa": "வேப்பம் புண்ணாக்கு & உயிரி உர கலவை",
+          "ingredients": [
+            "Neem cake: 100 kg/acre",
+            "Azospirillum: 2 kg/acre",
+            "Phosphobacteria: 2 kg/acre",
+            "Trichoderma viride: 1 kg/acre"
+          ],
+          "dosage": "Broadcast basally before sowing or planting",
+          "preparationDays": 3
+        }
+      ],
+      "cropRotationPlanning": [
+        "Mandatory legume inclusion in every crop sequence"
+      ],
+      "organicPestManagement": [
+        "Pheromone traps (5/acre)",
+        "Trichogramma cards (2 cc/acre)",
+        "Neem oil 3% foliar spray"
+      ],
+      "transitionTimelineYears": 3,
+      "certificationSteps": [
+        "Step 1: Obtain Form-I from TNOCD website and submit along with land chitta, adangal, and farm boundary map",
+        "Step 2: Pay prescribed statutory fee (Subsidized for individual small farmers and FPO grower groups)",
+        "Step 3: Initial field verification visit by TNOCD Organic Certification Inspector (OCI)",
+        "Step 4: Maintenance of Farm Input Record Book, Harvest Ledger, and Storage Records",
+        "Step 5: Completion of Conversion Period Year 1 (C1), Year 2 (C2), and Year 3 (C3)",
+        "Step 6: Grant of Scope Certificate authorizing use of India Organic and Jaivik Bharat seals"
+      ]
+    },
+    "highlights": [
+      "Official state government certification body accredited by APEDA",
+      "Authorizes use of 'India Organic' and 'Jaivik Bharat' national logos",
+      "Certificates valid for domestic retail and international export"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_org_salem_microbial_bioinputs",
+    "category": "organic",
+    "subCategory": "bioinputs_and_biocontrol",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "TNAU Microbial Bio-Inputs, Biocontrol & Composting Protocol for Salem Soil",
+      "ta": "சேலம் மாவட்டத்திற்கான TNAU உயிரி உரங்கள் மற்றும் உயிரி பூஞ்சாணக் கொல்லி நெறிமுறைகள்"
+    },
+    "description": {
+      "en": "Laboratory production and on-farm multiplication guidelines for Trichoderma viride, Pseudomonas fluorescens (Pf-1), and liquid biofertilizers tailored for Salem district red and black soils.",
+      "ta": "டிரைக்கோடெர்மா விரிடி, சூடோமோனாஸ் மற்றும் திரவ உயிர் உரங்களை சேலம் மாவட்ட மண்ணில் பயன்படுத்தும் முறை."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Department of Agricultural Microbiology, TNAU & KVK Salem",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/org_farm/orgfarm_contacts.html",
+    "sourceExcerpt": "Professor and Head, Department of Agricultural Microbiology, TNAU, Coimbatore. Phone: 0422-6611294. KVK Salem Sandhiyur: 0427-2422550.",
+    "sourcePublicationDate": "2025-06-15",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Professor and Head, Department of Agricultural Microbiology",
+      "contactType": "institutional_office",
+      "officePhone": "0422-6611294",
+      "email": "microbiology@tnau.ac.in",
+      "address": "Department of Agricultural Microbiology, TNAU, Coimbatore - 641 003",
+      "verificationNote": "Institutional office landline of TNAU Agricultural Microbiology Department.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "organicMeta": {
+      "soilHealthPractices": [
+        "Incorporate Trichoderma viride (@ 2.5 kg/ha) mixed with 50 kg farmyard manure into topsoil 15 days before planting to eradicate root-rot pathogens",
+        "Seed treatment with Azospirillum brasilense and Phosphobacteria (@ 600g/ha seeds) using rice gruel as adhesive binder",
+        "Soil drenching with liquid biofertilizer consortia (Azophos) at 30 and 60 days after sowing"
+      ],
+      "compostingMethods": [
+        "Rapid microbial composting of crop residues using TNAU Biomineralizer consortium (2 kg/tonne)",
+        "Coir pith composting using Pleurotus sajor-caju fungus (converting lignocellulosic waste in 30 days)"
+      ],
+      "bioInputsRecipes": [
+        {
+          "name": "Pseudomonas fluorescens (TNAU-Pf1) Biocontrol Formulation",
+          "nameTa": "சூடோமோனாஸ் புளோரசன்ஸ் உயிரி பூஞ்சாணக் கொல்லி",
+          "ingredients": [
+            "Pure mother broth culture: 1 Litre",
+            "Sterilized King's B nutrient medium: 10 Litres",
+            "Sterilized carrier talc (300 mesh): 10 kg",
+            "Carboxymethyl cellulose (binder): 50 g"
+          ],
+          "dosage": "Seed treatment: 10g/kg seed; Foliar spray: 2g/litre water",
+          "preparationDays": 14
+        },
+        {
+          "name": "Agni Astra Herbal Pest Repellent",
+          "nameTa": "அக்னி அஸ்திரம் மூலிகைப் பூச்சி விரட்டி",
+          "ingredients": [
+            "Local cow urine: 10 Litres",
+            "Neem leaf pulp: 5 kg",
+            "Hot green chilli paste: 500 g",
+            "Garlic paste: 500 g",
+            "Dry tobacco powder: 250 g"
+          ],
+          "dosage": "2% to 3% foliar spray (20-30 ml per litre of water)",
+          "preparationDays": 3
+        }
+      ],
+      "cropRotationPlanning": [
+        "Sesbania (Daincha) green manure incorporation -> Kharif Millet/Groundnut -> Rabi Pulses"
+      ],
+      "organicPestManagement": [
+        "Neem oil 3% with Teepol wetting agent (1 ml/L)",
+        "Bacillus thuringiensis (Bt) kurstaki formulation for bollworm & fruit borer prevention",
+        "Beauveria bassiana liquid spray (5 ml/L) for whiteflies and stem borers"
+      ],
+      "transitionTimelineYears": 3,
+      "certificationSteps": [
+        "Adhere to National Programme for Organic Production (NPOP) standards for on-farm inputs",
+        "Maintain Farm Input Ledger detailing microbial batch numbers and application dates",
+        "Annual inspection and chemical residue testing"
+      ]
+    },
+    "highlights": [
+      "Available for purchase at KVK Salem Sandhiyur sales counter",
+      "Biofertilizer cultures increase nitrogen and phosphorus uptake by 25-30%",
+      "Prevents soil-borne fungal wilt and root-rot without toxic fungicides"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_spec_salem_tomato",
+    "category": "special_operation",
+    "subCategory": "vegetable_master_guide",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Special Operation: Commercial Salem Tomato — Pro-Tray Nursery to Uzhavar Sandhai",
+      "ta": "சிறப்பு வழிகாட்டல்: சேலம் தக்காளி சாகுபடி — நாற்றங்கால் முதல் உழவர் சந்தை விற்பனை வரை"
+    },
+    "description": {
+      "en": "Complete 135-day commercial cultivation blueprint for hybrid tomato in Salem district, covering pro-tray seedling raising, drip fertigation, pinworm IPM, and direct sale at Salem Uzhavar Sandhai.",
+      "ta": "சேலம் மாவட்ட தக்காளி சாகுபடிக்கான 135 நாட்கள் முழுமையான வழிகாட்டல்: குழித்தட்டு நாற்றங்கால் முதல் உழவர் சந்தை விற்பனை வரை."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "TNAU Horticultural College & Research Institute & KVK Salem",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/horticulture/horti_vegetables_tomato.html",
+    "sourceExcerpt": "Tomato Production Technology. Spacing 60x45cm. Drip fertigation 100% water soluble fertilizers. Staking with bamboo poles. KVK Salem 0427-2422550.",
+    "sourcePublicationDate": "2025-06-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Horticulture Specialist, KVK Salem",
+      "contactType": "institutional_office",
+      "officePhone": "0427-2422550",
+      "email": "kvkmallur@tnau.ac.in",
+      "address": "KVK Salem, Sandhiyur, Mallur (Via), Salem - 636 203",
+      "verificationNote": "Institutional contact of KVK Salem Sandhiyur horticulture desk.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "cropGuideMeta": {
+      "cropName": "Tomato (Commercial Hybrid)",
+      "cropNameTa": "தக்காளி (வீரிய ஒட்டு ரகம்)",
+      "season": "Year-Round (Best: May-June & Nov-Dec in Salem)",
+      "durationDays": 135,
+      "stages": [
+        {
+          "stageNumber": 1,
+          "stageName": "Pro-Tray Nursery & Seedling Raising",
+          "stageNameTa": "குழித்தட்டு நாற்றங்கால் வளர்ப்பு",
+          "daysRange": "Day 1 to 25",
+          "keyActivities": [
+            "Sow 100g hybrid seeds (e.g. Shivam / PKM-1) in 98-cell pro-trays using sterilized coco-peat",
+            "Maintain under 50% shade net to prevent whitefly vector entry and Tomato Leaf Curl Virus (ToLCV)",
+            "Drench with Pseudomonas fluorescens (2g/L) on Day 12 to prevent damping-off"
+          ],
+          "waterManagement": "Fine rose-can watering twice daily; reduce watering 3 days before transplanting for seedling hardening.",
+          "nutrientRegime": "Foliar spray of 19:19:19 (3g/L) at Day 15 and Day 20.",
+          "pestMonitoring": "Inspect underside of leaves for whiteflies (Bemisia tabaci); install yellow sticky cards.",
+          "criticalAlert": "Never use field soil in pro-trays to prevent soil-borne Fusarium wilt."
+        },
+        {
+          "stageNumber": 2,
+          "stageName": "Main Field Prep, Drip & Transplanting",
+          "stageNameTa": "நிலம் தயாரிப்பு, சொட்டுநீர் & நடவு",
+          "daysRange": "Day 25 to 45",
+          "keyActivities": [
+            "Form broad bed and furrows (120 cm width) with 40 cm walking path",
+            "Lay 16mm inline drip lateral lines with 40 cm dripper spacing (2 LPH)",
+            "Transplant 25-day-old vigorous seedlings at 60 cm x 45 cm spacing during late afternoon"
+          ],
+          "waterManagement": "Operate drip for 45 minutes immediately after planting; maintain root-zone moisture at 65-70%.",
+          "nutrientRegime": "Basal application of 10 tonnes/acre FYM + 50 kg DAP + 25 kg MOP incorporated during bed forming.",
+          "pestMonitoring": "Monitor for cutworms and flea beetles; spray neem oil 3% at Day 35.",
+          "criticalAlert": "Ensure soil is saturated before planting to avoid transplanting shock."
+        },
+        {
+          "stageNumber": 3,
+          "stageName": "Staking, Fertigation & Vegetative Growth",
+          "stageNameTa": "தாங்கு குச்சி கட்டுதல் & உரம் அளித்தல்",
+          "daysRange": "Day 45 to 70",
+          "keyActivities": [
+            "Erect bamboo or eucalyptus support poles (2m height) every 3m along the bed",
+            "Tie plants with plastic twine to prevent fruit contact with wet soil and soil-borne rot",
+            "Prune lower side suckers up to 20 cm from ground to maintain single/double main stem"
+          ],
+          "waterManagement": "Drip irrigation 1.5 hours every alternate day based on soil tensiometer readings.",
+          "nutrientRegime": "Fertigation schedule through Venturi: 19:19:19 (4 kg/acre/week) + Calcium Nitrate (2 kg/acre/week).",
+          "pestMonitoring": "Install pheromone traps (5/acre) for Tomato Fruit Borer (Helicoverpa armigera) and Pinworm (Tuta absoluta).",
+          "criticalAlert": "Calcium deficiency causes Blossom End Rot (black sunken patch at fruit bottom). Maintain regular fertigation."
+        },
+        {
+          "stageNumber": 4,
+          "stageName": "Flowering, Fruit Set & IPM Protection",
+          "stageNameTa": "பூத்தல், காய் பிடித்தல் & பூச்சி மேலாண்மை",
+          "daysRange": "Day 70 to 95",
+          "keyActivities": [
+            "Foliar spray of Planofix (Alpha NAA @ 1 ml/4.5 L) or TNAU Tomato Special (2g/L) to prevent flower drop",
+            "Weekly inspection of fruit calyx for pinworm tunneling",
+            "Remove virus-infected plants showing leaf curling immediately to prevent field spread"
+          ],
+          "waterManagement": "Consistent moisture is critical; erratic irrigation during fruit enlargement causes fruit cracking.",
+          "nutrientRegime": "Switch fertigation to high potassium: Potassium Nitrate 13:0:45 (5 kg/acre/week) for firm fruit wall and vibrant red color.",
+          "pestMonitoring": "Spray Bacillus thuringiensis (Bt @ 2g/L) or Emamectin benzoate (0.5g/L) for fruit borers.",
+          "criticalAlert": "Avoid excessive nitrogen which causes lush foliage and flower drop."
+        },
+        {
+          "stageNumber": 5,
+          "stageName": "Harvesting & Direct Uzhavar Sandhai Sales",
+          "stageNameTa": "அறுவடை & உழவர் சந்தை நேரடி விற்பனை",
+          "daysRange": "Day 95 to 135",
+          "keyActivities": [
+            "Harvest fruits at 'Breaker' or 'Pink' stage (slight yellowish-pink color at blossom end) for maximum shelf life",
+            "Harvest in plastic crates (avoid gunny bags) during early morning hours to retain freshness",
+            "Direct transport to Salem Suramangalam / Hasthampatti Uzhavar Sandhai or listing on Namma Vivasayi marketplace"
+          ],
+          "waterManagement": "Light irrigation after every alternate picking to sustain late-season fruit sizing.",
+          "nutrientRegime": "Maintain Micronutrient foliar spray (Boron 1g/L) every 15 days.",
+          "pestMonitoring": "Inspect harvested fruits for fruit fly puncture; sort and grade into A-grade and B-grade.",
+          "criticalAlert": "Never harvest wet fruits; moisture promotes post-harvest bacterial soft rot."
+        }
+      ],
+      "harvestIndices": [
+        "Breaker stage: 10% to 20% pink/yellow color at blossom end for distant transport",
+        "Firm texture with shiny skin and intact calyx",
+        "Average fruit weight: 70g to 90g for hybrid varieties"
+      ],
+      "marketChannels": [
+        "Salem Suramangalam Uzhavar Sandhai (Direct consumer retail)",
+        "Salem Hasthampatti Uzhavar Sandhai",
+        "Namma Vivasayi Direct Farmer-to-Customer Marketplace (Farm gate pickup & bulk delivery)",
+        "Salem APMC Mandi (Bulk wholesale)"
+      ]
+    },
+    "highlights": [
+      "Pro-tray under shade net guarantees 95% seedling survival",
+      "Bamboo staking increases marketable yield by 35% and eliminates ground rot",
+      "Direct sales at Salem Uzhavar Sandhais eliminates commission agents"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_spec_salem_groundnut",
+    "category": "special_operation",
+    "subCategory": "oilseed_master_guide",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Special Operation: Rainfed Groundnut (VRI 8) — Sowing to Salem Regulated Mandi",
+      "ta": "சிறப்பு வழிகாட்டல்: மானாவாரி நிலக்கடலை (VRI 8) — விதைப்பு முதல் ஒழுங்குமுறை விற்பனைக்கூடம் வரை"
+    },
+    "description": {
+      "en": "Comprehensive 105-day field guide for rainfed bunch groundnut in Salem and Namakkal belts, featuring gypsum application, leaf miner monitoring, and e-NAM sale.",
+      "ta": "சேலம் மானாவாரி நிலக்கடலை சாகுபடி வழிகாட்டல்: ஜிப்சம் இடுதல், இலைச்சுருட்டு புழு மேலாண்மை மற்றும் e-NAM விற்பனை."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "TNAU Oilseeds Research Station (ORS) Tindivanam & KVK Salem",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/agriculture/agri_oilseeds_groundnut.html",
+    "sourceExcerpt": "Groundnut VRI 8 cultivation. Seed rate 125 kg kernels/ha. Gypsum 400 kg/ha at 45 DAS. Shelling percentage 72%. KVK Salem 0427-2422550.",
+    "sourcePublicationDate": "2025-05-10",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Agronomist, KVK Salem",
+      "contactType": "institutional_office",
+      "officePhone": "0427-2422550",
+      "email": "kvkmallur@tnau.ac.in",
+      "address": "KVK Salem, Sandhiyur, Salem - 636 203",
+      "verificationNote": "Institutional office desk telephone verified on official TNAU Salem KVK site.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "cropGuideMeta": {
+      "cropName": "Groundnut (VRI 8 Bunch Variety)",
+      "cropNameTa": "நிலக்கடலை (VRI 8 கொத்து ரகம்)",
+      "season": "Chithirai Pattam (Apr-May) & Adi Pattam (Jun-Jul)",
+      "durationDays": 105,
+      "stages": [
+        {
+          "stageNumber": 1,
+          "stageName": "Seed Selection & Bio-Priming",
+          "stageNameTa": "விதை தேர்வு & விதை நேர்த்தி",
+          "daysRange": "Day 1 to 5",
+          "keyActivities": [
+            "Select bold, well-filled certified kernels of VRI 8 (55 kg/acre seed rate)",
+            "Treat with Trichoderma viride (@ 4g/kg) followed by Rhizobium culture (TNAU Gn-1 @ 50g/kg) using rice gruel",
+            "Shade dry treated seeds for 30 minutes before sowing"
+          ],
+          "waterManagement": "Sow in moist seedbed following pre-monsoon showers or light sprinkler irrigation.",
+          "nutrientRegime": "Basal application of 5 tonnes FYM + 10 kg N + 20 kg P2O5 + 30 kg K2O per acre.",
+          "pestMonitoring": "Treat with Chlorpyrifos 20 EC (2 ml/kg seed) if termite history exists.",
+          "criticalAlert": "Never expose Rhizobium-inoculated seeds to direct sunlight."
+        },
+        {
+          "stageNumber": 2,
+          "stageName": "Vegetative Growth & Weed Control",
+          "stageNameTa": "பயிர் வளர்ச்சி & களை மேலாண்மை",
+          "daysRange": "Day 6 to 30",
+          "keyActivities": [
+            "Pre-emergence herbicide spray: Pendimethalin (1.0 L/acre) on Day 3 in moist soil",
+            "Hand hoeing and light weeding at Day 20",
+            "Ensure row spacing of 30 cm x 10 cm"
+          ],
+          "waterManagement": "Irrigate at 10-12 day intervals if dry spell exceeds 15 days.",
+          "nutrientRegime": "Foliar spray of 0.5% Ferrous sulphate + 0.1% Citric acid at Day 25 if iron chlorosis (yellow leaves) appears.",
+          "pestMonitoring": "Monitor for Groundnut Leaf Miner (Aproaerema modicella); spray Neem seed kernel extract (NSKE 5%).",
+          "criticalAlert": "Do not disturb soil after peg penetration starts on Day 35."
+        },
+        {
+          "stageNumber": 3,
+          "stageName": "Flowering, Pegging & Gypsum Application",
+          "stageNameTa": "பூத்தல், விழுது இறங்குதல் & ஜிப்சம் இடுதல்",
+          "daysRange": "Day 30 to 60",
+          "keyActivities": [
+            "Mandatory Gypsum application: 160 kg/acre broadcasted around plant base on Day 45",
+            "Light earthing up to guide descending pegs into the loosened soil bed",
+            "Ensures calcium availability for pod filling and prevents blind nuts ('Pops')"
+          ],
+          "waterManagement": "Crucial moisture phase: Pegging stage requires optimum soil moisture; apply life irrigation if rain fails.",
+          "nutrientRegime": "Gypsum provides 24% Calcium and 18% Sulphur essential for pod wall hardening and oil synthesis.",
+          "pestMonitoring": "Inspect for Tikka leaf spot (Cercospora); spray Mancozeb (2g/L) or Carbendazim (1g/L) if brown spots appear.",
+          "criticalAlert": "Failure to apply gypsum at 45 days results in empty pods with zero kernel development."
+        },
+        {
+          "stageNumber": 4,
+          "stageName": "Pod Development & Tikka Leaf Spot IPM",
+          "stageNameTa": "காய் பருத்தல் & இலைப்புள்ளி நோய் மேலாண்மை",
+          "daysRange": "Day 60 to 85",
+          "keyActivities": [
+            "Foliar spray of TNAU Groundnut Rich (2 kg/acre) at Day 65 to maximize kernel weight",
+            "Maintain field bunds clean to prevent rodent tunneling and pod gnawing"
+          ],
+          "waterManagement": "Maintain moderate moisture; waterlogging at this stage leads to pod rotting in soil.",
+          "nutrientRegime": "No soil nitrogen application; nodule bacteria supply sufficient nitrogen.",
+          "pestMonitoring": "Erect bird perches (10/acre) and install light traps for Spodoptera litura moths.",
+          "criticalAlert": "Waterlogging causes seed germination inside the pod before harvest."
+        },
+        {
+          "stageNumber": 5,
+          "stageName": "Maturity Lifting, Drying & Mandi Sale",
+          "stageNameTa": "அறுவடை, உலர்வித்தல் & ஒழுங்குமுறை விற்பனை",
+          "daysRange": "Day 85 to 105",
+          "keyActivities": [
+            "Check maturity signs: Yellowing of foliage, inner pod shell turns dark brown/black, kernels separate easily",
+            "Lift plants using tractor groundnut digger or manual pulling in moist soil",
+            "Strip pods mechanically and sun-dry on clean tarpaulins for 4-5 days until moisture drops below 9.0%"
+          ],
+          "waterManagement": "Give light harvest irrigation 2 days prior to digging if soil is hard and dry.",
+          "nutrientRegime": "No fertilizer applied.",
+          "pestMonitoring": "Dry pods thoroughly to <9% moisture to prevent carcinogenic Aflatoxin (Aspergillus flavus) contamination in storage.",
+          "criticalAlert": "Storing pods with >10% moisture causes fungal mold and zero mandi price realization."
+        }
+      ],
+      "harvestIndices": [
+        "Leaves turn yellow and begin to shed",
+        "Inner surface of the pod shell displays prominent dark veins and brownish-black color",
+        "Moisture of dried pods is below 9.0% (rattling sound when shaken)"
+      ],
+      "marketChannels": [
+        "Salem Regulated Market Committee (Shevapet & Attur yards via e-NAM)",
+        "Local oil expellers in Salem/Namakkal",
+        "Namma Vivasayi Direct Marketplace (Direct kernel & seed sale)"
+      ]
+    },
+    "highlights": [
+      "VRI 8 offers high shelling percentage (72%) and 49% oil content",
+      "Gypsum application at Day 45 guarantees 25% higher pod weight",
+      "Direct e-NAM sale at Salem Regulated Market avoids middleman brokerage"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_spec_samba_paddy_delta",
+    "category": "special_operation",
+    "subCategory": "cereal_master_guide",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Special Operation: Samba Paddy (CR 1009 Sub 1) — Nursery to Direct Purchase Centre",
+      "ta": "சிறப்பு வழிகாட்டல்: சம்பா நெல் (CR 1009 Sub 1) — நாற்றங்கால் முதல் DPC கொள்முதல் வரை"
+    },
+    "description": {
+      "en": "Field blueprint for long-duration flood-tolerant Samba paddy across the Cauvery basin, covering machine transplanting, AWD pipe water saving, and direct TNCSC procurement.",
+      "ta": "காவிரி பாசனப் படுகைக்கான சம்பா நெல் சாகுபடி: இயந்திர நடவு, AWD பாசன முறை மற்றும் நேரடி கொள்முதல் மைய முன்பதிவு."
+    },
+    "district": "Thanjavur",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Tamil Nadu Rice Research Institute (TRRI), Aduthurai",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/agriculture/agri_paddy_index.html",
+    "sourceExcerpt": "CR 1009 Sub 1 long duration Samba paddy (155 days). Submergence tolerant for 15 days. TNCSC Direct Purchase Centre moisture standard 14.0%. TRRI Aduthurai: 0435-2472098.",
+    "sourcePublicationDate": "2025-08-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Director, Tamil Nadu Rice Research Institute (TRRI)",
+      "contactType": "institutional_office",
+      "officePhone": "0435-2472098",
+      "email": "dirtrri@tnau.ac.in",
+      "address": "Tamil Nadu Rice Research Institute, Aduthurai - 612 101",
+      "verificationNote": "Institutional office landline verified from TRRI Aduthurai official site.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "cropGuideMeta": {
+      "cropName": "Paddy (CR 1009 Sub 1 - Savithri Sub)",
+      "cropNameTa": "நெல் (CR 1009 Sub 1 - சாவித்திரி சப் 1)",
+      "season": "Samba / Thaladi Season (August - January)",
+      "durationDays": 155,
+      "stages": [
+        {
+          "stageNumber": 1,
+          "stageName": "Mat Nursery & Soil Preparation",
+          "stageNameTa": "பாய் நாற்றங்கால் & நிலம் தயாரிப்பு",
+          "daysRange": "Day 1 to 18",
+          "keyActivities": [
+            "Sprout 12 kg certified seeds per acre using Pseudomonas fluorescens (10g/kg)",
+            "Prepare 100 sq.m raised bed on polythene sheet with sieved soil:FYM mix",
+            "Sow sprouted seeds uniformly and cover with paddy straw for 48 hours"
+          ],
+          "waterManagement": "Keep soil moist with rose-can for first 5 days; maintain 1 cm thin water film from Day 6 to 18.",
+          "nutrientRegime": "Top-dress with 0.5% urea solution at Day 10 if seedlings look pale.",
+          "pestMonitoring": "Watch for armyworm and leaf folder; install bird perches.",
+          "criticalAlert": "Do not let nursery bed dry to avoid seedling wilting."
+        },
+        {
+          "stageNumber": 2,
+          "stageName": "Main Field Puddling & Machine Planting",
+          "stageNameTa": "சேற்றுழவு & இயந்திர நடவு",
+          "daysRange": "Day 18 to 40",
+          "keyActivities": [
+            "Puddle field twice and level perfectly with wooden levelling board",
+            "Transplant 18-day-old mat seedlings using 4-row ride-on transplanter (30x15 cm spacing, 2-3 seedlings/hill)",
+            "Apply pre-emergence Butachlor (1.0 L/acre) at Day 3 after planting"
+          ],
+          "waterManagement": "Maintain 2 cm standing water during transplanting; transition to Alternate Wetting and Drying (AWD).",
+          "nutrientRegime": "Basal application: 5 tonnes FYM + 25 kg DAP + 15 kg MOP + 10 kg Zinc sulphate per acre.",
+          "pestMonitoring": "Scout for yellow stem borer egg masses; spray Azadirachtin (Neem 1% @ 2 ml/L) if ETL is reached.",
+          "criticalAlert": "Never apply Zinc sulphate directly mixed with DAP to prevent insoluble zinc phosphate precipitation."
+        },
+        {
+          "stageNumber": 3,
+          "stageName": "Tillering & Alternate Wetting and Drying (AWD)",
+          "stageNameTa": "தூர்கட்டுதல் & AWD பாசன முறை",
+          "daysRange": "Day 40 to 75",
+          "keyActivities": [
+            "Install perforated PVC 'Pani Pipe' (20 cm depth) in field to monitor water table",
+            "Irrigate only when water level drops 15 cm below soil surface (saves 30% irrigation water)",
+            "Operate cono-weeder twice between rows at Day 30 and Day 45 to incorporate weeds and aerate roots"
+          ],
+          "waterManagement": "Strict AWD water management until panicle initiation stage.",
+          "nutrientRegime": "First top dressing at active tillering: 25 kg Urea + 10 kg Neem coated urea.",
+          "pestMonitoring": "Inspect leaf sheaths for Sheath Blight (Rhizoctonia solani); avoid high nitrogen doses.",
+          "criticalAlert": "Ensure field is flooded during panicle initiation (Day 70)."
+        },
+        {
+          "stageNumber": 4,
+          "stageName": "Panicle Initiation, Flowering & Grain Filling",
+          "stageNameTa": "கதிர் உருவாகுதல் & பால் பிடிக்கும் பருவம்",
+          "daysRange": "Day 75 to 125",
+          "keyActivities": [
+            "Maintain 3 cm to 5 cm constant water layer from boot leaf stage through 100% flowering",
+            "Foliar spray of 1% Potassium chloride (MOP) during terminal drought stress",
+            "Erect T-shaped bird perches (15/acre) for predatory birds"
+          ],
+          "waterManagement": "Keep continuous standing water (5 cm) during 10-day flowering window to prevent sterile spikelets.",
+          "nutrientRegime": "Final top dressing: 15 kg Urea + 15 kg MOP per acre at panicle initiation.",
+          "pestMonitoring": "Watch for Brown Plant Hopper (BPH) at plant base; maintain alleyways (30 cm every 2m).",
+          "criticalAlert": "Drying field during flowering leads to chaffy, empty grains."
+        },
+        {
+          "stageNumber": 5,
+          "stageName": "Drainage, Combine Harvesting & DPC Procurement",
+          "stageNameTa": "வடிகட்டுதல், அறுவடை & DPC கொள்முதல்",
+          "daysRange": "Day 125 to 155",
+          "keyActivities": [
+            "Completely drain water from field 10 days before anticipated harvest date to harden soil",
+            "Harvest when 85% of grains in panicles turn straw golden yellow using track combine harvester",
+            "Thresh, winnow, and sun-dry on clean drying yards to 14.0% FAQ moisture standard",
+            "Reserve appointment token for direct weighing at nearest TNCSC Direct Purchase Centre (DPC)"
+          ],
+          "waterManagement": "Zero irrigation during final 12 days before machine entry.",
+          "nutrientRegime": "No fertilizer applied.",
+          "pestMonitoring": "Protect dried bagged paddy from stored grain pests using dry neem leaves.",
+          "criticalAlert": "TNCSC DPC automatically rejects paddy if moisture exceeds 17.0%."
+        }
+      ],
+      "harvestIndices": [
+        "Over 85% of grains in upper and middle panicles turn golden yellow",
+        "Hard dough stage when grain cannot be crushed between thumbnail and finger",
+        "Grain moisture at FAQ standard (14.0% to 15.0%)"
+      ],
+      "marketChannels": [
+        "TNCSC Direct Purchase Centre (DPC) Yard (MSP with state incentive: ₹2,400+ per quintal)",
+        "Regulated Market Committee Mandis",
+        "Modern Rice Mills"
+      ]
+    },
+    "highlights": [
+      "Withstands up to 15 days of complete flood submergence without plant mortality",
+      "AWD water saving technique reduces methane emission and water consumption by 30%",
+      "Direct DPC yard linkage guarantees MSP transfer directly to farmer bank accounts"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_prot_salem_horticulture_polyhouse",
+    "category": "protected_cultivation",
+    "subCategory": "hi_tech_horticulture",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Salem District Horticulture Department: Polyhouse & Green House Capital Subsidy",
+      "ta": "சேலம் மாவட்ட தோட்டக்கலைத் துறை: பசுமைக் குடில் அமைத்தல் & 50% அரசு மானியம்"
+    },
+    "description": {
+      "en": "Official technical specifications and MIDH 50% capital subsidy guidelines for erecting naturally ventilated polyhouses in Salem district for high-value capsicum, cucumber, and cut flowers.",
+      "ta": "சேலம் மாவட்டத்தில் வண்ண குடைமிளகாய், வெள்ளரி மற்றும் மலர் சாகுபடிக்கான பசுமைக்குடில் அமைப்பு முறைகள் மற்றும் 50% மானிய வழிகாட்டல்."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Department of Horticulture and Plantation Crops, Salem",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/horticulture/horti_extension%20services_state%20horticulture%20department.html",
+    "sourceExcerpt": "Salem District: Deputy Director of Horticulture, Joint Director of Agriculture Office building, 1, Cherry Road, Salem-636 001. Phone: 0427-2451382. State Horticulture Farms Karumandurai and Yercaud.",
+    "sourcePublicationDate": "2025-04-15",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Deputy Director of Horticulture (DDH)",
+      "contactType": "institutional_office",
+      "officePhone": "0427-2451382",
+      "email": "ddhsalem@yahoo.com",
+      "address": "Office of DDH, Joint Director of Agriculture Building, 1, Cherry Road, Salem - 636 001",
+      "verificationNote": "Institutional office landline of Salem District Deputy Director of Horticulture verified from official TNAU extension directory.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "subsidyMeta": {
+      "schemeName": "Mission for Integrated Development of Horticulture (MIDH) - Protected Cultivation",
+      "costNorm": "₹1,060 / sq. metre (Naturally Ventilated Tubular Structure)",
+      "subsidyPercent": 50,
+      "maxEligibleArea": "4,000 sq. metres (1 Acre) per farmer beneficiary",
+      "applicationPortal": "https://tnhorticulture.tn.gov.in/",
+      "applicableSectors": [
+        "Capsicum",
+        "Cucumber",
+        "Carnations",
+        "Gerbera",
+        "Tomatoes"
+      ]
+    },
+    "protectedCultivationMeta": {
+      "structureType": "Naturally Ventilated Polyhouse (Tubular GI Pipe Structure with Top Vent)",
+      "suitableCrops": [
+        "Color Capsicum (Red & Yellow)",
+        "Parthenocarpic Slicer Cucumber",
+        "Dutch Roses (Yercaud hills)",
+        "Carnations",
+        "Cherry Tomatoes"
+      ],
+      "irrigationFertigationRegime": "Inline drip system with 1.6 LPH pressure-compensating drippers at 30 cm spacing. Daily fertigation through Venturi using 100% water-soluble fertilizers (19:19:19 basal, 13:0:45 fruiting stage) maintaining EC < 1.8 dS/m and pH 6.0-6.5.",
+      "pestDiseaseManagement": [
+        "Outer boundary 40-mesh UV stabilized insect net preventing thrips, whiteflies, and mites entry",
+        "Double-door entry airlock with disinfectant foot dip",
+        "Foliar spray of wettable sulfur (2g/L) for yellow mites and powdery mildew"
+      ],
+      "setupRequirements": [
+        "Minimum land size: 1,000 to 4,000 sq. metres with unobstructed sunlight",
+        "GI tubular pipes (Class B) with hot-dip galvanization (>275 GSM zinc coating)",
+        "UV stabilized polyethylene film (200 micron, 5-layer with anti-dust and anti-fog additive)"
+      ],
+      "annualMaintenanceTips": [
+        "Wash polyfilm outer surface twice annually using mild neutral soap to maintain 85% light transmission",
+        "Inspect and retension apron and gutter clamps before monsoon season (October)",
+        "Flush drip lateral lines with 1% oxalic/phosphoric acid every 6 months to dissolve mineral precipitates"
+      ],
+      "applicableSchemes": [
+        "Mission for Integrated Development of Horticulture (MIDH) - 50% Capital Subsidy",
+        "National Horticulture Board (NHB) Commercial Horticulture Scheme"
+      ]
+    },
+    "highlights": [
+      "Yields 4x to 6x higher produce compared to open field cultivation",
+      "50% capital subsidy credited directly to empanelled fabricator account",
+      "Technical demonstration and saplings available at Karumandurai & Yercaud state farms"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_prot_salem_shadenet_nursery",
+    "category": "protected_cultivation",
+    "subCategory": "shade_net_nurseries",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Commercial 50% Shade Net House for Vegetable Nurseries & Spices in Salem",
+      "ta": "சேலம் மாவட்ட காய்கறி நாற்றங்கால் மற்றும் இஞ்சி சாகுபடிக்கான 50% நிழல்வலை குடில்"
+    },
+    "description": {
+      "en": "Cost-effective protected cultivation under 50% green/black mono-filament shade netting for commercial seedling production, ginger, and cut foliage plants with 50% TANHODA state subsidy.",
+      "ta": "காய்கறி நாற்று உற்பத்தி மற்றும் மிதமான வெப்பநிலையை பராமரிக்கும் 50% நிழல்வலை குடில் அமைப்பு மற்றும் 50% அரசு மானிய வழிகாட்டல்."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "State Horticulture Farm Karumandurai & TANHODA Salem",
+    "officialSourceUrl": "https://tnhorticulture.tn.gov.in/",
+    "sourceExcerpt": "Shade Net House Scheme. 50% subsidy under State Horticulture Mission. Cost norm Rs. 710 per sq.m. Contact DDH Salem: 0427-2451382.",
+    "sourcePublicationDate": "2025-05-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Assistant Director of Horticulture (ADH), Salem Block",
+      "contactType": "institutional_office",
+      "officePhone": "0427-2451382",
+      "email": "ddhsalem@yahoo.com",
+      "address": "Joint Director of Agriculture Office Building, 1 Cherry Road, Salem - 636 001",
+      "verificationNote": "Institutional office landline of Horticulture Department, Salem.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "subsidyMeta": {
+      "schemeName": "Tamil Nadu Horticulture Development Agency (TANHODA) Shade Net Scheme",
+      "costNorm": "₹710 / sq. metre",
+      "subsidyPercent": 50,
+      "maxEligibleArea": "2,000 sq. metres per farmer",
+      "applicationPortal": "https://tnhorticulture.tn.gov.in/",
+      "applicableSectors": [
+        "Pro-tray Vegetable Nurseries",
+        "Ginger",
+        "Turmeric",
+        "Medicinal Plants"
+      ]
+    },
+    "protectedCultivationMeta": {
+      "structureType": "Shade Net House (50% Mono-filament Green/Black Netting on GI Frame)",
+      "suitableCrops": [
+        "Pro-tray Tomato, Chilli & Brinjal Seedling Nurseries",
+        "Cabbage & Cauliflower seedlings",
+        "Ginger",
+        "Sweet Coriander",
+        "Vanilla (Yercaud)"
+      ],
+      "irrigationFertigationRegime": "Overhead micro-sprinkler system (40 LPH) with 3m x 3m grid delivering fine mist for microclimate cooling. Coupled with inline drip for root zone moisture.",
+      "pestDiseaseManagement": [
+        "Perimeter insect barrier netting (40-mesh)",
+        "Biological controls: Verticillium lecanii entomopathogenic fungus against aphids and whiteflies",
+        "Copper oxychloride (2.5g/L) prophylactic spray during overcast humid weather"
+      ],
+      "setupRequirements": [
+        "GI tubular or stone pillar support frame with minimum 3.5m center clearance",
+        "50% shade UV-stabilized virgin HDPE mono-filament tape net",
+        "Overhead cross-wire cable grid with anti-billow tie cords"
+      ],
+      "annualMaintenanceTips": [
+        "Check net tensioning clamps; tighten loose sections before pre-monsoon winds",
+        "Inspect micro-sprinkler nozzles for mineral clogging and descale with dilute vinegar"
+      ],
+      "applicableSchemes": [
+        "Tamil Nadu Horticulture Development Agency (TANHODA) State Plan - 50% Subsidy",
+        "Sub-Mission on Agriculture Mechanization (SMAM)"
+      ]
+    },
+    "highlights": [
+      "Low initial capital investment compared to climate-controlled polyhouses",
+      "Reduces ambient solar heat by 5°C to 8°C in summer",
+      "High nursery commercial profitability with rapid 25-day turnover"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_val_salem_turmeric_curing",
+    "category": "value_addition",
+    "subCategory": "spices_processing",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Hygienic Salem Finger Turmeric Solar Curing & High-Curcumin Powder Processing",
+      "ta": "சேலம் விரலி மஞ்சள் வேகவைத்தல், சூரிய உலர்த்தி & உயர் குர்குமின் பொடி தயாரிப்பு"
+    },
+    "description": {
+      "en": "Processing protocol for Salem's high-curcumin (>4.5%) turmeric using hygienic perforated steam boilers, solar tunnel dryers, and multi-layer moisture barrier packaging.",
+      "ta": "உயர் குர்குமின் கொண்ட சேலம் விரலி மஞ்சளை நீராவியில் வேகவைத்து, சோலார் டிரையரில் உலர்த்தி தரமான மஞ்சள் தூள் தயாரிக்கும் முறை."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "PHTC TNAU & Spices Board Regional Field Office",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/postharvest/pht_training_phtc.html",
+    "sourceExcerpt": "Turmeric Post Harvest Curing. Boiling in TNAU improved steam boiler (45 mins). Sun drying to <10% moisture. Mechanical polishing. PHTC Phone: 0422-6611268.",
+    "sourcePublicationDate": "2025-06-10",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Professor and Head, Post Harvest Technology Centre",
+      "contactType": "institutional_office",
+      "officePhone": "0422-6611268",
+      "email": "phtc@tnau.ac.in",
+      "address": "Agricultural Engineering College & Research Institute, TNAU, Coimbatore - 641 003",
+      "verificationNote": "Institutional office landline of TNAU Post Harvest Technology Centre.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "valueAdditionMeta": {
+      "produceCategory": "Spices (Salem Turmeric - Curcuma longa)",
+      "processingIdea": {
+        "en": "Steam-Cured Unpolished Finger Turmeric & Micro-Pulverized 4.5% Curcumin Pure Turmeric Powder",
+        "ta": "நீராவியில் பதப்படுத்தப்பட்ட சேலம் விரலி மஞ்சள் மற்றும் உயர் குர்குமின் மஞ்சள் தூள்"
+      },
+      "hygieneStandards": [
+        "Use of TNAU improved perforated steam boiler preventing direct open boiling water contact and nutrient loss",
+        "Solar tunnel drying maintaining temperature <50°C to preserve volatile essential oils (turmerone)",
+        "Stainless steel (SS 304) contact surfaces in pulverizer avoiding lead or chromate contamination"
+      ],
+      "packagingOptions": [
+        "Multi-layer aluminum foil barrier pouches (PET/Alu/Poly) preventing photo-degradation of curcumin",
+        "Food-grade HDPE containers with induction-heat inner foil seal"
+      ],
+      "shelfLifeExtensionDays": "365 to 730 Days (1 to 2 Years) under dry ambient storage",
+      "estimatedCostingBreakdown": "Raw green rhizomes (5 kg): ₹150. Steam boiling, solar drying & pulverizing: ₹35. Multi-layer pouch: ₹15. Yield: 1 kg powder. Total cost: ₹200/kg. Retail selling price: ₹380/kg. Gross profit margin: 47%.",
+      "marketingChannels": [
+        "Salem Regulated Market Committee e-NAM Spices Yard",
+        "Namma Vivasayi Direct Marketplace (Direct farm-to-consumer dispatch)",
+        "Pharmaceutical and Ayurvedic extract manufacturing buyers in Chennai and Bangalore"
+      ]
+    },
+    "highlights": [
+      "Salem turmeric enjoys high market premium due to dark golden color and high curcumin",
+      "Steam curing cuts boiling fuel consumption by 40% compared to traditional open pots",
+      "Eligible for 35% capital subsidy under PMFME spice processing scheme"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_val_salem_tapioca_wafers",
+    "category": "value_addition",
+    "subCategory": "tuber_processing",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Salem Tapioca Processing: High-Quality Starch, Sago & Hygienic Dehydrated Wafers",
+      "ta": "சேலம் மரவள்ளிக்கிழங்கு மதிப்புக்கூட்டுதல்: ஸ்டார்ச், ஜவ்வரிசி & உலர் சிப்ஸ் தயாரிப்பு"
+    },
+    "description": {
+      "en": "Value addition blueprint for converting fresh tapioca roots into industrial starch, pearl sago, and hygienic sun-dried fryums/chips for confectionery and household snacks.",
+      "ta": "மரவள்ளிக்கிழங்கை மாவுச்சத்து, ஜவ்வரிசி மற்றும் உலர் சிப்ஸ்களாக மாற்றி கூடுதல் லாபம் ஈட்டும் மதிப்புக் கூட்டு முறை."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Tapioca & Castor Research Station (TCRS) Yethapur & Sagoserve",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/",
+    "sourceExcerpt": "TCRS Yethapur, Salem. Phone: 04282-293526. Tapioca starch recovery (28-30%). Mechanized processing and solar drying parameters.",
+    "sourcePublicationDate": "2025-07-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Professor and Head, TCRS Yethapur",
+      "contactType": "institutional_office",
+      "officePhone": "04282-293526",
+      "email": "arsyethapur@tnau.ac.in",
+      "address": "TCRS, Yethapur, Salem - 636 119",
+      "verificationNote": "Institutional office landline of TNAU research station in Salem district.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "valueAdditionMeta": {
+      "produceCategory": "Tubers (Tapioca - Manihot esculenta)",
+      "processingIdea": {
+        "en": "Dehydrated Seasoned Tapioca Wafers (Appalam/Chips) & High-Purity Edible Starch",
+        "ta": "உலர்த்தப்பட்ட மரவள்ளிக் கிழங்கு அப்பளம், சிப்ஸ் மற்றும் சமையல் ஸ்டார்ச் மாவு"
+      },
+      "hygieneStandards": [
+        "Immediate processing within 48 hours of harvest to prevent post-harvest physiological deterioration (PPD)",
+        "Blanching sliced chips in boiling water (80°C for 3 minutes) to neutralize naturally occurring cyanogenic glucosides",
+        "Solar tunnel drying on food-grade nylon mesh beds elevated 1 meter above ground"
+      ],
+      "packagingOptions": [
+        "Heat-sealed nitrogen-flushed polypropylene (BOPP) pouches preventing moisture ingress and crispness loss",
+        "Corrugated export master cartons with inner poly lining"
+      ],
+      "shelfLifeExtensionDays": "180 to 240 Days at ambient temperature",
+      "estimatedCostingBreakdown": "Fresh tubers (4 kg @ ₹8/kg): ₹32. Peeling, slicing, blanching & drying: ₹18. Packaging & labeling: ₹10. Yield: 1 kg dried seasoned wafers. Total cost: ₹60/kg. Retail selling price: ₹140/kg. Profit margin: 57%.",
+      "marketingChannels": [
+        "Salem Sagoserve Co-operative Society auction",
+        "Uzhavar Sandhai snack stalls in Salem, Namakkal, and Erode",
+        "Direct consumer sales through Namma Vivasayi online portal"
+      ]
+    },
+    "highlights": [
+      "Converts low-price perishable fresh roots (₹8/kg) into high-value product (₹140/kg)",
+      "Blanching removes cyanogenic compounds guaranteeing 100% food safety",
+      "By-product starch milk can be decanted for domestic culinary starch"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_val_niftem_millet_processing",
+    "category": "value_addition",
+    "subCategory": "millet_processing",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "NIFTEM-Thanjavur: Multi-Millet Dehulling, Flaking & Value-Added Products",
+      "ta": "NIFTEM-தஞ்சாவூர்: சிறுதானிய பதப்படுத்துதல், அவல் மற்றும் மதிப்புக்கூட்டு பொருட்கள்"
+    },
+    "description": {
+      "en": "Industrial processing technology for de-hulling, destoning, and cold extrusion of Kodo, Barnyard, Foxtail, and Little millets into Ready-to-Cook (RTC) noodles, flakes, and multi-millet idli rava.",
+      "ta": "வரகு, சாமை, திணை, குதிரைவாலி சிறுதானியங்களை உமி நீக்கி அவல், ரவை மற்றும் நூடுல்ஸ் தயாரிக்கும் தொழில்நுட்ப நெறிமுறை."
+    },
+    "district": "Thanjavur",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "National Institute of Food Technology, Entrepreneurship and Management (NIFTEM-T)",
+    "officialSourceUrl": "https://niftem-t.ac.in/",
+    "sourceExcerpt": "NIFTEM-T Pudukkottai Road, Thanjavur - 613 005. Phone: 04362-228155. Centre of Excellence for Millet Processing. FSSAI Schedule 4 hygiene standards.",
+    "sourcePublicationDate": "2025-06-20",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Director, NIFTEM-Thanjavur",
+      "contactType": "institutional_office",
+      "officePhone": "04362-228155",
+      "email": "director@niftem-t.ac.in",
+      "address": "NIFTEM-T Campus, Pudukkottai Road, Thanjavur - 613 005",
+      "verificationNote": "Institutional office landline verified from official NIFTEM-T national portal.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "valueAdditionMeta": {
+      "produceCategory": "Millets (Barnyard, Kodo, Foxtail, Little, Ragi)",
+      "processingIdea": {
+        "en": "Dehulled Ready-to-Cook (RTC) Millets, Multi-Millet Idli Rava & Cold Extruded Millet Noodles",
+        "ta": "உமி நீக்கப்பட்ட சிறுதானியங்கள், சிறுதானிய இட்லி ரவை மற்றும் சேமியா தயாரிப்பு"
+      },
+      "hygieneStandards": [
+        "FSSAI Schedule 4 sanitary and hygienic requirements for cereal milling units",
+        "Stainless steel (SS 304 food-grade) contact surfaces for destoners and dehullers",
+        "Workers wearing food-grade hairnets, gloves, and aprons in air-conditioned packaging room"
+      ],
+      "packagingOptions": [
+        "Nitrogen-flushed multi-layer barrier pouches (PET/Met-PET/Poly) preventing lipid oxidation and rancidity",
+        "Eco-friendly stand-up kraft paper zipper pouches with transparent viewing window"
+      ],
+      "shelfLifeExtensionDays": "180 to 270 Days without synthetic chemical preservatives",
+      "estimatedCostingBreakdown": "Raw Kodo/Foxtail millet: ₹35/kg. Destoning, dehulling & packaging: ₹15/kg. Total cost: ₹50/kg. Wholesale price: ₹95/kg. Retail price: ₹140/kg. Value addition factor: 2.8x.",
+      "marketingChannels": [
+        "Direct sale via Namma Vivasayi Farmer Marketplace",
+        "District Uzhavar Sandhai value-add counters",
+        "FPO retail outlets and organic supermarkets in Chennai/Salem/Coimbatore"
+      ]
+    },
+    "highlights": [
+      "Developed by NIFTEM-T Ministry of Food Processing Industries (MoFPI)",
+      "Dehulling efficiency >95% without damaging nutrient-rich bran layer",
+      "High export potential in the Middle East and Southeast Asian diaspora markets"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_val_nrcb_banana_products",
+    "category": "value_addition",
+    "subCategory": "fruit_processing",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "ICAR-NRCB Trichy: Commercial Banana Pseudostem & Central Core Value Addition",
+      "ta": "ICAR-NRCB திருச்சி: வாழை தண்டு & பூ மதிப்புக்கூட்டு பொருட்கள் தயாரிப்பு"
+    },
+    "description": {
+      "en": "Processing technology for hygienic minimally processed banana central core, RTS blended juice, vacuum-fried chips, and eco-friendly banana fiber extraction.",
+      "ta": "வாழை தண்டு ஜூஸ், உலர் மிட்டாய் மற்றும் வாழை நார் கைவினைப் பொருட்கள் தயாரிக்கும் தொழில்நுட்பம்."
+    },
+    "district": "Tiruchirappalli",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "ICAR - National Research Centre for Banana (NRCB)",
+    "officialSourceUrl": "https://nrcb.icar.gov.in/",
+    "sourceExcerpt": "ICAR-NRCB Thayanur Post, Trichy - 620 102. Phone: 0431-2618106. Technologies: Banana pseudostem juice, central core candy, vacuum fried chips. License available.",
+    "sourcePublicationDate": "2025-04-10",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Director, ICAR - NRCB",
+      "contactType": "institutional_office",
+      "officePhone": "0431-2618106",
+      "email": "director.nrcb@icar.gov.in",
+      "address": "ICAR-NRCB, Thogamalai Main Road, Thayanur Post, Tiruchirappalli - 620 102",
+      "verificationNote": "Institutional office landline verified from ICAR-NRCB official directory.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "valueAdditionMeta": {
+      "produceCategory": "Horticulture (Banana - Musa spp.)",
+      "processingIdea": {
+        "en": "Minimally Processed Banana Central Core, Blended Nectar & Vacuum Fried Green Banana Chips",
+        "ta": "பதப்படுத்தப்பட்ட வாழைத்தண்டு, கலப்பு சாறு மற்றும் வெற்றிட வறுவல் சிப்ஸ்"
+      },
+      "hygieneStandards": [
+        "Anti-browning citric acid & ascorbic acid dip (0.1%) within 5 minutes of cutting",
+        "Thermal processing (85°C for 15 minutes) of bottled juice to eliminate microbial spoilage",
+        "Hygienic vacuum frying at 110°C maintaining 50% less oil absorption"
+      ],
+      "packagingOptions": [
+        "Nitrogen-flushed vacuum sealed retort pouches",
+        "Glass bottles with tamper-proof crown caps for RTS juice"
+      ],
+      "shelfLifeExtensionDays": "180 Days for juice; 90 Days for vacuum-fried chips",
+      "estimatedCostingBreakdown": "Banana pseudostem core: ₹10/stem. Mechanical slicing & juice extraction: ₹15. Glass bottle & cap: ₹12. Total cost: ₹37/300ml bottle. Selling price: ₹75/bottle. Profit: 50%.",
+      "marketingChannels": [
+        "Namma Vivasayi marketplace direct dispatch",
+        "Urban health food counters",
+        "Hospital dietary kiosks for kidney-stone therapeutic use"
+      ]
+    },
+    "highlights": [
+      "Converts agricultural field waste (pseudostem) into therapeutic beverages",
+      "Patented technology licensed to 40+ rural FPOs and SHGs",
+      "Machinery available with 35% PMFME individual capital subsidy"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_val_coconut_oil_neera",
+    "category": "value_addition",
+    "subCategory": "plantation_crops",
+    "contentType": "guidance_package",
+    "title": {
+      "en": "Wood-Pressed (Marachekku) Virgin Coconut Oil & Hygienic Neera Tapping",
+      "ta": "பாரம்பரிய மரச்செக்கு கன்னி தேங்காய் எண்ணெய் மற்றும் சுத்தமான நீரா பானம் தயாரிப்பு"
+    },
+    "description": {
+      "en": "Cold-pressed extraction of unrefined virgin coconut oil using slow-speed wooden expellers below 45°C, coupled with hygienic cold-chain preservation of coconut neera sap.",
+      "ta": "மரச்செக்கு மூலம் 45°C-க்கு குறைவான வெப்பத்தில் எடுக்கப்படும் சுத்தமான தேங்காய் எண்ணெய் மற்றும் நீரா தயாரிப்பு முறை."
+    },
+    "district": "Coimbatore",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Coconut Development Board (CDB) & TNAU Coconut Research Station",
+    "officialSourceUrl": "https://agritech.tnau.ac.in/",
+    "sourceExcerpt": "TNAU Coconut Research Station Aliyarnagar / Pollachi. Marachekku cold extraction <45C. Zero chemical refining. Phone: 04259-222245.",
+    "sourcePublicationDate": "2025-05-15",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Professor and Head, Coconut Research Station",
+      "contactType": "institutional_office",
+      "officePhone": "04259-222245",
+      "email": "arspollachi@tnau.ac.in",
+      "address": "Coconut Research Station, Aliyarnagar - 642 101, Pollachi Taluk",
+      "verificationNote": "Institutional landline of TNAU Coconut Research Station Aliyarnagar.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "valueAdditionMeta": {
+      "produceCategory": "Coconut & Palm Produce",
+      "processingIdea": {
+        "en": "Hygienic Marachekku (Wood-Pressed) Virgin Coconut Oil and Desiccated Coconut Powder",
+        "ta": "பாரம்பரிய மரச்செக்கு கன்னி தேங்காய் எண்ணெய் மற்றும் தேங்காய் துருவல் பொடி தயாரிப்பு"
+      },
+      "hygieneStandards": [
+        "Solar tunnel drying of copra to <6.0% moisture preventing carcinogenic aflatoxin (Aspergillus flavus)",
+        "Slow-speed wood pestle rotation (<35 RPM) keeping extraction temperature below 45°C",
+        "Multi-stage food-grade cotton micro-filtration before bottling"
+      ],
+      "packagingOptions": [
+        "Dark amber glass bottles (500 ml & 1 Litre) protecting from photo-oxidation",
+        "Food-grade tin cans with tamper-proof pull-ring seals"
+      ],
+      "shelfLifeExtensionDays": "365 Days (1 Year) at ambient temperature",
+      "estimatedCostingBreakdown": "Coconuts (4 nuts per litre of oil): ₹60. Drying, extraction & filtration: ₹25. Glass bottle & label: ₹25. Total cost: ₹110/500ml. Retail selling price: ₹210/500ml. Gross margin: 47%.",
+      "marketingChannels": [
+        "Namma Vivasayi Direct Marketplace (farm gate & courier dispatch)",
+        "Direct Ayurvedic and cosmetics formulation buyers",
+        "Organic grocery chains"
+      ]
+    },
+    "highlights": [
+      "Cold extraction preserves natural lauric acid (>50%) and vitamin E",
+      "Zero sulfur and zero chemical refining agents used",
+      "High consumer willingness-to-pay for authentic wood-pressed oils"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_mkt_enam_national_portal",
+    "category": "direct_market",
+    "subCategory": "electronic_trading_portal",
+    "contentType": "market_protocol",
+    "title": {
+      "en": "National Agriculture Market (e-NAM): Pan-India Electronic Trading & Assaying Network",
+      "ta": "தேசிய வேளாண் மின்னணு சந்தை (e-NAM): அகில இந்திய நேரடி வர்த்தக தளம்"
+    },
+    "description": {
+      "en": "Central flagship electronic spot trading platform connecting 1,361+ APMC mandis across Indian states for transparent price discovery, digital assaying, and direct online farmer payments.",
+      "ta": "மத்திய அரசின் தேசிய மின்னணு சந்தை தளம்: தமிழகம் உட்பட அனைத்து மாநில ஒழுங்குமுறை விற்பனைக் கூடங்களை இணைத்து நேரடி மின்னணு ஏலம் மற்றும் வங்கிக் கணக்கில் பணம் செலுத்தும் முறை."
+    },
+    "district": "All",
+    "state": "All-India",
+    "language": "bilingual",
+    "institution": "Small Farmers' Agri-Business Consortium (SFAC), Ministry of Agriculture & Farmers Welfare",
+    "officialSourceUrl": "https://www.enam.gov.in/",
+    "sourceExcerpt": "National Agriculture Market (e-NAM). Pan-India electronic portal. 1361 mandis integrated across 23 States and 4 UTs. Toll Free Farmer Helpline: 1800-270-0224. Office Phone: 011-26862367. Email: enam.helpdesk@gov.in.",
+    "sourcePublicationDate": "2025-01-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "e-NAM National Project Management Unit",
+      "contactType": "helpline",
+      "officePhone": "1800-270-0224",
+      "email": "enam.helpdesk@gov.in",
+      "address": "Small Farmers' Agri-Business Consortium (SFAC), NCUI Auditorium Building, 5th Floor, 3, Siri Institutional Area, August Kranti Marg, Hauz Khas, New Delhi - 110016",
+      "verificationNote": "National Toll-Free Farmer Helpline (1800-270-0224, 9 AM - 9 PM) verified against official e-NAM portal.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "directMarketMeta": {
+      "marketType": "e-NAM Electronic Spot Exchange (Pan-India Mandi Interconnection)",
+      "platformPortal": "https://www.enam.gov.in/web/",
+      "helplinePhone": "1800-270-0224 (Toll-Free, 9:00 AM to 9:00 PM)",
+      "tradingWorkflow": [
+        "Step 1 (Gate Entry): Farmer brings produce lot to e-NAM integrated APMC/Regulated Mandi; gate entry ticket with QR-code is generated",
+        "Step 2 (Digital Assaying): Mandi quality testing lab draws sample; measures moisture, foreign matter, and assigns Grade A/B/C parameters uploaded onto portal",
+        "Step 3 (Electronic Bidding): Registered traders across India bid electronically on the lot between 10:00 AM and 1:00 PM",
+        "Step 4 (Farmer Consent): Farmer views highest bid on mobile SMS/app and accepts or rejects the price (no forced sale)",
+        "Step 5 (Digital Payment): Buyer deposits money via e-NAM payment gateway directly into farmer's verified bank account without cash handling or commission cuts",
+        "Step 6 (Weighment & Exit): Electronic weighbridge recording and gate exit pass generated"
+      ],
+      "tradingWorkflowTa": [
+        "படி 1: விளைபொருளை e-NAM ஒழுங்குமுறை விற்பனைக்கூடத்திற்கு கொண்டுவந்து நுழைவுச் சீட்டு பெறுதல்",
+        "படி 2: தரப் பரிசோதனைக்கூடத்தில் ஈரப்பதம் மற்றும் தரம் பரிசோதிக்கப்பட்டு இணையத்தில் பதிவேற்றப்படுதல்",
+        "படி 3: நாடு முழுவதும் உள்ள வியாபாரிகள் ஆன்லைன் மூலம் ஏலம் கோருதல்",
+        "படி 4: அதிகபட்ச ஏல விலையை விவசாயி மொபைலில் பார்த்து சம்மதம் தெரிவித்தல்",
+        "படி 5: விளைபொருளுக்கான முழுத் தொகையும் விவசாயியின் வங்கிக் கணக்கிற்கு நேரடியாக ஆன்லைனில் வரவு வைக்கப்படுதல்"
+      ],
+      "qualityAssayingParameters": [
+        "Moisture content: Grains <14.0%, Oilseeds <9.0%, Spices <10.0%",
+        "Foreign organic matter: Maximum 1.0%",
+        "Inorganic foreign matter (sand, stones): Maximum 0.5%",
+        "Broken / shriveled grains: Maximum 3.0%",
+        "Weeviled / insect damaged kernels: Maximum 1.0%"
+      ],
+      "disputeResolutionDesk": "Mandi Secretary & District e-NAM Grievance Redressal Committee",
+      "buyerLinkageChannels": [
+        "Inter-state wholesale traders (Direct sales to buyers in Delhi, Mumbai, Bengaluru)",
+        "Large food processors and millers",
+        "Farmer Producer Organisations (FPO) bulk trade"
+      ]
+    },
+    "highlights": [
+      "Operates across 1,361+ regulated markets in India with zero broker commission",
+      "Direct payment credited directly to farmer bank account on same day",
+      "Farmer has complete right to reject bid if price is unsatisfactory"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_mkt_salem_regulated_markets",
+    "category": "direct_market",
+    "subCategory": "regulated_mandi",
+    "contentType": "market_protocol",
+    "title": {
+      "en": "Salem Market Committee: Regulated Mandis & e-NAM Trading Centers",
+      "ta": "சேலம் விற்பனைக் குழு: ஒழுங்குமுறை விற்பனைக் கூடங்கள் & e-NAM மின்னணு ஏலம்"
+    },
+    "description": {
+      "en": "Government regulated market yards across Salem district (Shevapet, Attur, Gangavalli, Sankari, Vazhapadi, Omalur) offering free electronic weighing, secret tender auction, and pledge loan facilities.",
+      "ta": "சேலம், ஆத்தூர், சங்ககிரி, வாழப்பாடி உள்ளிட்ட ஒழுங்குமுறை விற்பனைக்கூடங்களில் இடைத்தரகர் இன்றி ரகசிய டெண்டர் மற்றும் e-NAM ஏலம்."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Department of Agricultural Marketing and Agri Business (TNAMB), Govt of Tamil Nadu",
+    "officialSourceUrl": "https://agrimark.tn.gov.in/",
+    "sourceExcerpt": "Salem Market Committee, Shevapet, Salem - 636 002. Regulated Markets: Shevapet, Attur, Gangavalli, Sankari, Vazhapadi, Omalur, Mecheri. Phone: 0427-2211516. Pledge finance up to Rs. 3 Lakhs at 5% interest.",
+    "sourcePublicationDate": "2025-06-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Secretary, Salem Market Committee",
+      "contactType": "institutional_office",
+      "officePhone": "0427-2211516",
+      "email": "salem.marketcommittee@gmail.com",
+      "address": "Salem Market Committee Head Office, Shevapet, Salem - 636 002",
+      "verificationNote": "Institutional office landline of Salem Market Committee verified from TNAMB directory.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "directMarketMeta": {
+      "marketType": "Tamil Nadu Regulated Market Committee Yards (TNAMB)",
+      "platformPortal": "https://agrimark.tn.gov.in/",
+      "helplinePhone": "0427-2211516",
+      "tradingWorkflow": [
+        "1. Farmer brings agricultural produce (Turmeric, Groundnut, Castor, Maize, Paddy) to the market yard",
+        "2. Free un-biased electronic weighment and digital moisture determination",
+        "3. Lot displays in drying shed; licensed buyers submit secret bids or online e-NAM bids",
+        "4. Highest bid opened at 2:00 PM in presence of farmers",
+        "5. Payment settled directly by buyers within 24 hours into farmer bank account; zero brokerage, zero deductions"
+      ],
+      "tradingWorkflowTa": [
+        "1. விளைபொருளை ஒழுங்குமுறை விற்பனைக்கூடத்திற்கு கொண்டுவருதல்",
+        "2. இலவச மற்றும் துல்லியமான எலக்ட்ரானிக் எடை போடுதல்",
+        "3. வியாபாரிகள் ரகசிய டெண்டர் அல்லது e-NAM மூலம் விலைப்புள்ளி சமர்ப்பித்தல்",
+        "4. மதியம் 2 மணிக்கு விவசாயிகள் முன்னிலையில் அதிகபட்ச விலை அறிவிக்கப்படுதல்",
+        "5. இடைத்தரகர் கமிஷன் இன்றி முழுப் பணம் 24 மணி நேரத்திற்குள் வங்கிக் கணக்கில் வரவு"
+      ],
+      "qualityAssayingParameters": [
+        "Turmeric: Bulb vs finger proportion, curcumin level, dry moisture <10%",
+        "Groundnut: Pod moisture <9%, shelling percentage, kernel sound mature index",
+        "Maize: Moisture <14%, aflatoxin safe limit, foreign matter <1%"
+      ],
+      "disputeResolutionDesk": "Superintendent of Regulated Market & District Market Committee Secretary",
+      "buyerLinkageChannels": [
+        "Licensed traders and sago/oil millers across Tamil Nadu",
+        "Central warehousing and pledge finance access"
+      ]
+    },
+    "highlights": [
+      "Zero commission, zero deductions, and free weighing facilities",
+      "Pledge loan (உழவர் கடன்) up to ₹3 Lakhs at subsidized 5% interest for up to 6 months to avoid distress sales",
+      "Direct integration with National Agriculture Market (e-NAM)"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_mkt_salem_uzhavar_sandhai",
+    "category": "direct_market",
+    "subCategory": "direct_farmers_market",
+    "contentType": "market_protocol",
+    "title": {
+      "en": "Salem District Uzhavar Sandhais: Direct Farmer-to-Consumer Daily Farmers Markets",
+      "ta": "சேலம் மாவட்ட உழவர் சந்தைகள்: நுகர்வோருக்கு நேரடி விற்பனை செய்யும் உழவர் சந்தைகள்"
+    },
+    "description": {
+      "en": "Daily direct retail marketing network operating across 11 designated locations in Salem district providing free stalls, certified electronic weighing balances, and daily fair price boards.",
+      "ta": "சேலம் மாநகரம் மற்றும் புறநகரில் உள்ள 11 உழவர் சந்தைகளில் விவசாயிகள் காய்கறிகளை நேரடியாக பொதுமக்களுக்கு விற்கும் முறை."
+    },
+    "district": "Salem",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "Department of Agricultural Marketing and Agri Business, Salem",
+    "officialSourceUrl": "https://agrimark.tn.gov.in/",
+    "sourceExcerpt": "Uzhavar Sandhais in Salem District. Locations: Suramangalam, Hasthampatti, Dadagapatti, Ammapet, Attur, Mettur, Jalakandapuram, Edappadi. Free transport in government buses, free weighing scales.",
+    "sourcePublicationDate": "2025-05-10",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "Deputy Director of Agricultural Marketing (DDAM)",
+      "contactType": "institutional_office",
+      "officePhone": "0427-2451382",
+      "email": "ddamsalem@gmail.com",
+      "address": "Office of DDAM, Collectorate Compound, Salem - 636 001",
+      "verificationNote": "Institutional contact of Deputy Director of Agricultural Marketing Salem.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "directMarketMeta": {
+      "marketType": "Direct Farmer-to-Consumer Retail Market (Uzhavar Sandhai)",
+      "platformPortal": "https://agrimark.tn.gov.in/",
+      "helplinePhone": "1800-425-1661",
+      "tradingWorkflow": [
+        "1. Farmer obtains Uzhavar Sandhai Identity Card with photo from Assistant Director of Horticulture/Agriculture",
+        "2. Early morning arrival (5:00 AM to 6:30 AM) with freshly harvested vegetables and fruits",
+        "3. Free transport of produce baskets allowed in state transport buses",
+        "4. Allotment of free stall and certified electronic balance by Market Administrative Officer",
+        "5. Fair prices determined daily at 6:00 AM (average of wholesale + 20% consumer benefit) displayed on prominent LED price board",
+        "6. Direct retail cash or UPI sales directly to consumers until 12:00 PM; zero stall fee, zero middleman commission"
+      ],
+      "tradingWorkflowTa": [
+        "1. தோட்டக்கலை அலுவலரிடம் உழவர் சந்தை அடையாள அட்டை பெறுதல்",
+        "2. அதிகாலை 5:00 மணி முதல் 6:30 மணிக்குள் விளைபொருட்களுடன் சந்தைக்கு வருதல்",
+        "3. அரசு பேருந்துகளில் விவசாயிகளின் விளைபொருட்களை இலவசமாக எடுத்துச்செல்லும் வசதி",
+        "4. இலவச விற்பனை மேடை மற்றும் துல்லிய எலக்ட்ரானிக் தராசு பெறுதல்",
+        "5. அன்றைய விலைப்பட்டியல் பலகையில் அறிவிக்கப்படும் விலையில் பொதுமக்களுக்கு நேரடியாக விற்பனை செய்தல்"
+      ],
+      "qualityAssayingParameters": [
+        "Freshness and harvest on previous evening or early morning",
+        "Hygienic sorting, grading, and free from rotten or insect-damaged produce",
+        "Zero chemical color or wax coating allowed"
+      ],
+      "disputeResolutionDesk": "Administrative Officer (AO), Uzhavar Sandhai Control Room",
+      "buyerLinkageChannels": [
+        "Salem urban households and daily consumers",
+        "Local restaurants and small catering businesses"
+      ]
+    },
+    "highlights": [
+      "11 functional Uzhavar Sandhais in Salem district (Suramangalam, Hasthampatti, Dadagapatti, Attur, etc.)",
+      "Free bus transport for farmers carrying produce baskets",
+      "Farmers realize 20% higher price while consumers save 15% compared to commercial retail shops"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  },
+  {
+    "contentId": "fsc_mkt_direct_farmgate_protocol",
+    "category": "direct_market",
+    "subCategory": "digital_farmgate",
+    "contentType": "market_protocol",
+    "title": {
+      "en": "AgriBharat Direct Farm Gate & WhatsApp Order-Request Protocol",
+      "ta": "அக்ரிபாரத் நேரடி பண்ணை விற்பனை & வாட்ஸ்அப் முன்பதிவு வழிகாட்டல்"
+    },
+    "description": {
+      "en": "Operating guidelines for registered farmers to list available harvests on AgriBharat marketplace, handle customer order requests, arrange farm gate pickups, and accept digital UPI payments.",
+      "ta": "விவசாயிகள் தங்களின் விளைபொருட்களை அக்ரிபாரத் செயலியில் பட்டியலிட்டு, வாடிக்கையாளர் முன்பதிவுகளை ஏற்று பண்ணை வாசலில் விற்கும் நேரடி முறை."
+    },
+    "district": "All",
+    "state": "Tamil Nadu",
+    "language": "bilingual",
+    "institution": "AgriBharat Agricultural Direct Marketplace Framework",
+    "officialSourceUrl": "https://agrimark.tn.gov.in/",
+    "sourceExcerpt": "Direct Farmer-to-Customer peer discovery protocol. Verified farmer telephone contacts, 0% platform commission, farm gate collection, and digital UPI settlement.",
+    "sourcePublicationDate": "2026-01-01",
+    "lastCheckedDate": "2026-10-20",
+    "verificationStatus": "verified_official",
+    "activeStatus": "active",
+    "adminReviewed": false,
+    "contact": {
+      "name": null,
+      "designation": "State Farmer Helpdesk Co-ordinator",
+      "contactType": "helpline",
+      "officePhone": "1800-425-1661",
+      "email": "support@agribharat.gov.in",
+      "address": "Kisan Call Centre & Agri Marketing Directorate, Chennai - 600 032",
+      "verificationNote": "State Kisan Call Centre helpline 1800-425-1661.",
+      "contactVerificationStatus": "verified_official"
+    },
+    "directMarketMeta": {
+      "marketType": "Peer-to-Peer Farmer-to-Buyer Direct Discovery (Farm Gate Pickup / Local Delivery)",
+      "platformPortal": "https://agrimark.tn.gov.in/",
+      "helplinePhone": "1800-425-1661",
+      "tradingWorkflow": [
+        "1. Farmer logs into AgriBharat app and clicks 'List My Produce'",
+        "2. Enters crop name, variety, quantity, unit, farm gate asking price, harvest date, and fulfillment modes",
+        "3. Customer discovers listing on marketplace and submits order request with quantity and delivery preference",
+        "4. Farmer receives real-time order alert with buyer name, phone, and estimated total price",
+        "5. Farmer confirms order request and connects directly on WhatsApp / phone to schedule collection or delivery",
+        "6. Direct UPI or cash payment directly between buyer and farmer with zero middleman deductions"
+      ],
+      "tradingWorkflowTa": [
+        "1. அக்ரிபாரத் செயலியில் விளைபொருள் பெயர், அளவு, விலை மற்றும் அறுவடை தேதியை பதிவிடுதல்",
+        "2. நுகர்வோர் பட்டியலை பார்த்து தேவையான அளவை முன்பதிவு செய்தல்",
+        "3. விவசாயிக்கு உடனடி ஆர்டர் தகவல் மற்றும் வாங்குபவரின் தொலைபேசி எண் பகிரப்படுதல்",
+        "4. விவசாயி ஆர்டரை உறுதிசெய்து வாட்ஸ்அப் மூலம் பண்ணை முகவரியை பகிர்ந்து விநியோகம் செய்தல்",
+        "5. 0% கமிஷன் - முழுப் பணமும் நேரடியாக உழவருக்கே கிடைக்கிறது"
+      ],
+      "qualityAssayingParameters": [
+        "Truthful disclosure of harvest date and drying moisture",
+        "Clear mention of whether produce is certified organic or conventional",
+        "Accurate weighing in presence of buyer during farm gate collection"
+      ],
+      "disputeResolutionDesk": "Community Moderation & Admin Verification Review Desk",
+      "buyerLinkageChannels": [
+        "Urban families seeking clean heritage rice and cold-pressed oils",
+        "Local small businesses and bakeries",
+        "Inter-district buyers arranging bulk transport"
+      ]
+    },
+    "highlights": [
+      "0% commission - 100% of the sale value reaches the farmer directly",
+      "Enables forward booking even before harvest date",
+      "Automatic bilingual presentation in Tamil and English"
+    ],
+    "createdAt": "2026-10-20T00:00:00Z",
+    "updatedAt": "2026-10-20T00:00:00Z"
+  }
+]

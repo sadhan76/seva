@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sprout, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Sprout, ShieldAlert, CheckCircle2, Edit3 } from 'lucide-react';
 import { Card } from '../common/Card';
 import { Badge } from '../common/Badge';
 import { useLanguage } from '../../context/LanguageContext';
@@ -16,19 +16,29 @@ export const FarmDetailsCard: React.FC<FarmDetailsCardProps> = ({
 }) => {
   const { t, language } = useLanguage();
 
-  const isProfileComplete = Boolean(farmer.name && farmer.primaryCrop && farmer.totalLandAcres);
-
   return (
     <Card
       title={t.dashboard.farmDetailsTitle}
       subtitle={farmer.location || (language === 'ta' ? 'தமிழ்நாடு' : 'Tamil Nadu')}
       icon={<Sprout className="w-5 h-5 text-emerald-600" />}
       headerAction={
-        <Badge variant={farmer.isFromDb ? 'emerald' : 'slate'} dot>
-          {farmer.isFromDb
-            ? (language === 'ta' ? 'சரிபார்க்கப்பட்ட சுயவிவரம்' : 'Live Profile')
-            : (language === 'ta' ? 'முழுமையற்றது' : 'Profile Pending')}
-        </Badge>
+        <div className="flex items-center gap-1.5">
+          <Badge variant={farmer.isFromDb ? 'emerald' : 'slate'} dot>
+            {farmer.isFromDb
+              ? (language === 'ta' ? 'சரிபார்க்கப்பட்ட சுயவிவரம்' : 'Live Profile')
+              : (language === 'ta' ? 'முழுமையற்றது' : 'Profile Pending')}
+          </Badge>
+          {onViewProfile && (
+            <button
+              onClick={onViewProfile}
+              className="p-1 rounded-lg text-emerald-700 hover:bg-emerald-50 transition-colors"
+              title={t.common.editProfile || 'Edit Profile'}
+              aria-label={t.common.editProfile || 'Edit Profile'}
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
       }
       footer={
         <div className="flex items-center justify-between text-xs text-slate-500">
@@ -50,9 +60,10 @@ export const FarmDetailsCard: React.FC<FarmDetailsCardProps> = ({
           {onViewProfile && (
             <button
               onClick={onViewProfile}
-              className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 hover:underline"
+              className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline"
             >
-              {isProfileComplete ? `${t.common.viewDetails} →` : (language === 'ta' ? 'சுயவிவரத்தை நிரப்புக →' : 'Complete Profile →')}
+              <Edit3 className="w-3.5 h-3.5" />
+              <span>{t.common.editProfile || 'Edit Profile'} →</span>
             </button>
           )}
         </div>

@@ -15,6 +15,7 @@ Tests:
 import asyncio
 import httpx
 import time
+from datetime import date, timedelta
 
 BASE_URL = "http://127.0.0.1:8000"
 
@@ -142,14 +143,18 @@ async def run_auth_tests():
         assert reg_b_res.status_code in [200, 201], f"Farmer B registration failed: {reg_b_res.text}"
         token_b = reg_b_res.json().get("accessToken") or reg_b_res.json().get("access_token")
 
-        # Farmer A creates a booking
+        # Farmer A creates a booking (use a varying future offset to avoid capacity contention)
+        v_date = (date.today() + timedelta(days=14 + (suffix % 7))).isoformat()
+        h_date = (date.today() + timedelta(days=1)).isoformat()
         booking_payload = {
             "farmerName": user_a["name"],
             "farmerId": user_a.get("farmerId") or f"TN-AGRI-2026-{suffix % 10000}",
-            "mandiName": "Thanjavur Regulated Market (DPC Centre",
+            "mandiName": "Thanjavur Direct Procurement Centre #3 (Pillaiyarpatti)",
             "crop": "Paddy Grade A (சம்பா நெல் CR 1009)",
+            "cropVariety": "CR 1009",
+            "harvestDate": h_date,
             "quantityBags": 50,
-            "preferredDate": f"2026-12-{(suffix % 25) + 1:02d}",
+            "preferredDate": v_date,
             "timeWindow": "08:30 AM - 11:30 AM"
         }
         book_res = await client.post(
@@ -187,6 +192,13 @@ async def run_auth_tests():
         })
         assert invalid_phone_res.status_code in [400, 401, 422], f"Expected 400/401/422 for invalid phone, got {invalid_phone_res.status_code}"
         print("  -> PASS: Malformed/unknown phone correctly rejected.")
+
+        # Clean up test records
+        from database import get_database
+        db_instance = get_database()
+        await db_instance["users"].delete_many({"phone": {"$in": [farmer_a_phone, farmer_b_phone]}})
+        if 'booking_a_id' in locals():
+            await db_instance["procurement_bookings"].delete_many({"bookingId": booking_a_id})
 
         print("\n" + "=" * 80)
         print("ALL AUTHENTICATION, ROLE ISOLATION & DATA PRIVACY TESTS PASSED (7/7)!")

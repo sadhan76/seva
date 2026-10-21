@@ -1,6 +1,6 @@
-# Namma Vivasayi AI - FastAPI Backend (Phase 2 Active)
+# AgriBharat - FastAPI Backend
 
-This folder contains the Python FastAPI backend connected to MongoDB for the **Namma Vivasayi AI** platform.
+This folder contains the Python FastAPI backend connected to MongoDB for the **AgriBharat** platform.
 
 ---
 

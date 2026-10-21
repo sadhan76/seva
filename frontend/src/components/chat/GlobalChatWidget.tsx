@@ -96,10 +96,10 @@ export const GlobalChatWidget: React.FC<GlobalChatWidgetProps> = ({
     sender: 'ai',
     text:
       lang === 'ta'
-        ? `வணக்கம் ${user?.name || farmer?.name || 'விவசாயி'}! நான் உங்கள் 'நம்ம விவசாயி AI' உதவியாளர். வானிலை அறிக்கை, கொள்முதல் முன்பதிவு, டிஜிட்டல் ரசீதுகள் அல்லது விவசாய ஆலோசனைகள் குறித்து என்னிடம் கேளுங்கள்.`
-        : `Vanakkam ${user?.name || farmer?.name || 'Farmer'}! I am your Namma Vivasayi AI Assistant. Ask me to open weather, check your procurement slot, explain your bill, or answer any crop question.`,
+        ? `வணக்கம் ${user?.name || farmer?.name || 'விவசாயி'}! நான் உங்கள் 'அக்ரிபாரத் AI' உதவியாளர். வானிலை அறிக்கை, கொள்முதல் முன்பதிவு, டிஜிட்டல் ரசீதுகள் அல்லது விவசாய ஆலோசனைகள் குறித்து என்னிடம் கேளுங்கள்.`
+        : `Vanakkam ${user?.name || farmer?.name || 'Farmer'}! I am your AgriBharat AI Assistant. Ask me to open weather, check your procurement slot, explain your bill, or answer any crop question.`,
     time: 'Just now',
-    provider: 'NAMMA_VIVASAYI_AI',
+    provider: 'AGRIBHARAT_AI',
     isRealAI: false,
   });
 
@@ -376,7 +376,7 @@ export const GlobalChatWidget: React.FC<GlobalChatWidgetProps> = ({
             setIsOpen(true);
           }}
           className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold rounded-full shadow-xl shadow-emerald-700/25 transition-all duration-200 transform hover:scale-105 group border border-emerald-400/30"
-          title={chatLang === 'ta' ? 'நம்ம விவசாயி AI உதவியாளர்' : 'Namma Vivasayi AI Assistant'}
+          title={chatLang === 'ta' ? 'அக்ரிபாரத் AI உதவியாளர்' : 'AgriBharat AI Assistant'}
         >
           <div className="relative">
             <Bot className="w-5 h-5 transition-transform group-hover:rotate-12" />
@@ -409,7 +409,7 @@ export const GlobalChatWidget: React.FC<GlobalChatWidgetProps> = ({
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
-                  <h3 className="text-xs font-bold tracking-tight">Namma Vivasayi AI</h3>
+                  <h3 className="text-xs font-bold tracking-tight">AgriBharat</h3>
                   <span className="text-[9px] bg-emerald-900/40 text-emerald-200 px-1.5 py-0.2 rounded-full border border-emerald-400/20 font-medium">
                     Global Voice & Actions
                   </span>

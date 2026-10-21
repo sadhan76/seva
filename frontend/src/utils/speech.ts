@@ -1,17 +1,18 @@
 /**
- * Bilingual Text-to-Speech (TTS) and Speech-to-Text (STT) Utilities
+ * Multilingual Text-to-Speech (TTS) and Speech-to-Text (STT) Utilities
+ * Supports all 22 Eighth Schedule languages of India plus English.
  * Features:
- * - Tamil ('ta-IN') and English ('en-IN' / 'en-US') speech synthesis
- * - Play, Pause, Resume, and Stop speech controls
- * - Speech recognition with transcript preview
- * - Sanitization to ensure passwords, auth tokens, and secrets are NEVER read aloud
+ * - Exact BCP-47 speech locale mappings via central locale registry
+ * - Play, Pause, Resume, and Stop controls
+ * - Honest browser/device capability detection with helpful fallback messages
+ * - Sanitization to ensure passwords, auth tokens, OTPs, and secrets are NEVER read aloud
  */
 
 import type { Language } from '../types';
+import { getLocaleMetadata } from '../i18n/localeRegistry';
 
 /**
- * Strips Markdown formatting, URLs, emojis, and sensitive tokens before speaking.
- * TASK 3 & PHASE 19: "Never show or speak passwords, OTPs, tokens, or private authentication details using text-to-speech."
+ * Strips Markdown formatting, URLs, emojis, and sensitive security tokens before speaking.
  */
 export function cleanTextForSpeech(text: string): string {
   if (!text) return '';
@@ -25,7 +26,7 @@ export function cleanTextForSpeech(text: string): string {
     .replace(/https?:\/\/\S+/g, ' ')
     // Remove emojis and special agricultural icons
     .replace(/[\u{1F300}-\u{1F9FF}]/gu, ' ')
-    // Censor sensitive security patterns (tokens, JWT, passwords, Telegram OTPs)
+    // Censor sensitive security patterns (tokens, JWT, passwords, OTPs)
     .replace(/eyJ[a-zA-Z0-9_\-.]+/g, '[security token hidden]')
     .replace(/NV-[a-zA-Z0-9_\-]+/g, '[token code hidden]')
     .replace(/password[:=]\s*\S+/gi, 'password hidden')
@@ -49,28 +50,42 @@ export function isSpeechRecognitionSupported(): boolean {
 }
 
 /**
- * Finds the most suitable voice for the selected regional language.
+ * Checks whether the browser has a voice for the requested regional language.
  */
-export function getBestVoice(language: Language): SpeechSynthesisVoice | null {
-  if (!isSpeechSynthesisSupported()) return null;
+export function getBestVoice(language: Language): { voice: SpeechSynthesisVoice | null; isSupported: boolean } {
+  if (!isSpeechSynthesisSupported()) {
+    return { voice: null, isSupported: false };
+  }
+
   const voices = window.speechSynthesis.getVoices();
-  if (!voices || voices.length === 0) return null;
+  if (!voices || voices.length === 0) {
+    return { voice: null, isSupported: false };
+  }
 
-  const targetPrefix = language.toLowerCase();
+  const meta = getLocaleMetadata(language);
+  const targetCode = language.toLowerCase();
+  const targetLocale = (meta.speechSynthesisLocale || '').toLowerCase();
 
-  // Try exact match or language prefix (e.g. 'ta-IN', 'hi-IN', 'te-IN')
-  const matchedVoice = voices.find(
-    (v) => v.lang.toLowerCase().startsWith(targetPrefix) || v.name.toLowerCase().includes(targetPrefix)
-  );
-  if (matchedVoice) return matchedVoice;
+  // 1. Exact match on BCP-47 locale (e.g. 'hi-in', 'ta-in', 'te-in')
+  let matched = voices.find((v) => v.lang.toLowerCase() === targetLocale);
+  if (matched) return { voice: matched, isSupported: true };
 
-  // Look for Indian English voice fallback
-  const indianEng = voices.find((v) => v.lang.toLowerCase() === 'en-in');
-  if (indianEng) return indianEng;
+  // 2. Prefix match (e.g. starts with 'hi-', 'ta-', 'ur-')
+  matched = voices.find((v) => v.lang.toLowerCase().startsWith(`${targetCode}-`));
+  if (matched) return { voice: matched, isSupported: true };
 
-  // Standard English fallback
-  const engVoice = voices.find((v) => v.lang.toLowerCase().startsWith('en'));
-  return engVoice || voices[0] || null;
+  // 3. Name match containing language name
+  matched = voices.find((v) => v.name.toLowerCase().includes(meta.name.toLowerCase()));
+  if (matched) return { voice: matched, isSupported: true };
+
+  // 4. If target is English, accept standard English voice
+  if (targetCode === 'en') {
+    const eng = voices.find((v) => v.lang.toLowerCase().startsWith('en'));
+    return { voice: eng || voices[0] || null, isSupported: Boolean(eng || voices[0]) };
+  }
+
+  // Language voice pack not installed on this browser/device
+  return { voice: null, isSupported: false };
 }
 
 export interface SpeechPlaybackController {
@@ -88,7 +103,6 @@ export interface SpeechPlaybackController {
   isPaused: () => boolean;
 }
 
-
 export function createSpeechPlaybackController(): SpeechPlaybackController {
   let activeUtterance: SpeechSynthesisUtterance | null = null;
 
@@ -104,14 +118,23 @@ export function createSpeechPlaybackController(): SpeechPlaybackController {
       const sanitizedText = cleanTextForSpeech(text);
       if (!sanitizedText) return;
 
+      const meta = getLocaleMetadata(language);
+      const { voice, isSupported } = getBestVoice(language);
+
+      // Honest feedback if browser lacks voice support for this regional language
+      if (!isSupported && language !== 'en') {
+        const errorMsg = `Speech audio in ${meta.name} (${meta.nativeName}) is not supported by this browser/device. Please install an Indian language voice pack in your device settings or use Chrome on Android.`;
+        onError?.(errorMsg);
+        return;
+      }
+
       const utterance = new SpeechSynthesisUtterance(sanitizedText);
       activeUtterance = utterance;
 
-      utterance.lang = language === 'ta' ? 'ta-IN' : 'en-IN';
-      utterance.rate = language === 'ta' ? 0.95 : 1.0; // Slightly measured pace for clarity
+      utterance.lang = meta.speechSynthesisLocale || 'en-IN';
+      utterance.rate = language === 'ta' || language === 'ur' ? 0.95 : 1.0;
       utterance.pitch = 1.0;
 
-      const voice = getBestVoice(language);
       if (voice) {
         utterance.voice = voice;
       }
@@ -127,7 +150,6 @@ export function createSpeechPlaybackController(): SpeechPlaybackController {
 
       utterance.onerror = (e) => {
         activeUtterance = null;
-        // Ignore interrupted errors triggered by user pressing stop
         if (e.error !== 'interrupted' && e.error !== 'canceled') {
           onError?.(`Speech synthesis error: ${e.error}`);
         } else {
@@ -167,35 +189,37 @@ export function createSpeechPlaybackController(): SpeechPlaybackController {
   };
 }
 
-/**
- * Speech Recognition Listener Controller.
- * TASK 4: Web speech recognition with language selection (Tamil / English).
- */
 export interface SpeechRecognitionListener {
   start: () => void;
   stop: () => void;
 }
 
 export function createSpeechRecognizer(
-  language: 'en' | 'ta',
+  language: Language,
   onResult: (transcription: string, isFinal: boolean) => void,
   onError: (errorText: string) => void,
   onEnd: () => void
 ): SpeechRecognitionListener | null {
   if (!isSpeechRecognitionSupported()) {
+    onError('Speech recognition is not supported by this browser.');
     return null;
   }
 
   const SpeechRecognitionClass =
     (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
-  if (!SpeechRecognitionClass) return null;
+  if (!SpeechRecognitionClass) {
+    onError('Speech recognition is not supported by this browser.');
+    return null;
+  }
+
+  const meta = getLocaleMetadata(language);
 
   try {
     const recognition = new SpeechRecognitionClass();
     recognition.continuous = false;
     recognition.interimResults = true;
-    recognition.lang = language === 'ta' ? 'ta-IN' : 'en-IN';
+    recognition.lang = meta.speechRecognitionLocale || 'en-IN';
 
     recognition.onresult = (event: any) => {
       let interimTranscript = '';
@@ -219,6 +243,8 @@ export function createSpeechRecognizer(
         msg = 'Microphone permission denied. Please allow microphone access in your browser settings.';
       } else if (event.error === 'no-speech') {
         msg = 'No speech detected. Please speak into your microphone.';
+      } else if (event.error === 'language-not-supported') {
+        msg = `Voice recognition in ${meta.name} (${meta.nativeName}) is not supported by this browser/device. Please type your query or try Chrome.`;
       } else if (event.error === 'network') {
         msg = 'Network connection required for speech recognition service.';
       }
@@ -246,7 +272,7 @@ export function createSpeechRecognizer(
       },
     };
   } catch (err: any) {
-    onError(err.message || 'Speech recognition initialization failed.');
+    onError(err.message || `Speech recognition failed for ${meta.name}.`);
     return null;
   }
 }
