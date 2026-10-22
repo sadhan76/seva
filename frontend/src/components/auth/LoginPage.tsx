@@ -140,8 +140,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
       if (msg.includes('fetch') || msg.includes('Unable to connect') || msg.includes('NetworkError')) {
         setErrorMessage(
           language === 'ta'
-            ? 'அக்ரிபாரத் சேவையகத்துடன் இணைக்க முடியவில்லை. பின்தள சேவையகம் (http://127.0.0.1:8000) இயங்குவதை உறுதிசெய்யவும்.'
-            : 'Unable to connect to AgriBharat backend server. Please ensure the backend is running at http://127.0.0.1:8000.'
+            ? 'அக்ரிபாரத் சேவையகத்துடன் இணைக்க முடியவில்லை. பின்தள சேவையகம் இயங்குவதை உறுதிசெய்யவும்.'
+            : 'Unable to connect to AgriBharat backend server. Please ensure the backend service is running.'
         );
       } else {
         setErrorMessage(
@@ -277,8 +277,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
       if (msg.includes('fetch') || msg.includes('Unable to connect') || msg.includes('NetworkError')) {
         setErrorMessage(
           language === 'ta'
-            ? 'அக்ரிபாரத் சேவையகத்துடன் இணைக்க முடியவில்லை. பின்தள சேவையகம் (http://127.0.0.1:8000) இயங்குவதை உறுதிசெய்யவும்.'
-            : 'Unable to connect to AgriBharat backend server. Please ensure the backend is running at http://127.0.0.1:8000.'
+            ? 'அக்ரிபாரத் சேவையகத்துடன் இணைக்க முடியவில்லை. பின்தள சேவையகம் இயங்குவதை உறுதிசெய்யவும்.'
+            : 'Unable to connect to AgriBharat backend server. Please ensure the backend service is running.'
         );
       } else {
         setErrorMessage(

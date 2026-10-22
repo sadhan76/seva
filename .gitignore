@@ -67,3 +67,6 @@ backups/
 **/backups/
 scratch_*.json
 backend/scratch_*.json
+
+# Vercel
+.vercel/

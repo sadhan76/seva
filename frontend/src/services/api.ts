@@ -78,15 +78,9 @@ import localGeoDirectory from '../data/indiaGeographicDirectory.json';
 
 const getDefaultApiUrl = (): string => {
   if (typeof window !== 'undefined') {
-    // When running inside Vite dev server or browser preview, prefer relative /api proxy
-    if (window.location.port === '5173' || window.location.port === '5174') {
-      return '/api';
-    }
-    // In production browser environments without explicit VITE_API_URL, fallback to relative /api
-    // to prevent blocked mixed-content calls to 127.0.0.1 over HTTPS
-    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      return '/api';
-    }
+    // When running inside the browser (Vercel Services production, vercel dev, or Vite dev proxy),
+    // default to relative /api so requests route seamlessly through Vercel's multi-service rewrites.
+    return '/api';
   }
   return 'http://127.0.0.1:8000/api';
 };
@@ -634,7 +628,7 @@ export async function safeFetch(input: RequestInfo | URL, init?: RequestInit): P
       err.message?.includes('Failed to fetch')
     ) {
       throw new Error(
-        'Unable to connect to AgriBharat server. Please ensure the backend is running on http://127.0.0.1:8000.'
+        'Unable to connect to AgriBharat server. Please ensure the backend service is running.'
       );
     }
     throw err;

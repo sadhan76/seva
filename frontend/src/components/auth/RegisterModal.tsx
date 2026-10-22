@@ -162,7 +162,7 @@ export const RegisterModal: React.FC<RegisterModalProps> = ({
     } catch (err: any) {
       const msg = err.message || '';
       if (msg.includes('fetch') || msg.includes('Unable to connect') || msg.includes('NetworkError')) {
-        setErrorMessage('Unable to connect to AgriBharat server. Please ensure the backend is running at http://127.0.0.1:8000.');
+        setErrorMessage('Unable to connect to AgriBharat server. Please ensure the backend service is running.');
       } else {
         setErrorMessage(err.message || 'Registration failed. Please verify details.');
       }

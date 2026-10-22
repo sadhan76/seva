@@ -257,7 +257,10 @@ load_dotenv()
 app = FastAPI(
     title="Namma Vivasayi AI API",
     description="Backend API with Authentication & Role-Based Access Control for Farmers & Procurement Staff",
-    version="0.3.0"
+    version="0.3.0",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
 )
 
 # Configure CORS
@@ -313,6 +316,8 @@ def format_mongo_doc(doc: dict) -> dict:
 
 
 @app.get("/")
+@app.get("/api")
+@app.get("/api/")
 async def root():
     return {
         "project": "Namma Vivasayi AI",
@@ -330,7 +335,7 @@ async def root():
             "chat_status": "GET /api/chat/status",
             "bookings": "POST /api/procurement/bookings",
             "staff_queue": "GET /api/staff/queue",
-            "docs": "/docs"
+            "docs": "/api/docs"
         }
     }
 
