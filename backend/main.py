@@ -18,7 +18,9 @@ from bson import ObjectId
 from pydantic import BaseModel
 
 from fastapi import FastAPI, HTTPException, status, Depends, UploadFile, File, Query, Form, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from pymongo.errors import ServerSelectionTimeoutError, PyMongoError
 from dotenv import load_dotenv
 
 from database import (
@@ -30,6 +32,7 @@ from database import (
     get_notifications_collection,
     get_centres_collection,
     get_diagnosis_reports_collection,
+    sanitize_mongo_uri,
 )
 from models import (
     FarmerRegisterRequest,
@@ -282,20 +285,57 @@ app.add_middleware(
 )
 
 
+# Global Exception Handlers to provide informative error responses instead of blank 500s
+@app.exception_handler(ServerSelectionTimeoutError)
+async def mongo_timeout_handler(request: Request, exc: ServerSelectionTimeoutError):
+    safe_msg = sanitize_mongo_uri(str(exc))
+    return JSONResponse(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        content={"detail": f"Database connection timeout. Please verify MongoDB Atlas IP access (0.0.0.0/0) and MONGODB_URI in hosting environment variables. ({safe_msg})"}
+    )
+
+@app.exception_handler(PyMongoError)
+async def mongo_error_handler(request: Request, exc: PyMongoError):
+    safe_msg = sanitize_mongo_uri(str(exc))
+    return JSONResponse(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        content={"detail": f"Database service error: {safe_msg}"}
+    )
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    if isinstance(exc, HTTPException):
+        return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+    safe_msg = sanitize_mongo_uri(str(exc))
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"detail": f"Internal server error: {safe_msg}"}
+    )
+
+
 # Startup event: initialize indexes, provision initial trusted staff account and seed procurement rates
 @app.on_event("startup")
 async def startup_event():
-    await init_database_indexes()
-    await bootstrap_staff_account()
-    await seed_default_rates()
-    await seed_default_centres()
-    # Phase 3: Start distributed singleton scheduler for periodic smart irrigation checks
-    await irrigation_scheduler.start(interval_seconds=900)
-    # Start distributed singleton scheduler for periodic Mandi Market Prices data refresh
-    await mandi_scheduler.start()
-    # Initialize & seed authentic farmer support content and demo marketplace listings
-    await seed_farmer_support_database()
-    await seed_demo_marketplace_listings()
+    try:
+        await init_database_indexes()
+        await bootstrap_staff_account()
+        await seed_default_rates()
+        await seed_default_centres()
+        # Phase 3: Start distributed singleton scheduler for periodic smart irrigation checks
+        if os.getenv("ENABLE_BACKGROUND_SCHEDULERS", "true").lower() == "true":
+            try:
+                await irrigation_scheduler.start(interval_seconds=900)
+            except Exception as e:
+                print(f"[Warning] Failed to start irrigation_scheduler: {e}")
+            try:
+                await mandi_scheduler.start()
+            except Exception as e:
+                print(f"[Warning] Failed to start mandi_scheduler: {e}")
+        await seed_farmer_support_database()
+        await seed_demo_marketplace_listings()
+    except Exception as e:
+        safe_err = sanitize_mongo_uri(str(e))
+        print(f"[Startup Warning] Non-critical database seeding error during startup: {safe_err}")
 
 
 @app.on_event("shutdown")

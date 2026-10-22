@@ -61,13 +61,15 @@ def init_db():
     """Initializes the MongoDB client and database connection."""
     global client, db
     try:
-        safe_uri = format_mongo_uri(MONGODB_URI)
+        raw_uri = os.getenv("MONGODB_URI") or MONGODB_URI
+        db_name = os.getenv("MONGODB_DB_NAME") or MONGODB_DB_NAME
+        safe_uri = format_mongo_uri(raw_uri)
         client = AsyncIOMotorClient(
             safe_uri,
             serverSelectionTimeoutMS=5000,
             connectTimeoutMS=10000
         )
-        db = client[MONGODB_DB_NAME]
+        db = client[db_name]
     except Exception as e:
         safe_err = sanitize_mongo_uri(str(e))
         print(f"[Warning] Failed to initialize MongoDB client: {safe_err}")

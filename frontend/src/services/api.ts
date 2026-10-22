@@ -639,18 +639,29 @@ async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
     let errorDetail = `Request failed with status ${res.status}`;
     try {
-      const errJson = await res.json();
-      if (errJson && errJson.detail) {
-        if (typeof errJson.detail === 'string') {
-          errorDetail = errJson.detail;
-        } else if (Array.isArray(errJson.detail)) {
-          errorDetail = errJson.detail.map((d: any) => d.msg || JSON.stringify(d)).join(', ');
-        } else {
-          errorDetail = JSON.stringify(errJson.detail);
+      const text = await res.text();
+      try {
+        const errJson = JSON.parse(text);
+        if (errJson && errJson.detail) {
+          if (typeof errJson.detail === 'string') {
+            errorDetail = errJson.detail;
+          } else if (Array.isArray(errJson.detail)) {
+            errorDetail = errJson.detail.map((d: any) => d.msg || JSON.stringify(d)).join(', ');
+          } else {
+            errorDetail = JSON.stringify(errJson.detail);
+          }
+        }
+      } catch {
+        if (text && text.trim().length > 0 && text.length < 300 && !text.includes('<!DOCTYPE')) {
+          errorDetail = text.trim();
+        } else if (res.status === 500) {
+          errorDetail = 'Backend server error (HTTP 500). Please check cloud backend logs and ensure MONGODB_URI is configured in hosting settings.';
+        } else if (res.status === 503) {
+          errorDetail = 'Database service unavailable. Please check MongoDB Atlas connection and IP whitelist.';
         }
       }
     } catch {
-      // ignore json parse error
+      // ignore parse error
     }
     throw new Error(errorDetail);
   }
