@@ -7,11 +7,39 @@ from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 
+import urllib.parse
+import re
+
 # Load environment variables from .env
 load_dotenv()
 
-MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
-MONGODB_DB_NAME = os.getenv("MONGODB_DB_NAME", "namma_vivasayi_db")
+def get_configured_mongo_uri() -> str:
+    """
+    Retrieves the MongoDB URI from supported environment variables,
+    stripping enclosing quotes and whitespace. Falls back to localhost.
+    """
+    for key in ("MONGODB_URI", "MONGO_URI", "DATABASE_URL", "MONGODB_URL"):
+        val = os.getenv(key)
+        if val and str(val).strip():
+            cleaned = str(val).strip().strip("\"'").strip()
+            if cleaned:
+                return cleaned
+    return "mongodb://localhost:27017"
+
+def get_configured_db_name() -> str:
+    """
+    Retrieves the database name from supported environment variables.
+    """
+    for key in ("MONGODB_DB_NAME", "MONGO_DB_NAME", "DATABASE_NAME"):
+        val = os.getenv(key)
+        if val and str(val).strip():
+            cleaned = str(val).strip().strip("\"'").strip()
+            if cleaned:
+                return cleaned
+    return "namma_vivasayi_db"
+
+MONGODB_URI = get_configured_mongo_uri()
+MONGODB_DB_NAME = get_configured_db_name()
 
 client: AsyncIOMotorClient = None
 db = None
@@ -23,9 +51,6 @@ def get_database():
         init_db()
     return db
 
-import urllib.parse
-import re
-
 def sanitize_mongo_uri(raw_err: str) -> str:
     """Removes user:password credentials from raw MongoDB connection error strings."""
     if not raw_err:
@@ -36,33 +61,57 @@ def sanitize_mongo_uri(raw_err: str) -> str:
 def format_mongo_uri(raw_uri: str) -> str:
     """
     Ensures username and password in MongoDB URI are RFC 3986 escaped using urllib.parse.quote_plus.
-    Handles special characters like '@', ':', '#', etc., in passwords.
+    Handles special characters like '@', ':', '#', etc., in passwords while preserving host, path, and options.
     """
-    if not raw_uri or not ('://' in raw_uri):
+    if not raw_uri:
         return raw_uri
+    cleaned_uri = str(raw_uri).strip().strip("\"'").strip()
+    if "://" not in cleaned_uri:
+        return cleaned_uri
+
     try:
-        prefix, rest = raw_uri.split('://', 1)
-        if '@' not in rest:
-            return raw_uri
-        # Split credentials from host using the last '@'
-        creds, host_part = rest.rsplit('@', 1)
-        if ':' in creds:
-            user, pwd = creds.split(':', 1)
-            user = urllib.parse.quote_plus(urllib.parse.unquote_plus(user))
-            pwd = urllib.parse.quote_plus(urllib.parse.unquote_plus(pwd))
-            fixed_creds = f"{user}:{pwd}"
+        prefix, rest = cleaned_uri.split("://", 1)
+        if "@" not in rest:
+            return f"{prefix}://{rest}"
+
+        # Separate authority (credentials + host/port) from path and query parameters
+        path_idx = -1
+        for idx, ch in enumerate(rest):
+            if ch in ("/", "?"):
+                path_idx = idx
+                break
+
+        if path_idx != -1:
+            authority = rest[:path_idx]
+            path_and_query = rest[path_idx:]
+        else:
+            authority = rest
+            path_and_query = ""
+
+        if "@" not in authority:
+            return f"{prefix}://{rest}"
+
+        # Right-split on '@' to isolate host from credentials
+        creds, host = authority.rsplit("@", 1)
+        if ":" in creds:
+            user, pwd = creds.split(":", 1)
+            # Unquote first to prevent double-encoding, then re-quote per RFC 3986
+            safe_user = urllib.parse.quote_plus(urllib.parse.unquote_plus(user))
+            safe_pwd = urllib.parse.quote_plus(urllib.parse.unquote_plus(pwd))
+            fixed_creds = f"{safe_user}:{safe_pwd}"
         else:
             fixed_creds = urllib.parse.quote_plus(urllib.parse.unquote_plus(creds))
-        return f"{prefix}://{fixed_creds}@{host_part}"
+
+        return f"{prefix}://{fixed_creds}@{host}{path_and_query}"
     except Exception:
-        return raw_uri
+        return cleaned_uri
 
 def init_db():
     """Initializes the MongoDB client and database connection."""
     global client, db
     try:
-        raw_uri = os.getenv("MONGODB_URI") or MONGODB_URI
-        db_name = os.getenv("MONGODB_DB_NAME") or MONGODB_DB_NAME
+        raw_uri = get_configured_mongo_uri()
+        db_name = get_configured_db_name()
         safe_uri = format_mongo_uri(raw_uri)
         client = AsyncIOMotorClient(
             safe_uri,
@@ -83,27 +132,39 @@ async def check_db_connection() -> dict:
     global client
     if client is None:
         init_db()
-    
+
+    active_db_name = get_configured_db_name()
+    if client is None:
+        return {
+            "connected": False,
+            "database_name": active_db_name,
+            "is_atlas": "mongodb+srv" in get_configured_mongo_uri(),
+            "message": "Database client could not be initialized."
+        }
+
     try:
         # Ping the admin database to verify connectivity
         await client.admin.command('ping')
         return {
             "connected": True,
-            "database_name": MONGODB_DB_NAME,
+            "database_name": active_db_name,
+            "is_atlas": "mongodb+srv" in get_configured_mongo_uri(),
             "message": "Connected to MongoDB successfully."
         }
     except (ConnectionFailure, ServerSelectionTimeoutError) as e:
         safe_msg = sanitize_mongo_uri(str(e))
         return {
             "connected": False,
-            "database_name": MONGODB_DB_NAME,
+            "database_name": active_db_name,
+            "is_atlas": "mongodb+srv" in get_configured_mongo_uri(),
             "message": f"Could not connect to MongoDB: {safe_msg}"
         }
     except Exception as e:
         safe_msg = sanitize_mongo_uri(str(e))
         return {
             "connected": False,
-            "database_name": MONGODB_DB_NAME,
+            "database_name": active_db_name,
+            "is_atlas": "mongodb+srv" in get_configured_mongo_uri(),
             "message": f"Database error: {safe_msg}"
         }
 
