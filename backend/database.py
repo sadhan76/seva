@@ -23,6 +23,7 @@ def get_database():
         init_db()
     return db
 
+import urllib.parse
 import re
 
 def sanitize_mongo_uri(raw_err: str) -> str:
@@ -32,12 +33,37 @@ def sanitize_mongo_uri(raw_err: str) -> str:
     # Redact mongodb://user:pass@ and mongodb+srv://user:pass@
     return re.sub(r"://([^:]+):([^@]+)@", r"://\1:[REDACTED]@", str(raw_err))
 
+def format_mongo_uri(raw_uri: str) -> str:
+    """
+    Ensures username and password in MongoDB URI are RFC 3986 escaped using urllib.parse.quote_plus.
+    Handles special characters like '@', ':', '#', etc., in passwords.
+    """
+    if not raw_uri or not ('://' in raw_uri):
+        return raw_uri
+    try:
+        prefix, rest = raw_uri.split('://', 1)
+        if '@' not in rest:
+            return raw_uri
+        # Split credentials from host using the last '@'
+        creds, host_part = rest.rsplit('@', 1)
+        if ':' in creds:
+            user, pwd = creds.split(':', 1)
+            user = urllib.parse.quote_plus(urllib.parse.unquote_plus(user))
+            pwd = urllib.parse.quote_plus(urllib.parse.unquote_plus(pwd))
+            fixed_creds = f"{user}:{pwd}"
+        else:
+            fixed_creds = urllib.parse.quote_plus(urllib.parse.unquote_plus(creds))
+        return f"{prefix}://{fixed_creds}@{host_part}"
+    except Exception:
+        return raw_uri
+
 def init_db():
     """Initializes the MongoDB client and database connection."""
     global client, db
     try:
+        safe_uri = format_mongo_uri(MONGODB_URI)
         client = AsyncIOMotorClient(
-            MONGODB_URI,
+            safe_uri,
             serverSelectionTimeoutMS=5000,
             connectTimeoutMS=10000
         )
