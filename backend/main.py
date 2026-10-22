@@ -289,9 +289,20 @@ app.add_middleware(
 @app.exception_handler(ServerSelectionTimeoutError)
 async def mongo_timeout_handler(request: Request, exc: ServerSelectionTimeoutError):
     safe_msg = sanitize_mongo_uri(str(exc))
+    is_localhost = "localhost:27017" in safe_msg or "127.0.0.1:27017" in safe_msg
+    is_cloud = bool(os.getenv("RENDER") or os.getenv("PORT") or os.getenv("ENVIRONMENT") == "production")
+    if is_localhost and is_cloud:
+        detail_msg = (
+            "Database connection timeout to localhost:27017. "
+            "The backend defaulted to localhost because the MONGODB_URI environment variable was not detected on Render. "
+            "Please go to your Render Dashboard -> Backend Web Service -> Environment -> Add MONGODB_URI with your MongoDB Atlas connection string, then manual redeploy."
+        )
+    else:
+        detail_msg = f"Database connection timeout. Please verify MongoDB Atlas IP access (0.0.0.0/0 allowed) and MONGODB_URI in hosting environment variables. ({safe_msg})"
+
     return JSONResponse(
         status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-        content={"detail": f"Database connection timeout. Please verify MongoDB Atlas IP access (0.0.0.0/0) and MONGODB_URI in hosting environment variables. ({safe_msg})"}
+        content={"detail": detail_msg}
     )
 
 @app.exception_handler(PyMongoError)
@@ -313,14 +324,39 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-# Startup event: initialize indexes, provision initial trusted staff account and seed procurement rates
+# Startup event: perform database health inspection, initialize indexes and seed core datasets
 @app.on_event("startup")
 async def startup_event():
+    db_conn = await check_db_connection()
+    if db_conn.get("connected"):
+        print(f"[Startup Database] OK: Connected to MongoDB at '{db_conn.get('target_host')}' (db: {db_conn.get('database_name')}) via {db_conn.get('source_key')}")
+    else:
+        print("=" * 80)
+        print("[CRITICAL STARTUP DATABASE ERROR] Could not connect to MongoDB!")
+        print(f"  Target Host: {db_conn.get('target_host')}")
+        print(f"  Source Key:  {db_conn.get('source_key')}")
+        print(f"  Configured:  {db_conn.get('is_configured')}")
+        print(f"  Detail:      {db_conn.get('message')}")
+        if not db_conn.get("is_configured"):
+            print("  [FIX REQUIRED ON RENDER]")
+            print("  The MONGODB_URI environment variable is missing in Render.")
+            print("  Please open Render Dashboard -> Service -> Environment -> Add MONGODB_URI and Redeploy.")
+        elif db_conn.get("is_atlas"):
+            print("  [FIX REQUIRED ON MONGODB ATLAS]")
+            print("  Atlas connection timed out. Please check MongoDB Atlas -> Network Access -> Add IP Address: 0.0.0.0/0 (Allow Access from Anywhere).")
+        print("=" * 80)
+
     try:
-        await init_database_indexes()
-        await bootstrap_staff_account()
-        await seed_default_rates()
-        await seed_default_centres()
+        if db_conn.get("connected"):
+            await init_database_indexes()
+            await bootstrap_staff_account()
+            await seed_default_rates()
+            await seed_default_centres()
+            await seed_farmer_support_database()
+            await seed_demo_marketplace_listings()
+        else:
+            print("[Startup Notice] Skipping initial database indexing and seeding because MongoDB is currently offline.")
+
         # Phase 3: Start distributed singleton scheduler for periodic smart irrigation checks
         if os.getenv("ENABLE_BACKGROUND_SCHEDULERS", "true").lower() == "true":
             try:
@@ -331,11 +367,9 @@ async def startup_event():
                 await mandi_scheduler.start()
             except Exception as e:
                 print(f"[Warning] Failed to start mandi_scheduler: {e}")
-        await seed_farmer_support_database()
-        await seed_demo_marketplace_listings()
     except Exception as e:
         safe_err = sanitize_mongo_uri(str(e))
-        print(f"[Startup Warning] Non-critical database seeding error during startup: {safe_err}")
+        print(f"[Startup Warning] Seeding initialization exception: {safe_err}")
 
 
 @app.on_event("shutdown")
@@ -397,6 +431,16 @@ async def health_check():
         "database": db_status,
         "mandiMarketPrices": market_health
     }
+
+
+@app.get("/api/health/db")
+async def database_health_check():
+    """
+    Dedicated diagnostic endpoint to inspect MongoDB Atlas connection status,
+    configured environment variable, target cluster host, and ping latency
+    without exposing any passwords or sensitive credentials.
+    """
+    return await check_db_connection()
 
 
 @app.get("/api/market/health")

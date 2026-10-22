@@ -13,18 +13,92 @@ import re
 # Load environment variables from .env
 load_dotenv()
 
+def get_mongo_connection_info() -> dict:
+    """
+    Inspects environment variables for MongoDB connection strings.
+    Prioritizes 'MONGODB_URI' while also checking common cloud aliases,
+    whitespace-padded keys, and any variable containing a mongodb:// or mongodb+srv:// URI.
+    Returns a dictionary containing the sanitized URI, target host, source key, and flags.
+    Never exposes username or password.
+    """
+    target_raw_uri = None
+    detected_key = None
+
+    # Priority 1: Direct MONGODB_URI check
+    direct_val = os.getenv("MONGODB_URI")
+    if direct_val and str(direct_val).strip():
+        cleaned = str(direct_val).strip().strip("\"'").strip()
+        if cleaned:
+            target_raw_uri = cleaned
+            detected_key = "MONGODB_URI"
+
+    # Priority 2: Key-stripped / case-insensitive search for known aliases
+    if not target_raw_uri:
+        known_aliases = (
+            "MONGODB_URI",
+            "MONGO_URI",
+            "MONGO_URL",
+            "DATABASE_URL",
+            "MONGODB_URL",
+            "DATABASE_URI",
+            "MONGODB_CONNECTION_STRING",
+            "ATLAS_URI",
+        )
+        for k, v in os.environ.items():
+            if k.strip().upper() in known_aliases:
+                cleaned = str(v).strip().strip("\"'").strip()
+                if cleaned and (cleaned.startswith("mongodb://") or cleaned.startswith("mongodb+srv://")):
+                    target_raw_uri = cleaned
+                    detected_key = k.strip()
+                    break
+
+    # Priority 3: Any environment variable whose value is a valid MongoDB connection string
+    if not target_raw_uri:
+        for k, v in os.environ.items():
+            cleaned = str(v).strip().strip("\"'").strip()
+            if cleaned and (cleaned.startswith("mongodb://") or cleaned.startswith("mongodb+srv://")):
+                target_raw_uri = cleaned
+                detected_key = k.strip()
+                break
+
+    is_configured = target_raw_uri is not None
+    is_cloud = bool(os.getenv("RENDER") or os.getenv("PORT") or os.getenv("ENVIRONMENT") == "production")
+
+    if not target_raw_uri:
+        target_raw_uri = "mongodb://localhost:27017"
+        detected_key = "default_fallback (localhost:27017)"
+
+    # Safely extract target host without leaking credentials
+    target_host = "localhost:27017"
+    try:
+        if "@" in target_raw_uri:
+            after_at = target_raw_uri.rsplit("@", 1)[1]
+            host_part = after_at.split("/")[0].split("?")[0]
+            target_host = host_part.strip()
+        elif "://" in target_raw_uri:
+            after_scheme = target_raw_uri.split("://", 1)[1]
+            host_part = after_scheme.split("/")[0].split("?")[0]
+            target_host = host_part.strip()
+    except Exception:
+        target_host = "unknown_host"
+
+    is_atlas = "mongodb+srv" in target_raw_uri or ".mongodb.net" in target_raw_uri
+
+    return {
+        "raw_uri": target_raw_uri,
+        "is_configured": is_configured,
+        "source_key": detected_key,
+        "target_host": target_host,
+        "is_atlas": is_atlas,
+        "is_cloud": is_cloud,
+    }
+
 def get_configured_mongo_uri() -> str:
     """
     Retrieves the MongoDB URI from supported environment variables,
     stripping enclosing quotes and whitespace. Falls back to localhost.
     """
-    for key in ("MONGODB_URI", "MONGO_URI", "DATABASE_URL", "MONGODB_URL"):
-        val = os.getenv(key)
-        if val and str(val).strip():
-            cleaned = str(val).strip().strip("\"'").strip()
-            if cleaned:
-                return cleaned
-    return "mongodb://localhost:27017"
+    return get_mongo_connection_info()["raw_uri"]
 
 def get_configured_db_name() -> str:
     """
@@ -110,7 +184,8 @@ def init_db():
     """Initializes the MongoDB client and database connection."""
     global client, db
     try:
-        raw_uri = get_configured_mongo_uri()
+        info = get_mongo_connection_info()
+        raw_uri = info["raw_uri"]
         db_name = get_configured_db_name()
         safe_uri = format_mongo_uri(raw_uri)
         client = AsyncIOMotorClient(
@@ -127,19 +202,41 @@ def init_db():
 async def check_db_connection() -> dict:
     """
     Checks whether MongoDB is alive and responsive.
-    Returns status dict with connection info.
+    Returns status dict with connection info, without exposing secrets.
     """
     global client
     if client is None:
         init_db()
 
+    info = get_mongo_connection_info()
     active_db_name = get_configured_db_name()
+    target_host = info["target_host"]
+    is_atlas = info["is_atlas"]
+    is_configured = info["is_configured"]
+    source_key = info["source_key"]
+
+    # In cloud environments (Render / production), warn if environment variable is missing
+    if info["is_cloud"] and not is_configured:
+        return {
+            "connected": False,
+            "database_name": active_db_name,
+            "is_atlas": False,
+            "is_configured": False,
+            "source_key": source_key,
+            "target_host": target_host,
+            "message": "MONGODB_URI environment variable is missing on Render. Please configure MONGODB_URI in Render dashboard and redeploy.",
+            "render_action_required": "Go to Render Dashboard -> Web Service -> Environment -> Add MONGODB_URI.",
+        }
+
     if client is None:
         return {
             "connected": False,
             "database_name": active_db_name,
-            "is_atlas": "mongodb+srv" in get_configured_mongo_uri(),
-            "message": "Database client could not be initialized."
+            "is_atlas": is_atlas,
+            "is_configured": is_configured,
+            "source_key": source_key,
+            "target_host": target_host,
+            "message": "Database client could not be initialized.",
         }
 
     try:
@@ -148,24 +245,35 @@ async def check_db_connection() -> dict:
         return {
             "connected": True,
             "database_name": active_db_name,
-            "is_atlas": "mongodb+srv" in get_configured_mongo_uri(),
-            "message": "Connected to MongoDB successfully."
+            "is_atlas": is_atlas,
+            "is_configured": is_configured,
+            "source_key": source_key,
+            "target_host": target_host,
+            "message": f"Connected to MongoDB successfully at {target_host}."
         }
     except (ConnectionFailure, ServerSelectionTimeoutError) as e:
         safe_msg = sanitize_mongo_uri(str(e))
+        action = "Check MongoDB Atlas Network Access (whitelist 0.0.0.0/0)" if is_atlas else "Check if local MongoDB service is running"
         return {
             "connected": False,
             "database_name": active_db_name,
-            "is_atlas": "mongodb+srv" in get_configured_mongo_uri(),
-            "message": f"Could not connect to MongoDB: {safe_msg}"
+            "is_atlas": is_atlas,
+            "is_configured": is_configured,
+            "source_key": source_key,
+            "target_host": target_host,
+            "message": f"Could not connect to MongoDB ({target_host}): {safe_msg}",
+            "render_action_required": action,
         }
     except Exception as e:
         safe_msg = sanitize_mongo_uri(str(e))
         return {
             "connected": False,
             "database_name": active_db_name,
-            "is_atlas": "mongodb+srv" in get_configured_mongo_uri(),
-            "message": f"Database error: {safe_msg}"
+            "is_atlas": is_atlas,
+            "is_configured": is_configured,
+            "source_key": source_key,
+            "target_host": target_host,
+            "message": f"Database error ({target_host}): {safe_msg}",
         }
 
 def get_farmers_collection():
