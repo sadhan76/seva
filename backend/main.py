@@ -272,8 +272,14 @@ allowed_origins_raw = os.getenv(
     "http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174,http://localhost:3000,http://127.0.0.1:3000,http://localhost:4173,http://127.0.0.1:4173,http://localhost:8080,http://127.0.0.1:8080"
 )
 origins = [origin.strip() for origin in allowed_origins_raw.split(",") if origin.strip()]
-default_origin_regex = r"^(https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)(:\d+)?|https:\/\/.*\.vercel\.app)$"
+default_origin_regex = r"^(https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)(:\d+)?|https:\/\/.*\.vercel\.app|https:\/\/.*\.onrender\.com)$"
 allowed_origin_regex = os.getenv("ALLOWED_ORIGIN_REGEX", default_origin_regex).strip() or default_origin_regex
+
+# Starlette CORS disallows origins=['*'] when allow_credentials=True.
+# If '*' is provided in ALLOWED_ORIGINS, safely remove it from origins list and match via regex.
+if "*" in origins:
+    origins = [o for o in origins if o != "*"]
+    allowed_origin_regex = r"^https?:\/\/.*$"
 
 app.add_middleware(
     CORSMiddleware,

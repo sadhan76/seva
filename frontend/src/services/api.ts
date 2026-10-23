@@ -76,21 +76,78 @@ export type {
 
 import localGeoDirectory from '../data/indiaGeographicDirectory.json';
 
-const getDefaultApiUrl = (): string => {
+const normalizeApiBase = (url: string): string => {
+  const clean = url.trim().replace(/\/+$/, '');
+  return clean.endsWith('/api') ? clean : `${clean}/api`;
+};
+
+export const getStoredApiUrl = (): string | null => {
   if (typeof window !== 'undefined') {
-    // When running inside the browser (Vercel Services production, vercel dev, or Vite dev proxy),
-    // default to relative /api so requests route seamlessly through Vercel's multi-service rewrites.
+    try {
+      const stored =
+        localStorage.getItem('VITE_API_URL') ||
+        localStorage.getItem('BACKEND_URL') ||
+        (window as any).__VITE_API_URL__;
+      if (stored && typeof stored === 'string' && stored.trim().length > 0) {
+        return stored.trim();
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return null;
+};
+
+const getDefaultApiUrl = (): string => {
+  const runtimeStored = getStoredApiUrl();
+  if (runtimeStored) {
+    return normalizeApiBase(runtimeStored);
+  }
+
+  const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
+  if (envUrl && envUrl.trim().length > 0) {
+    return normalizeApiBase(envUrl.trim());
+  }
+
+  if (typeof window !== 'undefined') {
+    // When running locally, Vite proxy forwards /api to http://127.0.0.1:8000
     return '/api';
   }
   return 'http://127.0.0.1:8000/api';
 };
 
-const rawApiUrl =
-  import.meta.env.VITE_API_URL ||
-  import.meta.env.VITE_API_BASE_URL ||
-  getDefaultApiUrl();
-const cleanApiUrl = rawApiUrl.replace(/\/+$/, '');
-const API_BASE_URL = cleanApiUrl.endsWith('/api') ? cleanApiUrl : `${cleanApiUrl}/api`;
+export let API_BASE_URL = getDefaultApiUrl();
+
+export function setCustomApiUrl(url: string): string {
+  const normalized = normalizeApiBase(url);
+  API_BASE_URL = normalized;
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem('VITE_API_URL', normalized);
+      (window as any).__VITE_API_URL__ = normalized;
+    } catch {
+      // ignore
+    }
+  }
+  return normalized;
+}
+
+export function clearCustomApiUrl(): void {
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.removeItem('VITE_API_URL');
+      localStorage.removeItem('BACKEND_URL');
+      delete (window as any).__VITE_API_URL__;
+    } catch {
+      // ignore
+    }
+  }
+  API_BASE_URL = getDefaultApiUrl();
+}
+
+export function getEffectiveApiUrl(): string {
+  return API_BASE_URL;
+}
 
 export interface BackendHealthResponse {
   status: string;
@@ -652,7 +709,28 @@ async function handleResponse<T>(res: Response): Promise<T> {
           }
         }
       } catch {
-        if (text && text.trim().length > 0 && text.length < 300 && !text.includes('<!DOCTYPE')) {
+        const isHosted =
+          typeof window !== 'undefined' &&
+          window.location.hostname !== 'localhost' &&
+          window.location.hostname !== '127.0.0.1';
+
+        const isVercel404 =
+          res.status === 404 &&
+          (text.includes('NOT_FOUND') ||
+            text.includes('could not be found') ||
+            text.includes('bom1::') ||
+            text.includes('cle1::') ||
+            text.includes('iad1::') ||
+            text.includes('sin1::') ||
+            text.includes('fra1::') ||
+            API_BASE_URL === '/api' ||
+            API_BASE_URL.startsWith('/') ||
+            (isHosted && API_BASE_URL.includes(window.location.hostname)));
+
+        if (isVercel404) {
+          errorDetail =
+            'Hosted Backend URL Not Configured: The frontend is hosted on Vercel, but VITE_API_URL is missing. Please add VITE_API_URL in your Vercel Project Settings > Environment Variables pointing to your Render backend URL (e.g. https://your-backend.onrender.com) and click Redeploy.';
+        } else if (text && text.trim().length > 0 && text.length < 300 && !text.includes('<!DOCTYPE')) {
           errorDetail = text.trim();
         } else if (res.status === 500) {
           errorDetail = 'Backend server error (HTTP 500). Please check cloud backend logs and ensure MONGODB_URI is configured in hosting settings.';

@@ -24,6 +24,7 @@ import { LanguageToggle } from '../common/LanguageToggle';
 import { REGIONAL_LANGUAGE_OPTIONS, IRRIGATION_OPTIONS } from '../../i18n/translations';
 import type { Language } from '../../types';
 import { GeoLocationSelect, type GeoLocationValue } from '../common/GeoLocationSelect';
+import { setCustomApiUrl, getEffectiveApiUrl, checkBackendHealth } from '../../services/api';
 
 interface LoginPageProps {
   initialMode?: 'signin' | 'register';
@@ -72,6 +73,42 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [customBackendUrl, setCustomBackendUrl] = useState(() => {
+    const current = getEffectiveApiUrl();
+    return current.startsWith('http') ? current.replace(/\/api\/?$/, '') : '';
+  });
+  const [isCheckingUrl, setIsCheckingUrl] = useState(false);
+
+  const handleSaveBackendUrl = async () => {
+    const trimmed = customBackendUrl.trim();
+    if (!trimmed) {
+      setErrorMessage(language === 'ta' ? 'செல்லுபடியாகும் பின்தள முகவரியை உள்ளிடவும்.' : 'Please enter a valid Render backend URL (e.g. https://your-backend.onrender.com)');
+      return;
+    }
+    setIsCheckingUrl(true);
+    try {
+      setCustomApiUrl(trimmed);
+      const health = await checkBackendHealth();
+      if (health.status === 'ok') {
+        setErrorMessage(null);
+        setSuccessMessage(
+          language === 'ta'
+            ? 'பின்தள சேவையகம் வெற்றிகரமாக இணைக்கப்பட்டது! மீண்டும் உள்நுழையவும்.'
+            : 'Connected to Render backend successfully! You can now click "Sign In".'
+        );
+      } else {
+        setErrorMessage(`Backend status: ${health.status}`);
+      }
+    } catch (err: any) {
+      setErrorMessage(
+        language === 'ta'
+          ? `சேவையகத்தை இணைக்க முடியவில்லை (${trimmed}). Render இலவச அடுக்கு உறக்கத்திலிருந்து விழித்தெழ 30-50 வினாடிகள் ஆகலாம்.`
+          : `Unable to connect to ${trimmed}. If your Render backend is waking from sleep, wait 30-50s and retry.`
+      );
+    } finally {
+      setIsCheckingUrl(false);
+    }
+  };
 
   // Handle Role Selection without injecting credentials
   const handleSelectRole = (targetRole: 'farmer' | 'staff') => {
@@ -386,9 +423,42 @@ export const LoginPage: React.FC<LoginPageProps> = ({ initialMode = 'signin' }) 
 
           {/* Alerts: Error & Success */}
           {errorMessage && (
-            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-300 text-rose-900 text-xs flex items-start gap-2.5 animate-shake">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
-              <div className="flex-1 font-semibold">{errorMessage}</div>
+            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-300 text-rose-900 text-xs flex flex-col gap-2.5 animate-shake">
+              <div className="flex items-start gap-2.5">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <div className="flex-1 font-semibold leading-relaxed">{errorMessage}</div>
+              </div>
+              {(errorMessage.includes('Backend URL') ||
+                errorMessage.includes('சேவையகத்துடன்') ||
+                errorMessage.includes('Unable to connect') ||
+                errorMessage.includes('NOT_FOUND') ||
+                errorMessage.includes('Failed to fetch')) && (
+                <div className="pt-2 border-t border-rose-200">
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1.5">
+                    {language === 'ta'
+                      ? 'Render பின்தள முகவரியை உள்ளிட்டு உடனடியாக இணைக்கவும்:'
+                      : 'Connect immediately by entering your Render backend URL:'}
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="url"
+                      placeholder="https://your-backend.onrender.com"
+                      value={customBackendUrl}
+                      onChange={(e) => setCustomBackendUrl(e.target.value)}
+                      className="flex-1 px-3 py-1.5 bg-white border border-rose-300 rounded-xl text-xs font-mono text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSaveBackendUrl}
+                      disabled={isCheckingUrl}
+                      className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-colors shadow-sm disabled:opacity-60 flex items-center gap-1.5 shrink-0"
+                    >
+                      {isCheckingUrl && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                      <span>{isCheckingUrl ? (language === 'ta' ? 'இணைக்கிறது...' : 'Testing...') : (language === 'ta' ? 'இணை & சேமி' : 'Save & Connect')}</span>
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
